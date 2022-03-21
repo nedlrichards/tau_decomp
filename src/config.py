@@ -8,7 +8,7 @@ class Config:
         self.fc = fc
         self.bottom_HS = [1600., 1000., 0.1]
         self.c_bounds = [1503, 1545]
-        self.z_src = 30.
+        self.z_src = 40.
         self.z_int = 120.
 
         self.lat = 30.

@@ -8,7 +8,7 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = tau_decomp
-PYTHON_INTERPRETER = python3
+PYTHON_INTERPRETER = ipython
 
 ifeq (,$(shell which conda))
 HAS_CONDA=False
@@ -22,12 +22,18 @@ endif
 
 ## Install Python Dependencies
 requirements: test_environment
-	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+	#micromambda create -f env.yml
+	#micromamba activate tau_decomp
 
 ## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+data: requirements data/processed/inputed_spice.npz data/processed/decomposed_fields.npz
+	#$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+
+data/processed/inputed_spice.npz: requirements
+	$(PYTHON_INTERPRETER) src/data/lp_incompute.py
+
+data/processed/decomposed_fields.npz: requirements data/processed/inputed_spice.npz
+	$(PYTHON_INTERPRETER) src/data/field_compute.py
 
 ## Delete all compiled Python files
 clean:
