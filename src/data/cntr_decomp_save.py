@@ -109,17 +109,23 @@ def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
 
         tmp_dict['r_modes'] = (rd_modes.r_plot + tmp_dict['xs']) / 1e3
         tmp_dict['bg_mode_amps'] = rd_modes.couple_cn()
+        tmp_dict['psi_bg'] = rd_modes.psi_bg
+        tmp_dict['k_bg'] = rd_modes.k_bg
+        psi_k_bg = (rd_modes.psi_bg, rd_modes.k_bg)
 
         rd_modes = RDModes(tmp_dict['c_tilt'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds)
+                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,
+                        psi_k_bg=psi_k_bg)
         tmp_dict['tilt_mode_amps'] = rd_modes.couple_cn()
 
         rd_modes = RDModes(tmp_dict['c_spice'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds)
+                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,
+                        psi_k_bg=psi_k_bg)
         tmp_dict['spice_mode_amps'] = rd_modes.couple_cn()
 
         rd_modes = RDModes(tmp_dict['c_total'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds)
+                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,
+                        psi_k_bg=psi_k_bg)
         tmp_dict['total_mode_amps'] = rd_modes.couple_cn()
 
     np.savez(join(save_dir, f'tl_section_{int(xs/1e3):03d}'), **tmp_dict)
@@ -127,5 +133,5 @@ def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
 
 run_func = lambda xs: save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True)
 
-#list(map(run_func, x_start))
-run_func(420e3)
+list(map(run_func, x_start))
+#run_func(420e3)

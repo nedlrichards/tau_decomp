@@ -17,7 +17,7 @@ class RDModes:
 
     def __init__(self, c_field, x_a, z_a, fc, z_src,
                  bottom_HS=None, c_bounds=[0, 3000.],
-                 r_decimation=10, s=1/8):
+                 r_decimation=10, s=1/8, psi_k_bg=None):
         """Setup position and verticle profiles for gaussian"""
         self.c_field = c_field
         self.fc = fc
@@ -56,7 +56,11 @@ class RDModes:
         self.run_file = path.join('envs', f'auto_gen')
         self.s = s
 
-        psi_bg, self.k_bg = self.run_kraken_bg()
+        if psi_k_bg is None:
+            psi_bg, self.k_bg = self.run_kraken_bg()
+        else:
+            psi_bg, self.k_bg = psi_k_bg
+
         self.psi_bg = np.real(psi_bg)
         self.bg_sld, sld_i = sonic_layer_depth(z_a, self.bg_prof[:, None], z_max=300.)
 
