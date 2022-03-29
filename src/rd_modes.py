@@ -106,12 +106,17 @@ class RDModes:
         """Run kraken to compute modes"""
         dux = pyducts.modes.Kraken(self.run_file, 100., self.z_a,
                                    c_bounds=self.c_bounds)
-
-        bg_ier = UnivariateSpline(self.z_a, self.bg_prof, k=1, s=self.s)
-        dux.write_env(self.fc,
-                      bg_ier.get_knots(),
-                      bg_ier.get_coeffs(),
-                      bottom_HS=self.bottom_HS)
+        if self.s is not None:
+            bg_ier = UnivariateSpline(self.z_a, self.bg_prof, k=1, s=self.s)
+            dux.write_env(self.fc,
+                        bg_ier.get_knots(),
+                        bg_ier.get_coeffs(),
+                        bottom_HS=self.bottom_HS)
+        else:
+            dux.write_env(self.fc,
+                        self.z_a,
+                        self.bg_prof,
+                        bottom_HS=self.bottom_HS)
 
         dux.run_kraken()
         psi_bg, k_bg, _ = pyducts.modes.read_mod(self.run_file)
@@ -128,8 +133,11 @@ class RDModes:
 
         for i, prof in enumerate(self.c_field.T):
             # resample profiles to compute delta
-            dc_ier = UnivariateSpline(self.z_a, prof, k=1, s=self.s)
-            prof = [dc_ier.get_knots(), dc_ier.get_coeffs()]
+            if self.s is not None:
+                dc_ier = UnivariateSpline(self.z_a, prof, k=1, s=self.s)
+                prof = [dc_ier.get_knots(), dc_ier.get_coeffs()]
+            else:
+                prof = [self.z_a, prof]
 
             if i == 0:
                 dux_rd.write_env(self.fc, prof[0], prof[1],
