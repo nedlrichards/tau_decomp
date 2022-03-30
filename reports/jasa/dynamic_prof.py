@@ -17,7 +17,7 @@ stab_height = sec4.stable_cntr_height(sec4.lvls)
 stab_spice  = np.load('data/processed/inputed_spice.npz')['lvls']
 stab_lvls = sec4.stable_spice(stab_height)
 
-prof_i = 150
+prof_i = 252
 
 z_a = sec4.z_a
 
@@ -46,11 +46,11 @@ ax[0].grid()
 ax[1].grid()
 ax[2].grid()
 
-ax[2].text(1495.5, sld_z[prof_i] - 7, 'Sonic layer depth', bbox=bbox)
+ax[2].text(1499.5, sld_z[prof_i] - 7, 'Sonic layer depth', bbox=bbox)
 
-ax[0].set_xlim(25.2, 26.2)
-ax[1].set_xlim(0.8, 1.8)
-ax[2].set_xlim(1496, 1508)
+ax[0].set_xlim(25.0, 26.0)
+ax[1].set_xlim(1.1, 2.3)
+ax[2].set_xlim(1499, 1513)
 ax[2].set_ylim(150, 0)
 
 pos = ax[0].get_position()
