@@ -54,10 +54,11 @@ def run_ram(rf, xs, x_a, cg):
     x_i = np.bitwise_and(x_a >= xs, x_a < xs + rmax)
 
     for x, c_p in zip(x_a[x_i], cg.T[x_i]):
-        c_ier = UnivariateSpline(z_a, c_p, s=1, k=1)
-        z_ds = c_ier.get_knots()
-        c_ds = c_ier.get_coeffs()
-        rf.write_profile(x - xs, z_ds, c_ds)
+        #c_ier = UnivariateSpline(z_a, c_p, s=1, k=1)
+        #z_ds = c_ier.get_knots()
+        #c_ds = c_ier.get_coeffs()
+        #rf.write_profile(x - xs, z_ds, c_ds)
+        rf.write_profile(x - xs, z_a, c_p)
 
     pyducts.ram.run_ram()
 
@@ -105,7 +106,7 @@ def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
 
     if save_couple:
         rd_modes = RDModes(tmp_dict['c_bg'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds)
+                        cf.fc, cf.z_src, c_bounds=cf.c_bounds, s=None)
 
         tmp_dict['r_modes'] = (rd_modes.r_plot + tmp_dict['xs']) / 1e3
         tmp_dict['bg_mode_amps'] = rd_modes.couple_cn()
