@@ -1,7 +1,6 @@
 """Compare results of gridded and reconstructed total field"""
 
 import numpy as np
-from scipy.io import loadmat
 from os.path import join
 from scipy.interpolate import UnivariateSpline
 
@@ -17,11 +16,11 @@ save_dir = f'data/processed/field_{int(fc)}'
 if False:
     save_dir = join('/hb/scratch/edrichar/computed_results/', save_dir)
 
-stab_height = sec4.stable_cntr_height(sec4.lvls)
+total_lvls  = np.load('data/processed/inputed_spice.npz')['lvls']
+stab_spice = sec4.stable_spice(total_lvls)
+stab_lvls = sec4.stable_cntr_height(stab_spice)
 
-#stab_spice = sec4.stable_spice(sec4.lvls)
-stab_spice  = np.load('data/processed/inputed_spice.npz')['lvls']
-stab_lvls = sec4.stable_spice(stab_height)
+#stab_spice  = np.load('data/processed/inputed_spice.npz')['lvls']
 
 z_a, c_bg = sec4.compute_c_field(stab_lvls)
 z_a, c_tilt = sec4.compute_c_field(stab_spice)

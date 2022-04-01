@@ -18,9 +18,9 @@ stab_spice  = np.load('data/processed/inputed_spice.npz')['lvls']
 stab_lvls = sec4.stable_spice(stab_height)
 
 #prof_i = np.arange(250, 255)
-prof_i = np.array([250, 255])
+prof_i = np.array([248, 252])
 
-tl = np.load('data/processed/field_400/tl_section_240.npz')
+tl = np.load('data/processed/field_400/xmission_240.npz')
 proc_i = np.argmin(np.abs((tl['x_a'] / 1e3) - prof_i[:, None]), axis=-1)
 
 z_a = sec4.z_a
@@ -41,7 +41,8 @@ ax[2].plot(c_field[:, prof_i], z_a[plt_i])
 
 ax[3].plot(tl['c_tilt'][:, proc_i], proc_z_a)
 [a.set_prop_cycle(None) for a in ax]
-ax[3].plot(tl['c_spice'][:, proc_i], proc_z_a, '--')
+#ax[3].plot(tl['c_spice'][:, proc_i], proc_z_a, '--')
+#ax[3].plot(tl['c_bg'][:, proc_i], proc_z_a, '--')
 
 [a.set_prop_cycle(None) for a in ax]
 ax[0].plot([-10, 100], [sld_z[prof_i], sld_z[prof_i]], alpha=0.6)
@@ -57,40 +58,40 @@ ax[0].grid()
 ax[1].grid()
 ax[2].grid()
 
-ax[2].text(1499.5, sld_z[prof_i[0]] - 7, 'Sonic layer depth', bbox=bbox)
+#ax[2].text(1499.5, sld_z[prof_i[0]] - 7, 'Sonic layer depth', bbox=bbox)
 
 ax[0].set_xlim(25.0, 26.0)
 ax[1].set_xlim(1.1, 2.3)
-ax[2].set_xlim(1508, 1512.5)
+ax[2].set_xlim(1505, 1512.5)
 ax[2].set_ylim(150, 0)
-ax[3].set_xlim(1508, 1512.5)
+ax[3].set_xlim(1505, 1512.5)
 
 pos = ax[0].get_position()
 pos.x0 -= 0.02
 pos.x1 += 0.00
 pos.y1 += 0.06
-pos.y0 += 0.02
+pos.y0 += 0.04
 ax[0].set_position(pos)
 
 pos = ax[1].get_position()
 pos.x0 -= 0.00
 pos.x1 += 0.02
 pos.y1 += 0.06
-pos.y0 += 0.02
+pos.y0 += 0.04
 ax[1].set_position(pos)
 
 pos = ax[2].get_position()
 pos.x0 += 0.02
 pos.x1 += 0.04
 pos.y1 += 0.06
-pos.y0 += 0.02
+pos.y0 += 0.04
 ax[2].set_position(pos)
 
 pos = ax[3].get_position()
 pos.x0 += 0.04
 pos.x1 += 0.06
 pos.y1 += 0.06
-pos.y0 += 0.02
+pos.y0 += 0.04
 ax[3].set_position(pos)
 
 
