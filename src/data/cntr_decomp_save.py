@@ -13,7 +13,7 @@ import pyducts
 sec4 = Section()
 fc = 400
 save_dir = f'data/processed/field_{int(fc)}'
-if True:
+if False:
     save_dir = join('/hb/scratch/edrichar/computed_results/', save_dir)
 
 total_lvls  = np.load('data/processed/inputed_spice.npz')['lvls']
