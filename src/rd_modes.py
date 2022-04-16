@@ -209,7 +209,7 @@ class RDModes:
 
         if r_synth is None:
             r_synth = self.r_plot
-        else:
+        elif amps.shape[0] > 1:
             amp_ier = interp1d(self.r_plot, amps[:, :, 0].T,
                                bounds_error=False,
                                fill_value=(amps[0, :, 0], amps[-1, :, 0]))

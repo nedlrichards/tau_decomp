@@ -31,12 +31,12 @@ c_sld = np.ma.array(sec4.c, mask=sld_m)
 mean_c = np.mean(c_sld, axis=0).data
 sec_mean_c = mean_c.mean()
 
-fig, ax = plt.subplots(figsize=(6.5, 4))
+fig, ax = plt.subplots(figsize=(6.5, 3))
 cm = ax.pcolormesh(sec4.x_a / 1e3, z_a[plt_i], c_field - 1500,
                    cmap=plt.cm.coolwarm,
                    vmax = sec_mean_c + 6 - 1500, vmin = sec_mean_c - 6 - 1500)
 
-ax.text(1030, 155, "+ 1500.")
+ax.text(1000, 163, "+ 1500.")
 
 cb = fig.colorbar(cm)
 cb.set_label('Sound speed (m/s)')
@@ -47,17 +47,17 @@ ax.set_ylim(150, 0)
 ax.set_xlim(0, 970)
 
 pos = ax.get_position()
-pos.x1 += 0.10
+pos.x1 += 0.14
 pos.x0 -= 0.03
 pos.y1 += 0.06
-pos.y0 -= 0.00
+pos.y0 += 0.04
 ax.set_position(pos)
 
 pos = cb.ax.get_position()
-pos.x1 += 0.08
-pos.x0 += 0.08
+pos.x1 += 0.12
+pos.x0 += 0.12
 pos.y1 += 0.06
-pos.y0 -= 0.00
+pos.y0 += 0.04
 cb.ax.set_position(pos)
 
 fig.savefig(join(savedir, 'sound_speed_transcet.png'), dpi=300)

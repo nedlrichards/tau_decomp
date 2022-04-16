@@ -159,6 +159,7 @@ def plot_comp(section):
     plt.close(fig)
 
 #for sec in filter(lambda x: len(x.split('.')) == 2, os.listdir(f'data/processed/field_{int(fc)}')):
-sec = 'xmission_000.npz'
-plot_comp(sec)
+for sec in os.listdir('data/processed/field_400/'):
+#sec = 'xmission_000.npz'
+    plot_comp(sec)
 

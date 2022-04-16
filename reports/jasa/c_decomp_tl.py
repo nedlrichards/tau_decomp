@@ -17,8 +17,9 @@ cmap = copy(plt.cm.magma_r)
 cmap.set_under('w')
 
 fc = 400
-#section = 'tl_section_230.npz'
-section = 'xmission_230.npz'
+section = 'tl_section_230.npz'
+#section = 'xmission_230.npz'
+savedir = 'reports/jasa/figures'
 
 #def plot_comp(section):
 tl_data = np.load(os.path.join(f'data/processed/field_{int(fc)}', section))
@@ -149,8 +150,10 @@ pos.y0 += 0.03
 pos.y1 += 0.03
 axes[2, 1].set_position(pos)
 
-x_s = int(tl_data['xs']/1e3)
 
+fig.savefig(os.path.join(savedir, 'decomp_xmission.png'), dpi=300)
+
+#x_s = int(tl_data['xs']/1e3)
     #fig.savefig(f'figures/decomp_{int(fc)}/' + f'decomp_section_{x_s}km.png', dpi=300)
     #plt.close(fig)
 
