@@ -13,7 +13,7 @@ import pyducts
 sec4 = Section()
 fc = 400
 save_dir = f'data/processed/field_{int(fc)}'
-if False:
+if True:
     save_dir = join('/hb/scratch/edrichar/computed_results/', save_dir)
 
 total_lvls  = np.load('data/processed/inputed_spice.npz')['lvls']
@@ -109,8 +109,8 @@ def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
 
         tmp_dict['r_modes'] = (rd_modes.r_plot + tmp_dict['xs']) / 1e3
         tmp_dict['bg_mode_amps'] = rd_modes.couple_cn()
-        tmp_dict['psi_bg'] = rd_modes.psi_bg
-        tmp_dict['k_bg'] = rd_modes.k_bg
+        #tmp_dict['psi_bg'] = rd_modes.psi_bg
+        #tmp_dict['k_bg'] = rd_modes.k_bg
         #psi_k_bg = (rd_modes.psi_bg, rd_modes.k_bg)
         print('bg')
 
@@ -135,7 +135,5 @@ def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
     print(f'saved tl_section_{int(xs/1e3)}')
 
 run_func = lambda xs: save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True)
-run_func(690e3)
-1/0
-#list(map(run_func, x_start))
+list(map(run_func, x_start))
 #run_func(420e3)
