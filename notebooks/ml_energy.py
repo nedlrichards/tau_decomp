@@ -1,92 +1,72 @@
 import numpy as np
 from math import pi
-from os import listdir
-from os.path import join
 import matplotlib.pyplot as plt
-from copy import copy
-from scipy.interpolate import UnivariateSpline, interp1d
-from scipy.signal import find_peaks
 
 import os
 
-from src import RDModes, Config
+from src import MLEnergy, list_tl_files
 
-plt.ion()
-cmap = copy(plt.cm.magma_r)
-cmap.set_under('w')
-bbox = dict(boxstyle='round', fc='w')
+#plt.ion()
 
 fc = 400
-z_int = 150.
-cf = Config(fc)
+tl_files = list_tl_files(fc)
 
-run_number = 690
-tl_data = np.load(join(f'data/processed/field_{int(fc)}',
-                    f'tl_section_{run_number:03}.npz'))
-r_a = tl_data['rplot']
+def eng_partition(tl_path):
+    """Partition energy into mode sets"""
 
-def red_eng(field_type):
+    ml_eng = MLEnergy(fc, tl_path)
 
-    rd_modes = RDModes(tl_data['c_' + field_type], tl_data['x_a'], tl_data['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds, s=None)
+    en_ri, en_ri_0 = ml_eng.background_diffraction()
 
-    l_len = -2 * pi / np.diff(np.real(rd_modes.k_bg))
+    en_bg = ml_eng.field_ml_eng("bg")
+    en_tilt = ml_eng.field_ml_eng("tilt")
+    en_spice = ml_eng.field_ml_eng("spice")
+    en_total = ml_eng.field_ml_eng("total")
 
-    # reference energy
-    psi_s = np.exp(1j * pi / 4) / (rd_modes.rho0 * np.sqrt(8 * pi)) \
-            * rd_modes.psi_ier(rd_modes.z_src)
-    psi_s /= np.sqrt(rd_modes.k_bg)
-    psi_s *= 4 * pi
+    en_bg_1 = ml_eng.field_ml_eng("bg", indicies=ml_eng.set_1["bg"])
+    en_tilt_1 = ml_eng.field_ml_eng("tilt", indicies=ml_eng.set_1["tilt"])
+    en_spice_1 = ml_eng.field_ml_eng("spice", indicies=ml_eng.set_1["spice"])
+    en_total_1 = ml_eng.field_ml_eng("total", indicies=ml_eng.set_1["total"])
 
-    psi_m0 = psi_s.copy()
-    dom_modes = np.zeros(psi_m0.size, dtype=np.bool_)
-    am = np.argmax(l_len)
+    en_bg_2 = ml_eng.field_ml_eng("bg", indicies=ml_eng.set_2["bg"])
+    en_tilt_2 = ml_eng.field_ml_eng("tilt", indicies=ml_eng.set_2["tilt"])
+    en_spice_2 = ml_eng.field_ml_eng("spice", indicies=ml_eng.set_2["spice"])
+    en_total_2 = ml_eng.field_ml_eng("total", indicies=ml_eng.set_2["total"])
 
-    if l_len[am + 1] > 6e4:
-        am = [am, am + 1]
-    else:
-        am = [am]
+    ref_dB = 10 * np.log10(en_ri)
+    ref_dB_0 = 10 * np.log10(en_ri_0)
+    ref = ref_dB_0
 
-    am = np.hstack([[am[0] - 1], am, [am[-1] + 1]])
-    dom_modes[am] = True
-    psi_m0[~dom_modes] = 0
+    r_a = ml_eng.r_a + ml_eng.xs
+    #r_i = (ml_eng.r_a > 5e3) & (ml_eng.r_a < 45e3)
+    r_i = np.ones(ml_eng.r_a.size, dtype=np.bool_)
 
-    p_m0 = rd_modes.synthesize_pressure(psi_m0, z_a, r_synth=r_a)
-    en_ri_0 = np.sum(np.abs(p_m0) ** 2, axis=1) * dz
 
-    # reference ml energy
-    p_ri = rd_modes.synthesize_pressure(psi_s, z_a, r_synth=r_a)
-    en_ri = np.sum(np.abs(p_ri) ** 2, axis=1) * dz
+    fig, ax = plt.subplots()
+    #ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_bg) - ref)[r_i])
+    ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_tilt) - ref)[r_i])
+    ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_spice) - ref)[r_i])
+    ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_total) - ref)[r_i])
 
-    # reduced mode set estimate of energy
-    psi_rd = tl_data[field_type + '_mode_amps'].copy()
-    p_rd = rd_modes.synthesize_pressure(psi_rd, z_a, r_synth=r_a)
-    en_rd = np.sum(np.abs(p_rd) ** 2, axis=1) * dz
+    ax.set_prop_cycle(None)
 
-    psi_rd[:, ~dom_modes] = 0
-    p_rd = rd_modes.synthesize_pressure(psi_rd, z_a, r_synth=r_a)
-    en_rd_0 = np.sum(np.abs(p_rd) ** 2, axis=1) * dz
+    #ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_bg_1) - ref)[r_i], '--')
+    ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_tilt_1) - ref)[r_i], '--')
+    ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_spice_1) - ref)[r_i], '--')
+    ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_total_1) - ref)[r_i], '--')
 
-    return en_ri_0, en_ri, en_rd_0, en_rd
+    ax.set_prop_cycle(None)
+    #ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_bg_2) - ref)[r_i], ':')
+    ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_tilt_2) - ref)[r_i], ':')
+    ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_spice_2) - ref)[r_i], ':')
+    ax.plot(r_a[r_i] / 1e3, (10 * np.log10(en_total_2) - ref)[r_i], ':')
 
-field_type = 'total'
+    ax.grid()
+    ax.set_ylim(-20, 5)
+    #ax.set_xlim(ml_eng.xs / 1e3, ml_eng.xs / 1e3 + 55)
 
-# energy from pe
-xs = tl_data['xs']
-z_a = tl_data['zplot']
-r_a = tl_data['rplot'] - xs
-dz = (z_a[-1] - z_a[0]) / (z_a.size - 1)
-z_i = z_a < z_int
-en_pe = np.sum(np.abs(tl_data['p_' + field_type])[:, z_i] ** 2, axis=1) * dz
+    filename = 'red_amp_' + tl_path.split('.')[0].split('_')[-1] + '.png'
+    fig.savefig('reports/figures/red_amp/' + filename, dpi=300)
+    plt.close(fig)
 
-en_ri_0, _, _, _ = red_eng('bg')
-_, _, en_rd_0, en_rd = red_eng(field_type)
-
-ref_dB = 10 * np.log10(en_ri_0)
-rd_dB = 10 * np.log10(en_rd_0)
-pe_dB = 10 * np.log10(en_pe)
-
-fig, ax = plt.subplots()
-ax.plot((r_a + xs) / 1e3, rd_dB - ref_dB)
-ax.plot((r_a + xs) / 1e3, pe_dB - ref_dB)
-
+[eng_partition(tl) for tl in tl_files]

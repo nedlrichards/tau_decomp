@@ -5,13 +5,11 @@ import matplotlib.pyplot as plt
 from scipy.stats import linregress
 from os.path import join
 
-from src import Section, sonic_layer_depth, grid_field, Config
+from src import Section, sonic_layer_depth, grid_field
 
 plt.ion()
 bbox = dict(boxstyle='round', fc='w')
-savedir = 'reports/jasa/figures'
-
-cf = Config()
+savedir = 'reports/spice_po/figures'
 
 sec4 = Section()
 stab_height = sec4.stable_cntr_height(sec4.lvls)
@@ -33,12 +31,12 @@ c_sld = np.ma.array(sec4.c, mask=sld_m)
 mean_c = np.mean(c_sld, axis=0).data
 sec_mean_c = mean_c.mean()
 
-fig, ax = plt.subplots(figsize=(cf.jasa_2clm,  3))
+fig, ax = plt.subplots(figsize=(6.5, 3))
 cm = ax.pcolormesh(sec4.x_a / 1e3, z_a[plt_i], c_field - 1500,
                    cmap=plt.cm.coolwarm,
-                   vmax = sec_mean_c + 6 - 1500, vmin = sec_mean_c - 6 - 1500)
+                   vmax = sec_mean_c + 2 - 1500, vmin = sec_mean_c - 6 - 1500)
 
-ax.text(1000, 163, "+ 1500.")
+ax.text(310, 163, "+ 1500.")
 
 cb = fig.colorbar(cm)
 cb.set_label('Sound speed (m/s)')
@@ -46,7 +44,7 @@ ax.set_xlabel('Range (km)')
 ax.set_ylabel('Depth (m)')
 
 ax.set_ylim(150, 0)
-ax.set_xlim(0, 970)
+ax.set_xlim(0, 299)
 
 pos = ax.get_position()
 pos.x1 += 0.14
@@ -64,7 +62,7 @@ cb.ax.set_position(pos)
 
 fig.savefig(join(savedir, 'sound_speed_transcet.png'), dpi=300)
 
-ax.plot(sec4.x_a / 1e3, sld_z, '0.2', linewidth=1)
+ax.plot(sec4.x_a / 1e3, sld_z, 'k')
 
 fig.savefig(join(savedir, 'sound_speed_transcet_sld.png'), dpi=300)
 

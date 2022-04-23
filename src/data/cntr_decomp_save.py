@@ -115,19 +115,19 @@ def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
         print('bg')
 
         rd_modes = RDModes(tmp_dict['c_tilt'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,)
+                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,s=None)
                         #psi_k_bg=psi_k_bg)
         tmp_dict['tilt_mode_amps'] = rd_modes.couple_cn()
         print('tilt')
 
         rd_modes = RDModes(tmp_dict['c_spice'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,)
+                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,s=None)
                         #psi_k_bg=psi_k_bg)
         tmp_dict['spice_mode_amps'] = rd_modes.couple_cn()
         print('spice')
 
         rd_modes = RDModes(tmp_dict['c_total'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,)
+                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,s=None)
                         #psi_k_bg=psi_k_bg)
         tmp_dict['total_mode_amps'] = rd_modes.couple_cn()
 
@@ -135,5 +135,9 @@ def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
     print(f'saved tl_section_{int(xs/1e3)}')
 
 run_func = lambda xs: save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True)
+
+#for xs in np.arange(31, 90) * 1e4:
+    #run_func(xs)
+
 list(map(run_func, x_start))
 #run_func(420e3)

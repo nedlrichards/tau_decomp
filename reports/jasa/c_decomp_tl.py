@@ -18,7 +18,6 @@ cmap.set_under('w')
 
 fc = 400
 section = 'tl_section_230.npz'
-#section = 'xmission_230.npz'
 savedir = 'reports/jasa/figures'
 
 #def plot_comp(section):

@@ -1,83 +1,49 @@
 import numpy as np
 from math import pi
-from os import listdir
-from os.path import join
 import matplotlib.pyplot as plt
-from copy import copy
-from scipy.interpolate import UnivariateSpline, interp1d
-from scipy.signal import find_peaks
 
-import os
+import pickle
 
-from src import RDModes, Config
+from src import Config
 
 plt.ion()
-cmap = copy(plt.cm.magma_r)
-cmap.set_under('w')
-bbox = dict(boxstyle='round', fc='w')
 
 fc = 400
 z_int = 150.
 cf = Config(fc)
 
-def ml_energy(run_number):
-    tl_data = np.load(join(f'data/processed/field_{int(fc)}',
-                        f'tl_section_{run_number:03}.npz'))
-    r_a = tl_data['rplot']
-    rd_modes = RDModes(tl_data['c_bg'], tl_data['x_a'], tl_data['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds, s=None)
+bg_ri_eng = np.load('data/processed/bg_ri_eng.npz')
 
-    xs = tl_data['xs']
-    dr = (rd_modes.r_plot[-1] - rd_modes.r_plot[0]) / (rd_modes.r_plot.size - 1)
-    r_max = 60e3
-    num_r = int(np.ceil(r_max / dr))
-    r_a_modes = (np.arange(num_r) + 1) * dr
+diff_eng = bg_ri_eng['diff_eng']
+diff_eng_0 = bg_ri_eng['diff_eng_0']
+r_a = bg_ri_eng['r_a']
 
-    l_len = -2 * pi / np.diff(np.real(rd_modes.k_bg))
+eng_dB = 10 * np.log10(diff_eng * r_a).T
+eng_dB_0 = 10 * np.log10(diff_eng_0 * r_a).T
 
-    # reference energy
-    psi_s = np.exp(1j * pi / 4) / (rd_modes.rho0 * np.sqrt(8 * pi)) \
-            * rd_modes.psi_ier(rd_modes.z_src)
-    psi_s /= np.sqrt(rd_modes.k_bg)
-    psi_s *= 4 * pi
-
-    z_a = tl_data['zplot']
-    dz = (z_a[-1] - z_a[0]) / (z_a.size - 1)
-
-    p_ri = rd_modes.synthesize_pressure(psi_s, z_a, r_synth=r_a_modes)
-    en_ri = np.sum(np.abs(p_ri) ** 2, axis=1) * dz
-
-    psi_m0 = psi_s.copy()
-    # Mode 1s seem to get the general trend
-    #dom_modes = rd_modes.mode_number == 0
-    # Mode 1 and 2s nail the trend
-    dom_modes = (rd_modes.mode_number == 0) | (rd_modes.mode_number == 1)
-
-    # either 3 or 4 selected modes
-    dom_modes = np.zeros_like(dom_modes)
-    am = np.argmax(l_len)
-
-    if l_len[am + 1] > 6e4:
-        am = [am, am + 1]
-    else:
-        am = [am]
-
-    am = np.hstack([[am[0] - 1], am, [am[-1] + 1]])
-    dom_modes[am] = True
-    psi_m0[~dom_modes] = 0
-
-    p_m0 = rd_modes.synthesize_pressure(psi_m0, z_a, r_synth=r_a_modes)
-    en_m0 = np.sum(np.abs(p_m0) ** 2, axis=1) * dz
-    return r_a_modes, en_m0
-
-diff_eng = []
-for rn in np.arange(70) * 10:
-    r_a_modes, ml_eng = ml_energy(rn)
-    diff_eng.append(ml_eng)
-diff_eng = np.array(diff_eng)
-
-eng_dB = 10 * np.log10(diff_eng * r_a_modes).T
 fig, ax = plt.subplots()
-ax.plot(r_a_modes / 1e3, eng_dB, '0.4', linewidth=0.5)
+ax.plot(r_a / 1e3, eng_dB - eng_dB_0, '0.4', linewidth=0.5)
+ax.grid()
+
+fig, ax = plt.subplots()
+ax.plot(np.max(eng_dB_0, axis=0) - np.min(eng_dB_0, axis=0))
+ax.grid()
+
+with open("data/processed/bg_loop_length.pic", "rb") as f:
+    loop_length = pickle.load(f)
+
+m_ll = []
+m2_ll = []
+for ll in loop_length:
+    ll_sort = np.sort(ll)
+    m_ll.append(ll_sort[-1])
+    m2_ll.append(ll_sort[-2])
+
+m_ll = np.array(m_ll)
+m2_ll = np.array(m2_ll)
+
+fig, ax = plt.subplots()
+ax.plot(m_ll / 1e3)
+ax.set_ylim(40, 400)
 ax.grid()
 

@@ -1,4 +1,6 @@
 from numpy import array, linspace, concatenate
+from matplotlib.pyplot import cm
+from copy import copy
 
 class Config:
     """Common enviornment configuration"""
@@ -10,6 +12,16 @@ class Config:
         self.c_bounds = [1503, 1545]
         self.z_src = 40.
         self.z_int = 120.
+
+        # plot specifications
+        cmap = copy(cm.magma_r)
+        cmap.set_under('w')
+        self.cmap = cmap
+        self.bbox = dict(boxstyle="round", fc="w", ec="0.5", alpha=1.0)
+        self.jasa_1clm = 3.4  # 1 column figure width, in
+        self.jasa_2clm = 7.05  # 2 column figure width, in
+
+        self.field_types = ['bg', 'tilt', 'spice', 'total']
 
         self.lat = 30.
         self.lon = -140.
