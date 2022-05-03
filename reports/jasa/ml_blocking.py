@@ -11,7 +11,7 @@ fc = 400
 cf = Config(fc)
 
 bg_ri_eng = np.load('data/processed/bg_ri_eng.npz')
-diff_eng = bg_ri_eng['e_ri']
+bg_ri_eng = bg_ri_eng['e_ri']
 
 tl_list = list_tl_files(fc)
 
@@ -30,7 +30,7 @@ x_s = np.array(x_s)
 
 all_eng = np.concatenate(all_eng, axis=1)
 
-norm_eng = np.log10(all_eng) - np.log10(diff_eng)
+norm_eng = np.log10(all_eng) - np.log10(bg_ri_eng)
 norm_eng *= 10
 
 dr = (r_a[-1] - r_a[0]) / (r_a.size - 1)
@@ -56,7 +56,7 @@ ax.grid()
 ax.legend(['tilt', 'spice', 'observed'])
 
 pos = ax.get_position()
-pos.x0 += 0.05
+pos.x0 += 0.06
 pos.x1 += 0.05
 pos.y0 += 0.04
 pos.y1 += 0.06
@@ -110,3 +110,80 @@ pos.y1 += 0.06
 ax[2].set_position(pos)
 
 fig.savefig('reports/jasa/figures/ml_energy.png', dpi=300)
+
+def eng_stats(field_tl, indicies=None):
+    """Compute mean and variance for given field"""
+
+    if indicies is None:
+        eng_m = field_tl
+    else:
+        eng_m = field_tl[indicies, :]
+
+    e_mean = np.mean(eng_m, axis=0)
+    e_var = np.var(eng_m, axis=0)
+    return e_mean, np.sqrt(e_var)
+
+
+m_i = ~(max_int > 3)
+
+fig, ax = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(cf.jasa_2clm,3))
+
+tilt_m_0, tilt_r_0 = eng_stats(norm_eng[1, :, :])
+tilt_m, tilt_r = eng_stats(norm_eng[1, :, :], m_i[1, :])
+
+spice_m_0, spice_r_0 = eng_stats(norm_eng[2, :, :])
+spice_m, spice_r = eng_stats(norm_eng[2, :, :], m_i[2, :])
+
+total_m_0, total_r_0 = eng_stats(norm_eng[3, :, :])
+total_m, total_r = eng_stats(norm_eng[3, :, :], m_i[3, :])
+
+ax[0].plot(r_a / 1e3, total_m, linewidth=3, color='k')
+ax[0].plot(r_a / 1e3, tilt_m, linewidth=3, color='C0')
+ax[0].plot(r_a / 1e3, spice_m, linewidth=3, color='C1')
+
+ax[0].plot(r_a / 1e3, total_m + total_r, linewidth=2, color='k', linestyle='--')
+ax[0].plot(r_a / 1e3, total_m - total_r, linewidth=2, color='k', linestyle='--')
+
+ax[0].plot(r_a / 1e3, tilt_m + tilt_r, linewidth=2, color='C0', linestyle='--')
+ax[0].plot(r_a / 1e3, tilt_m - tilt_r, linewidth=2, color='C0', linestyle='--')
+
+ax[0].plot(r_a / 1e3, spice_m + spice_r, linewidth=2, color='C1', linestyle='--')
+ax[0].plot(r_a / 1e3, spice_m - spice_r, linewidth=2, color='C1', linestyle='--')
+
+ax[1].plot(r_a / 1e3, total_m_0, linewidth=3, color='k')
+ax[1].plot(r_a / 1e3, tilt_m_0, linewidth=3, color='C0')
+ax[1].plot(r_a / 1e3, spice_m_0, linewidth=3, color='C1')
+
+ax[1].plot(r_a / 1e3, total_m_0 + total_r_0, linewidth=2, color='k', linestyle='--')
+ax[1].plot(r_a / 1e3, total_m_0 - total_r_0, linewidth=2, color='k', linestyle='--')
+
+ax[1].plot(r_a / 1e3, tilt_m_0 + tilt_r_0, linewidth=2, color='C0', linestyle='--')
+ax[1].plot(r_a / 1e3, tilt_m_0 - tilt_r_0, linewidth=2, color='C0', linestyle='--')
+
+ax[1].plot(r_a / 1e3, spice_m_0 + spice_r_0, linewidth=2, color='C1', linestyle='--')
+ax[1].plot(r_a / 1e3, spice_m_0 - spice_r_0, linewidth=2, color='C1', linestyle='--')
+
+ax[0].text(7, 5, 'W/O blocking', bbox=cf.bbox)
+ax[1].text(7, 5, 'With blocking', bbox=cf.bbox)
+
+ax[0].set_xlim(5, 45)
+ax[0].set_ylim(-15, 5)
+
+ax[0].set_ylabel('Compensated ML energy (dB)')
+fig.supxlabel('Position, $x$ (km)')
+
+pos = ax[0].get_position()
+pos.x0 += 0.00
+pos.x1 += 0.06
+pos.y0 += 0.04
+pos.y1 += 0.06
+ax[0].set_position(pos)
+
+pos = ax[1].get_position()
+pos.x0 += 0.02
+pos.x1 += 0.06
+pos.y0 += 0.04
+pos.y1 += 0.06
+ax[1].set_position(pos)
+
+fig.savefig('reports/jasa/figures/ml_energy_stats.png', dpi=300)

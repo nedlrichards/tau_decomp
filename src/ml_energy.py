@@ -27,10 +27,10 @@ class MLEnergyPE:
 class MLEnergy:
     """Different methods to calculate or estimate mixed layer energy"""
 
-    def __init__(self, fc, run_file):
+    def __init__(self, run_file):
         """Calculate range independent modes"""
-        self.cf = Config(fc)
         self.tl_data = np.load(run_file)
+        self.cf = Config(self.tl_data['fc'][()])
 
         bg_modes = RDModes(self.tl_data['c_bg'],
                            self.tl_data['x_a'],

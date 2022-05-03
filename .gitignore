@@ -97,3 +97,16 @@ target/
 envs/
 .~lock.*
 *.odp
+
+# Latex
+*.bib
+*.ent
+*.bbl
+*.aux
+*.blg
+*.pdf
+
+# AT
+*.env
+*.mod
+*.prt

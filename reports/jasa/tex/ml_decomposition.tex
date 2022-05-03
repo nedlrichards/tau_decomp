@@ -1,0 +1,125 @@
+%	JASA LaTeX Sample File, Preprint Sample
+%
+%  Beginner Latex users should refer to their favorite online documentation
+%  here is one from the TeX Users Group 
+%	https://www.tug.org/twg/mactex/tutorials/ltxprimer-1.0.pdf
+%
+%  Useful FAQ from  https://journals.aps.org/revtex/revtex-faq
+% 
+
+%%%%%%% For Preprint
+%% For manuscript, 12pt, one column style. Preprint is required for submission.
+
+\documentclass[preprint]{JASA}
+
+%%%%% Preprint Options %%%%%
+%% The track changes option allows you to mark changes
+%% and will produce a list of changes, their line number
+%% and page number at the end of the article.
+ %\documentclass[preprint,trackchanges]{JASA}
+
+
+%% NumberedRefs is used for numbered bibliography and citations.
+%% Default is Author-Year style.
+%\documentclass[preprint,NumberedRefs]{JASA}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% For Reprint
+%% For appearance of finished article; 2 columns, 10 pt fonts
+%% Also used for estimating print page length.
+
+% \documentclass[reprint]{JASA}
+
+%%%%% Reprint Options %%%%%
+
+%% NumberedRefs is used for numbered bibliography and citations.
+%% Default is Author-Year style.
+% \documentclass[reprint,NumberedRefs]{JASA}
+
+%% TurnOnLineNumbers
+%% Make lines be numbered in reprint style:
+% \documentclass[reprint,TurnOnLineNumbers]{JASA}
+
+\begin{document}
+
+\title[Mixed layer tilt and spice]{North Pacific upper ocean spice and isopycnal tilt sound-speed structures and their effects on acoustic propagation}
+\author{Edward L. Richards}
+\email{edwardlrichards@gmail.com}
+\affiliation{Ocean Sciences, University of California Santa Cruz, Santa Cruz, California 95064, USA}
+\author{John A. Colosi}
+\affiliation{Department of Oceanography, Naval Postgraduate School, Monterey, California 93943, USA}
+
+\preprint{E. L. Richards, JASA}	%if you want want this message to appear in upper right corner of title page
+
+\date{\today}
+
+
+\begin{abstract}
+Put your abstract here. Abstracts are limited to 200 words for
+regular articles and 100 words for Letters to the Editor. Please no
+personal pronouns, also please do not use the words ``new'' and/or
+``novel'' in the abstract. An article usually includes an abstract, a
+concise summary of the work covered at length in the main body of the
+article.
+\end{abstract}
+
+\maketitle
+
+\section{\label{sec:intro} Introduction}
+
+The paper is organized as follows: Section~\ref{sec:decompostion} discusses the dynamic decompostion of the observed sound speed field into spice and tilt structures.
+
+\section{North Pacific transcet}
+The focus of this study is a 970 km SeaSoar transcet taken over 4 days in the North Pacific. The observation extended from the sea surface to 430 m depth, with an average cycle length of 1.28 km. The SeaSoar observations are gridded with 1 km horizontal and 0.5 m vertical resolution before analysis.
+
+A simple metric for mixed layer acoustic propagation viability is the sonic layer depth (SLD), defined as the maximum sound speed depth above the thermocline. The SLD increases over the transect, a linear regression fit begins at 78.5 m and has a slope of 2 m / 100 km. The density at 40 m depth decreases with range, with a linear regression intercept at 25.3 and a slope of -0.04 (kg/m3) / 100 km. The decrease in density means that as range increases, mixed layer isopycnals transition to positions with stable stratification below the mixed layer.
+
+\begin{figure}
+\includegraphics{../figures/sound_speed_transcet_sld.png}
+\caption{\label{fig:transcet}{Sound speed observation of the mixed layer, the sonic layer depth is black line.}}
+\end{figure}
+
+\section{\label{sec:decomposition}Spice and tilt decompostion}
+The sound speed variations in this observation are then decomposed into contributions from isopycnal tilt and along isopycnal spice. This decompostion mostly follows the method proposed for a similar SeaSoar transcet by \citet{dzieciuch2004}, although the spice in the mixed layer is treated differently here. The decomposition works by contouring the observed field into isopycnals, and then spatially lowpass filtering each isopycnal height and spiceto estimate an unperturbed background condition.
+
+\begin{figure}
+\includegraphics{../figures/sld_profile.png}
+    \caption{\label{fig:transcet}{(a) Potential density (b) spiciness and (c) sound speed measured at 249 km (blue curves) and 252 km (orange curves).}}
+\end{figure}
+
+Define the potential density isopycnal as $\sigma(x, z) = z^{-1}(x, \sigma)$. The isopycnals are discretized to $z_i(x; \sigma_i)$, with a fine $\sigma$ spacing in the mixed layer and a coarser spacing for deeper isopycnals. A linear interpolation is used to create a continous field between the isopycnal positions, written $\sigma=\mathcal{L}(x, z;\sigma_i, z_i(x))$. The $\tau$ field is defined with a similar linear interpolation with the position of the interpolator knots also set by the isopycnals, $\tau = \mathcal{L}(x, z; \tau_i(x), z_i(x)$.
+
+The dynamic decomposition uses spatial lowpass filtering to estimate stable isopycnal position and spice estimates, $\hat{z}_i(x; \sigma_i)$ and $\hat{\tau}_i(x, \sigma_i)$. A 50 km cutoff is used for both spatial filters. The lowpass positions are used in the linear interpolator to compute the background and spice fields, while the lowpass spice values are used to compute the background and tilt fields. This stratagy is most effective outside of the mixed layer, where the ocean is well stratified in regions of significant spice variation.
+
+Two challenges arrise in the mixed layer: (1) significant variations of $\tau$ occcur in positions with small $\sigma$ gradients, and (2) isopycnal locations vary rapidly and may not have a stable position. First, while the error of the interpolator for $\sigma$ can be made small by increasing the number of isopycnals, the position of isopycnals may not occur in regions of significant spice variation. While dynamic stability limits on N$^2$ prevent $\partial \sigma / \partial z$ from reaching 0, observations come close to the theoretical sampling limit where significant changes in $\partial \tau / \partial z$ occur at positions with very small changes in $\sigma$.
+
+Secondly, the lowpassed isopycnal positions are an estimate of where the isopycnals would be in the absence of isopycnal tilt from internal waves and eddies. While isopycnals are observed in the mixed layer, the position of isopycnals in the mixed layer are highly variable and yield physically implausable lowpassed positions. In keeping with the well mixed assumption, this study does not attempt to estimate a stable position for isopycnals in the mixed layer.
+
+A linear superposition model is used instead of a linear interpolator for the estimate of $\tau$ in the mixed layer. In essence, all observed $\tau$ variablitly that is not explained by the tilt field is included in the spice field, without any warping to account for the mean isopycnal levels. The linear superposition model is written
+\begin{equation}
+    \tau_{observed} = \tau_{bg} + \delta \tau_{tilt} + \delta \tau_{spice},
+\end{equation}
+with the spice field is defined as $\tau_{bg} + \delta \tau_{spice}$, and similarly for tilt. The value of $\delta \tau_{spice}$ is be estimated by subtracting $\tau_{tilt}$ from $\tau_{observed}$.
+
+\begin{figure}
+\includegraphics{../figures/rms_profile.png}
+    \caption{\label{fig:c_rms}{The mean sound speed profile and the RMS profile of the deviation from the background field of the measured, tilt and spice fields. }}
+\end{figure}
+
+\begin{figure}
+\includegraphics{../figures/decomp_xmission.png}
+    \caption{\label{fig:decomp_x}{Left panels is sound speed field, right panel is acoustic pressure. The rows are the (a) tilt, (b) spice and (c) total fields.}}
+\end{figure}
+
+\section{\label{sec:propagation}Acoustic propagation with separated spice and tilt}
+\begin{figure}
+\includegraphics{../figures/decomp_xmission.png}
+    \caption{\label{fig:decomp_x}{Left panels is sound speed field, right panel is acoustic pressure. The rows are the (a) tilt, (b) spice and (c) total fields.}}
+\end{figure}
+
+
+\bibliographystyle{jasanum2}
+\bibliography{eRichards_master}
+
+\end{document}

@@ -36,11 +36,15 @@ ax[1].plot([0, 1e4], [z_sld, z_sld], '0.4')
 
 ax[0].grid()
 ax[1].grid()
-ax[1].legend(loc=3, bbox_to_anchor=(0.48, 0.60))
+ax[1].set_xlim(0, 2)
 
+ax[1].legend(loc=3, bbox_to_anchor=(0.48, 0.60))
 ax[0].set_ylim(150, 0)
 ax[0].set_xlim(1498, 1512)
-ax[1].set_xlim(0, 2)
+
+#ax[0].set_ylim(350, 0)
+#ax[1].legend()
+#ax[0].set_xlim(1490, 1512)
 
 fig.supylabel('Depth (m)')
 ax[0].set_xlabel('Sound speed (m/s)')
