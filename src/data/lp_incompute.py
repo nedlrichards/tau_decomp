@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
     save_dict = {'filled_lvls':filled_spice, 'stable_spice':stab_spice,
                  'stable_lvls':stab_lvls, 'c_bg':c_bg, 'c_tilt':c_tilt,
-                 'c_spice':c_spice, 'c_total':c_total, 'x_a':sec4.x_a,
-                 'z_a':z_a}
+                 'c_spice':c_spice, 'c_total':c_total, 'sig':sec4.sig_lvl,
+                 'x_a':sec4.x_a, 'z_a':z_a}
 
     np.savez('data/processed/inputed_decomp.npz', **save_dict)
