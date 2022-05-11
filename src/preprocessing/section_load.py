@@ -48,9 +48,9 @@ class Section:
         self.theta = stab_data['CT_stab']
 
         self.sigma0 = gsw.density.sigma0(self.salinity, self.theta)
-        self.local_spice = LocalSpice()
-        self.spice = self.local_spice.xy_gamma.copy()
-        #self.spice = gsw.spiciness0(self.salinity, self.theta)
+        #self.local_spice = LocalSpice()
+        #self.spice = self.local_spice.xy_gamma.copy()
+        self.spice = gsw.spiciness0(self.salinity, self.theta)
         self.c = gsw.sound_speed(self.salinity, self.theta,
                                  self.pressure[:, None])
 

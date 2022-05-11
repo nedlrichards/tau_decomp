@@ -4,7 +4,7 @@ from scipy.io import loadmat
 from scipy.interpolate import interp1d
 import gsw
 
-from src import Config
+from src import Config, SA_CT_from_sigma0_spiciness0
 
 class Field:
     """Generate spice, gamma, in local coordinates"""
@@ -87,7 +87,7 @@ class Field:
                       * np.sqrt((self.alpha * ct_diff) ** 2
                                 + (self.beta * sa_diff) ** 2)
 
-    def sa_ct_from_sig_gamma(self, sig, gamma, pressure, sig_err=1e-4):
+    def c_from_sig_gamma(self, sig, gamma, pressure, sig_err=1e-4):
         """Compute sound speed from inverse of spice transformation"""
         sig = np.asarray(sig)
         gamma = np.asarray(gamma)
@@ -95,13 +95,14 @@ class Field:
         xy_mean = self.sig_mean_ier(sig)
         xy_pert = np.zeros_like(xy_mean)
 
-        d_gamma = gamma
-        dt_test = self._adjust_spice(d_gamma)
+        # start with estimate based on spice gradients
+        dt_test = self._adjust_spice(gamma)
         xy_pert += dt_test
 
-        curr_err = sig_err + 1  # always run one loop
-        while np.abs(curr_err) > sig_err:
+        curr_err = np.full_like(sig, sig_err + 1)  # always run one loop
 
+        # run untill worst value below minimum error
+        while np.any(np.abs(curr_err) > sig_err):
             # refine estimate of sigma
             sa_ct_est = xy_mean + xy_pert
             sig_est = gsw.rho(sa_ct_est[0], sa_ct_est[1], self.p_ref)
@@ -120,10 +121,12 @@ class Field:
             g_est = np.sign(xy_pert[1]) * np.sqrt((self.alpha * xy_pert[1]) ** 2
                                                 + (self.beta * xy_pert[0]) ** 2)
             sa_ct_est = xy_mean + xy_pert
-            sig_est = gsw.rho(sa_ct_est[0], sa_ct_est[1], self.p_ref)
+            sig_est = gsw.rho(*sa_ct_est, self.p_ref)
             curr_err = sig_est - sig
 
-        return g_est, sig_est
+        c = gsw.sound_speed(*sa_ct_est, pressure)
+
+        return c
 
     def _adjust_spice(self, d_gamma):
         """Adjust from current xy by d_gamma"""

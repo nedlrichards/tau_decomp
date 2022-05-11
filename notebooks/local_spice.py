@@ -5,17 +5,15 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 from src import Config
-from src import LocalSpice
+from src import Field
 
 plt.ion()
 cf = Config()
-spice = LocalSpice()
+field = Field()
 
-gamma = 1
-sig = spice.sig_ref + 1
-press = spice.p_ref
+gamma = field.xy_gamma
+sig = field.xy_sig
+press = field.press[:, None]
 
-g_est, sig_est = spice.c_from_sig_gamma(sig, gamma, press)
-
-print((sig_est - sig) / gamma)
-print((gamma - g_est) / gamma)
+c = field.c_from_sig_gamma(sig, gamma, press)
+print(np.max(np.abs(c - field.xy_c)))

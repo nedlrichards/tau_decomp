@@ -23,9 +23,9 @@ x_a = inputed['x_a']
 #max_x = 250
 #call_lvls = [39, 48, 54]
 
-min_x = 200
+min_x = 175
 max_x = 400
-call_lvls = [38, 42, 46]
+call_lvls = [38, 42, 48]
 
 #min_x = 200
 #max_x = 400
@@ -39,7 +39,7 @@ z_off = [-8, -3, 0]
 for zo, c0, lbl_i in zip(z_off, cc0, call_lvls):
     plt_height = stable_lvls[0, lbl_i, :]
     plt_inds = plt_height > 1e-5
-    ax[0].plot(x_a[plt_inds] / 1e3, plt_height[plt_inds], color='#be0119')
+    ax[0].plot(x_a[plt_inds] / 1e3, plt_height[plt_inds], color='#be0119', alpha=0.6)
     ax[0].plot(x_a / 1e3, lvls[0, lbl_i, :].T, color=c0)
 
     ax[0].text(max_x + 3., lvls[0, lbl_i, x_i][-1] + zo,
@@ -74,12 +74,14 @@ for zo, c0, lbl_i in zip(z_off, cc0, call_lvls):
     ax[1].text(max_x + 3., lvls[1, lbl_i, x_i][-1] + zo,
                f'{sigma[lbl_i]:.2f}', color=c0, va='center')
 
+ax[1].plot(x_a / 1e3, stable_lvls[1, call_lvls[-1], :],color='#be0119', alpha=0.6)
+
 ax[1].set_xlabel('Range (km)')
 
 ax[1].set_ylim(1.45, 2.15)
 
-ax[0].text(min_x + 7., 5, '(a)', bbox=cf.bbox)
-ax[1].text(min_x + 7., 2.10, '(b)', bbox=cf.bbox)
+ax[0].text(min_x - 25., 5, '(a)', bbox=cf.bbox)
+ax[1].text(min_x - 25., 2.10, '(b)', bbox=cf.bbox)
 
 
 ax[0].spines["right"].set_visible(False)
