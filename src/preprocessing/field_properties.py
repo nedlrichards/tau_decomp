@@ -6,7 +6,7 @@ import gsw
 
 from src import Config
 
-class LocalSpice:
+class Field:
     """Generate spice, gamma, in local coordinates"""
 
     def __init__(self, p_ref=100., num_sigma=300):
@@ -24,10 +24,12 @@ class LocalSpice:
         self.p_ref = p_ref
         z_ref_i = np.argmin(np.abs(self.p_ref - self.press))
 
+        # transform to TEOS-10
         self.xy_sa = gsw.SA_from_SP(grid_data['sali'], self.press[:, None],
                                  self.cf.lon, self.cf.lat)
-        self.xy_ct = grid_data['thetai']
+        self.xy_ct = gsw.CT_from_pt(self.xy_sa, grid_data['thetai'])
 
+        # derived quantities
         self.xy_sig = gsw.rho(self.xy_sa, self.xy_ct, p_ref)
         self.xy_c = gsw.sound_speed(self.xy_sa, self.xy_ct, self.press[:, None])
         self.r_prof = np.broadcast_to(self.x_a, self.xy_sa.shape)
@@ -63,8 +65,7 @@ class LocalSpice:
         self.sig_ref = np.mean(self.xy_sig[z_ref_i, :])
         self.sa_ct_ref = self.sig_mean_ier(self.sig_ref)
 
-        self.beta, self.alpha, _  = gsw.rho_first_derivatives(self.sa_ct_ref[0],
-                                                              self.sa_ct_ref[1],
+        self.beta, self.alpha, _  = gsw.rho_first_derivatives(*self.sa_ct_ref,
                                                               self.p_ref)
 
         ct_diff = self.xsig_ct - self.sig_mean_ct[:, None]
@@ -86,10 +87,11 @@ class LocalSpice:
                       * np.sqrt((self.alpha * ct_diff) ** 2
                                 + (self.beta * sa_diff) ** 2)
 
-    def c_from_sig_gamma(self, sig, gamma, pressure, sig_err=1e-4):
+    def sa_ct_from_sig_gamma(self, sig, gamma, pressure, sig_err=1e-4):
         """Compute sound speed from inverse of spice transformation"""
         sig = np.asarray(sig)
         gamma = np.asarray(gamma)
+
         xy_mean = self.sig_mean_ier(sig)
         xy_pert = np.zeros_like(xy_mean)
 
@@ -135,9 +137,7 @@ class LocalSpice:
 
     def _adjust_sigma(self, sa_ct, d_sig):
         """refine estimate of sigma"""
-        beta, alpha, _  = gsw.rho_first_derivatives(sa_ct[0],
-                                                    sa_ct[1],
-                                                    self.p_ref)
+        beta, alpha, _  = gsw.rho_first_derivatives(*sa_ct, self.p_ref)
 
         theta = np.arctan2(-alpha, beta)
         d_ct = (d_sig / np.abs(alpha) / 2)

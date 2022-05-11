@@ -8,6 +8,6 @@ from .ml_energy import MLEnergy, MLEnergyPE
 from .preprocessing.contour_manipulation import not_nan_segments, join_spice, reduce_field
 from .preprocessing.prof_decomposition import lvl_profiles, grid_field
 from .preprocessing.climatology import append_climatolgy
-from .preprocessing.local_spice import LocalSpice
+from .preprocessing.field_properties import Field
 
 from .preprocessing.section_load import Section

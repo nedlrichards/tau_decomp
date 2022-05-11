@@ -10,6 +10,7 @@ from src import SA_CT_from_sigma0_spiciness0
 from src import lvl_profiles, grid_field
 from src import append_climatolgy
 from src import Config
+from src import Field
 
 transect_file = 'data/raw/section4_fields.mat'
 stable_transcet_file = 'data/raw/stable_prof.mat'
@@ -21,6 +22,9 @@ class Section:
     def __init__(self):
         """Load data and compute commonly used quanitities"""
 
+        self.cf = Config()
+        self.field = Field()
+
         transect = loadmat(transect_file)
         stab_data = loadmat(stable_transcet_file)
 
@@ -28,7 +32,6 @@ class Section:
         self.x_a *= 1e3
         self.dx = (self.x_a[-1] - self.x_a[0]) / (self.x_a.size - 1)
         self.z_a = np.squeeze(transect['zz'])
-        self.cf = Config()
 
         self.pressure = gsw.p_from_z(-self.z_a, self.cf.lat)
 
@@ -45,7 +48,9 @@ class Section:
         self.theta = stab_data['CT_stab']
 
         self.sigma0 = gsw.density.sigma0(self.salinity, self.theta)
-        self.spice = gsw.spiciness0(self.salinity, self.theta)
+        self.local_spice = LocalSpice()
+        self.spice = self.local_spice.xy_gamma.copy()
+        #self.spice = gsw.spiciness0(self.salinity, self.theta)
         self.c = gsw.sound_speed(self.salinity, self.theta,
                                  self.pressure[:, None])
 
@@ -184,6 +189,7 @@ class Section:
     def compute_c_field(self, lvls, append_clim=True):
         """Create gridded sound speed field with climatolgy appended"""
         sigma, tau = grid_field(self.z_a, lvls, self.sig_lvl)
+        1/0
         sa, ct = SA_CT_from_sigma0_spiciness0(sigma, tau)
 
         if append_clim:

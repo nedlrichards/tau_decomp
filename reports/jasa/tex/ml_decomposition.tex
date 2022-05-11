@@ -85,25 +85,34 @@ A simple metric for mixed layer acoustic propagation viability is the sonic laye
 \section{\label{sec:decomposition}Spice and tilt decompostion}
 A dynamic decomposition is used to separated the observed sound speed variations into contributions from: (1) isopycnal tilt and (2) density compensated sound speed variation proportional to ocean spice. This decompostion follows the method proposed for a similar SeaSoar transcet by \citet{dzieciuch2004}, although spice in the mixed layer is treated differently here. The decomposition is first described for the case where spice is observed in a stratfied ocean, which is applied below the mixed layer. A modified treatment of spice in the margninally stratified mixed layer is discussed next. Finally, the decomposed sound speed fields are compared.
 
-The dynamic decomposition begins by defining a field quanitity, \emph{e.g.} $\sigma$, by interpolation of values along isopycnals. The isopycnal positions are defined as $\sigma(x, z) = z^{-1}(x, \sigma)$, and are discretized as $z_i(x; \sigma_i)$. A two dimensional linear interpolation is defined for $\sigma$ as
+The dynamic decomposition begins by defining a field quanitity, $\sigma$ is used as a simple demonstration, by interpolation of values along isopycnals. This definition allows for the generation of new fields that vary only in isopycnal positions, used to correct for dynamic isopycnal tilt. The isopycnal positions are defined as $\sigma(x, z) = z^{-1}(x, \sigma)$, and are discretized as $z_i(x; \sigma_i)$. A two dimensional linear interpolation is defined for $\sigma$ as
 \begin{equation}
     \sigma\approx\mathcal{L}(x, y; \sigma_i, z_i).
     \label{eq:lin_intr}
 \end{equation}
-The positions $z_i(x, \sigma)$ are then modeled as the superposition of finescale dynamics and a stable background position $\bar{z}(x, \sigma)$. The background density field, $\bar{\sigma}$, defined by substituting $\bar{z}(x, \sigma)$ for $z(x, \sigma)$ in Eq. \eqref{eq:lin_intr}. The estimate of $\bar{\sigma}$ is then a vertically streched version of the observed field that corrects for finescale changes to the background position.
+The positions $z_i(x, \sigma)$ are then modeled as the superposition of finescale dynamics and a stable background position $\bar{z}(x, \sigma)$. The background density field, $\bar{\sigma}$, is defined by substituting $\bar{z}(x, \sigma)$ for $z(x, \sigma)$ in Eq. \eqref{eq:lin_intr}. The estimate of $\bar{\sigma}$ is then a vertically streched version of the observed $\sigma$ field without finescale tilt dynamics.
 
-with a fine $\sigma_i$ spacing in the mixed layer and a coarser spacing for deeper isopycnals. The position of three isopycnals are shown in Fig. \ref{fig:cntrs}(a). Isopycnals below the mixed layer, \emph{i.e.} $\sigma = 25.29$ kg/m$^3$, are continous in $x$ and vary relativly slowly in $z$. Isopycnals above the mixed layer, \emph{i.e.} $\sigma = 25.21$ kg/m$^3$, may outcrop, causing discontinuities in $x$, and vary rapidly in $z$. The large scale trend of decreasing mixed layer density with $x$ means that isopycnals transistion from unstable mixed layer isopycnals to stable isopycnals below the mixed layer.
+The same isopycnal surfaces can be used to define and then compute estimates of other field quantites without finescale isopycnal tilt. While sound speed is ultimately the field quantity of interest, the variable of ocean spice is used here instead,
+\begin{equation}
+    \gamma=\textrm{sgn}(T-\bar{T}) \sqrt{\alpha^2(T-\bar{T})^2 +\beta^2(S-\bar{S})^2},
+    \label{eq:gamma}
+\end{equation}
+where $\bar{T}$ and $\bar{S}$ are the isopycnal mean of temperature and salinity, and a representative value is used for $\alpha=\partial \sigma / \partial T$ and $\beta=\partial \sigma / \partial S$. $\gamma$ is potential variable that represents linearized distance in density units along (T, S) isopycnals. Following Eq. \eqref{eq:lin_intr}, the interpolated $\gamma$ field is defined
+\begin{equation}
+    \gamma\approx\mathcal{L}(x, z; \gamma_i(x), z_i),
+    \label{eq:lin_intr_gamma}
+\end{equation}
+where the range dependent $\gamma_i(x)$ is measured along the $\sigma_i$ isopycnal. The accuracy of Eq. \eqref{eq:lin_intr_gamma} depends on the ocean statification through the positions of the isopycnals, $z_i$, and has the smallest error in well stratified regions.
 
+The $\gamma$ field in Eq. \eqref{eq:lin_intr_gamma} allows for the additional definition of a stable background value along isopycnals, $\hat{\gamma}_i(x)$. This leads to four possible $\gamma$ fields with the combination of paramter pairs: the stable field, ($\bar{\gamma}_i$, $\bar{z}_i$); the tilt field, ($\bar{gamma_i}$, $z_i$); the spice field, ($gamma_i$, $\bar{z}_i$); and the total field, ($gamma_i$, $z_i$).
+
+when $\gamma$ has significant non-linear variation over depths with little $\sigma$ gradient. In well stratified areas of the ocean, however, Eq. \ref{eq:lin_intr} and Eq. \ref{eq:lin_intr_gamma} are accurate and suffienct to compute soundspeed with the inverse of Eq. \eqref{eq:gamma}, $c(S, T, p)=c(\gamma^{-1}, p)$.
 
  The background isopycnal position is estimated with a spatial lowpass filter. This study uses a cutoff of 50 km for the estimate of $\bar{z}(x, \sigma)$, which is shown as red lines in Fig. \ref{fig:cntrs}(a). The estimated position where the isopycnal moves below the mixed layer is used as the start of the $\bar{z}(x, \sigma)$ estimate, apparent around 250 km for $\sigma=25.25$ (kg/m$^3$). A conservative estimate is made for the start position of $\bar{z}(x, \sigma)$ is made by eye. In contrast, isopycnals in the mixed layer are considered unstable and no attempt is made to estimate a background isopycnal position.
 
- Pysical processes that cause isopycnals to tilt, such as internal waves and eddies, move the isopycnal positions vertically but leave the sound speed along an isopycnal unchanged.
-
-Pysical processes that stir and mix parcels of water along an isopycnal lead instead to variation of sound speed along the isopycnal but are assumed here not to effect the isopycnal position. The ocean spice variable $\gamma$, which has units of density (kg/m$^3$), is used instead of sound speed in this decomposition because it is a measure of tracer stirring along an isopycnal \cite{veronis1972properties}. Ocean spice is proportional to temperature, salinity, as well as sound speed with the additional constraint of constant pressure. The $\gamma$ field is defined with a similar linear interpolation, where the position of the interpolator knots also set by the isopycnals, $\gamma = \mathcal{L}\big(x, z; \gamma_i(x), z_i(x)\big)$. Finally, a function c($\sigma, \ \gamma$) is constructed using the inverse of $(\sigma, \ \gamma) = f(s, t)$ and TEOS-10.
+with a fine $\sigma_i$ spacing in the mixed layer and a coarser spacing for deeper isopycnals. The position of three isopycnals are shown in Fig. \ref{fig:cntrs}(a). Isopycnals below the mixed layer, \emph{i.e.} $\sigma = 25.29$ kg/m$^3$, are continous in $x$ and vary relativly slowly in $z$. Isopycnals above the mixed layer, \emph{i.e.} $\sigma = 25.21$ kg/m$^3$, may outcrop, causing discontinuities in $x$, and vary rapidly in $z$. The large scale trend of decreasing mixed layer density with $x$ means that isopycnals transistion from unstable mixed layer isopycnals to stable isopycnals below the mixed layer.
 
 The dynamic decomposition uses spatial lowpass filtering with a 50 km cutoff to estimate stable isopycnal position and spice estimates, $\hat{z}_i(x; \sigma_i)$ and $\hat{\tau}_i(x, \sigma_i)$. The background and spice fields use $\hat{z}_i(x; \sigma_i)$ in place of $z_i(x; \sigma_i)$ in the interpolation of both $\sigma$ and $\tau$. The background and tilt fields use $\hat{\tau}_i(x; \sigma_i)$ in place of $\tau_i(x; \sigma_i)$ in the interpolation of $\tau$.
-
-
 
  Internal waves largely followed the Garret-Munk spectrum up to the mixed layer, while eddies were the largest contribution to tilt in the mixed layer.  The decomposition works by contouring the observed field into isopycnals, and then spatially lowpass filtering isopycnal position and spice along the isopycnal to estimate an unperturbed background condition.
 
