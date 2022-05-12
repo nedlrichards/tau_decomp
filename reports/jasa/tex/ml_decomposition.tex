@@ -1,45 +1,4 @@
-%	JASA LaTeX Sample File, Preprint Sample
-%
-%  Beginner Latex users should refer to their favorite online documentation
-%  here is one from the TeX Users Group 
-%	https://www.tug.org/twg/mactex/tutorials/ltxprimer-1.0.pdf
-%
-%  Useful FAQ from  https://journals.aps.org/revtex/revtex-faq
-% 
-
-%%%%%%% For Preprint
-%% For manuscript, 12pt, one column style. Preprint is required for submission.
-
 \documentclass[preprint,NumberedRefs]{JASA}
-
-%%%%% Preprint Options %%%%%
-%% The track changes option allows you to mark changes
-%% and will produce a list of changes, their line number
-%% and page number at the end of the article.
- %\documentclass[preprint,trackchanges]{JASA}
-
-
-%% NumberedRefs is used for numbered bibliography and citations.
-%% Default is Author-Year style.
-%\documentclass[preprint,NumberedRefs]{JASA}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%% For Reprint
-%% For appearance of finished article; 2 columns, 10 pt fonts
-%% Also used for estimating print page length.
-
-% \documentclass[reprint]{JASA}
-
-%%%%% Reprint Options %%%%%
-
-%% NumberedRefs is used for numbered bibliography and citations.
-%% Default is Author-Year style.
-% \documentclass[reprint,NumberedRefs]{JASA}
-
-%% TurnOnLineNumbers
-%% Make lines be numbered in reprint style:
-% \documentclass[reprint,TurnOnLineNumbers]{JASA}
 
 \begin{document}
 
@@ -96,9 +55,10 @@ A dynamic decomposition is used to separated the observed sound speed variations
 
 \begin{figure}
 \includegraphics{../figures/sig_tau_interp.png}
-    \caption{\label{fig:cntrs}{Contours of: (a) Potential density (b) spiciness. The low pass estimate of stable isopycnal position is shown in red in panel (a). The full record shows isopycnals shoal and enter the mixed layer with decreasing range. The stable isopycnal estimate ends at the first location the isopycnal enters the mixed layer. Intermittant outcropping of the isopycnal are apperent as gaps in the $\sigma=25.21$ (kg/m$^3$) isopycnal position. The spice record has been imputed at the isopycnal outcroppings to form a continous series.}}
+    \caption{\label{fig:cntrs}{Contours of: (a) Potential density (b) spiciness. The lowpass estimate of each stable isopycnal position is shown in red in panel (a). The lowpass estimate of the $\sigma=25.31$ (kg/m$^3$) is shown in (b), to represent common processing of all isopycnals. The full record shows isopycnals shoal and enter the mixed layer with decreasing range. The stable isopycnal estimate ends at the first location the isopycnal enters the mixed layer. Intermittant outcropping of the isopycnal are apperent as gaps in the $\sigma=25.21$ (kg/m$^3$) isopycnal position. The spice record has been imputed at the isopycnal outcroppings to form a continous series.}}
 \end{figure}
 
+\subsection{Staratified ocean decomposition}
 The dynamic decomposition begins by defining a field quanitity, $\sigma$ is used as a simple demonstration, by interpolation of values along isopycnals. This definition allows for the generation of new fields that vary only in isopycnal positions, used to correct for dynamic isopycnal tilt. The isopycnal positions are defined as $\sigma(x, z) = z^{-1}(x, \sigma)$, and are discretized as $z_i(x; \sigma_i)$. A two dimensional linear interpolation is defined for $\sigma$ as
 \begin{equation}
     \sigma\approx\mathcal{L}(x, y; \sigma_i, z_i).
@@ -113,20 +73,20 @@ The same isopycnal surfaces can be used to define and then compute estimates of 
 \end{equation}
 where the range dependent $\gamma_i(x)$ is measured along the $\sigma_i$ isopycnal. The accuracy of Eq. \eqref{eq:lin_intr_gamma} depends on the ocean statification through the positions of the isopycnals, $z_i$, and has the smallest error in well stratified regions.
 
-The sound speed can be computed from ($\sigma$, $\gamma$) through an inverse of Eq. \eqref{eq:gamma}. The inverse function is implimented in a few iterations. The values of $\alpha_0$ and $\beta_0$ used for Eq. \eqref{eq:gamma} define an angle $\theta_0$ of maximum $d\gamma$. The angle of 0 $d\sigma$ is not constant however, and is determined by the local values of ($\alpha$, $\beta$) as $\theta - \pi / 2$. The linearized estimate of ($\sigma$, $\gamma$) is first estimated from $\theta_0$. Then, iteratively, the value of $\sigma$ is first refined with the local value of $\theta$ and then gamma is corrected with $\theta_0$.
-
-The $\gamma$ field in Eq. \eqref{eq:lin_intr_gamma} allows for the additional definition of a stable background value along isopycnals, $\hat{\gamma}_i(x)$. This leads to four possible $\gamma$ fields with the combination of paramter pairs: the stable field, ($\bar{\gamma}_i$, $\bar{z}_i$); the tilt field, ($\bar{gamma_i}$, $z_i$); the spice field, ($gamma_i$, $\bar{z}_i$); and the total field, ($gamma_i$, $z_i$).
-
 when $\gamma$ has significant non-linear variation over depths with little $\sigma$ gradient. In well stratified areas of the ocean, however, Eq. \ref{eq:lin_intr} and Eq. \ref{eq:lin_intr_gamma} are accurate and suffienct to compute soundspeed with the inverse of Eq. \eqref{eq:gamma}, $c(S, T, p)=c(\gamma^{-1}, p)$.
 
- The background isopycnal position is estimated with a spatial lowpass filter. This study uses a cutoff of 50 km for the estimate of $\bar{z}(x, \sigma)$, which is shown as red lines in Fig. \ref{fig:cntrs}(a). The estimated position where the isopycnal moves below the mixed layer is used as the start of the $\bar{z}(x, \sigma)$ estimate, apparent around 250 km for $\sigma=25.25$ (kg/m$^3$). A conservative estimate is made for the start position of $\bar{z}(x, \sigma)$ is made by eye. In contrast, isopycnals in the mixed layer are considered unstable and no attempt is made to estimate a background isopycnal position.
+The background isopycnal position is estimated with a spatial lowpass filter. This study uses a cutoff of 50 km for the estimate of $\bar{z}(x, \sigma)$, which is shown as red lines in Fig. \ref{fig:cntrs}(a). The estimated position where the isopycnal moves below the mixed layer is used as the start of the $\bar{z}(x, \sigma)$ estimate, apparent around 250 km for $\sigma=25.25$ (kg/m$^3$). A conservative estimate is made for the start position of $\bar{z}(x, \sigma)$ is made by eye. In contrast, isopycnals in the mixed layer are considered unstable and no attempt is made to estimate a background isopycnal position.
 
 with a fine $\sigma_i$ spacing in the mixed layer and a coarser spacing for deeper isopycnals. The position of three isopycnals are shown in Fig. \ref{fig:cntrs}(a). Isopycnals below the mixed layer, \emph{i.e.} $\sigma = 25.29$ kg/m$^3$, are continous in $x$ and vary relativly slowly in $z$. Isopycnals above the mixed layer, \emph{i.e.} $\sigma = 25.21$ kg/m$^3$, may outcrop, causing discontinuities in $x$, and vary rapidly in $z$. The large scale trend of decreasing mixed layer density with $x$ means that isopycnals transistion from unstable mixed layer isopycnals to stable isopycnals below the mixed layer.
 
-The dynamic decomposition uses spatial lowpass filtering with a 50 km cutoff to estimate stable isopycnal position and spice estimates, $\hat{z}_i(x; \sigma_i)$ and $\hat{\tau}_i(x, \sigma_i)$. The background and spice fields use $\hat{z}_i(x; \sigma_i)$ in place of $z_i(x; \sigma_i)$ in the interpolation of both $\sigma$ and $\tau$. The background and tilt fields use $\hat{\tau}_i(x; \sigma_i)$ in place of $\tau_i(x; \sigma_i)$ in the interpolation of $\tau$.
+The $\gamma$ field in Eq. \eqref{eq:lin_intr_gamma} allows for the additional definition of a stable background value along isopycnals, $\hat{\gamma}_i(x)$. This leads to four possible $\gamma$ fields with the combination of paramter pairs: the stable field, ($\bar{\gamma}_i$, $\bar{z}_i$); the tilt field, ($\bar{gamma_i}$, $z_i$); the spice field, ($gamma_i$, $\bar{z}_i$); and the total field, ($gamma_i$, $z_i$).
 
- Internal waves largely followed the Garret-Munk spectrum up to the mixed layer, while eddies were the largest contribution to tilt in the mixed layer.  The decomposition works by contouring the observed field into isopycnals, and then spatially lowpass filtering isopycnal position and spice along the isopycnal to estimate an unperturbed background condition.
+The sound speed can be computed from ($\sigma$, $\gamma$) through an inverse of Eq. \eqref{eq:gamma}. The inverse function is implimented in a few iterations. The values of $\alpha_0$ and $\beta_0$ used for Eq. \eqref{eq:gamma} define an angle $\theta_0$ of maximum $d\gamma$. The angle of 0 $d\sigma$ is not constant however, and is determined by the local values of ($\alpha$, $\beta$) as $\theta - \pi / 2$. The linearized estimate of ($\sigma$, $\gamma$) is first estimated from $\theta_0$. Then, iteratively, the value of $\sigma$ is first refined with the local value of $\theta$ and then gamma is corrected with $\theta_0$.
 
+
+Internal waves largely followed the Garret-Munk spectrum up to the mixed layer, while eddies were the largest contribution to tilt in the mixed layer.  The decomposition works by contouring the observed field into isopycnals, and then spatially lowpass filtering isopycnal position and spice along the isopycnal to estimate an unperturbed background condition.
+
+\subsection{Mixed layer decomposition}
 Estimation of the stable isopycnal position and spice with a lowpass filter is most effective outside of the mixed layer where the ocean is well stratified in regions of significant spice variation. Two challenges in the dynamic decomposition of \citep{dzieciuch2004} arrise in the mixed layer: (1) significant variations of $\tau$ occcur in positions with small $\sigma$ gradients, and (2) isopycnal locations vary rapidly and may not have a stable position. The $\sigma$ field is only effected by (2), which is treated by truncating $\hat{z}_i(x; \sigma_i)$ when an isopycnal shows significant surface excursions or outcropping. The last stable isopycanl density is then extrapolated to the surface, resulting in a completely mixed layer. However, both challenges are significant to the construction of $\gamma$ since this interpolation depends on the isopycnal positions.
 
 These challenges are particularly relevant the construction of the $\gamma$ fields, the 

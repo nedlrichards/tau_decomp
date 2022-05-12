@@ -29,31 +29,32 @@ z_a_decomp = decomp_fields['z_a']
 c_tau_d = decomp_fields['c_spice']
 z_i = z_a_decomp < 300
 
-fig, ax = plt.subplots(2, 1, sharex=True, sharey=True, figsize=(cf.jasa_1clm, 4))
-cm = ax[0].pcolormesh(x_a / 1e3, z_a, c_rud, cmap=plt.cm.coolwarm,
-                      vmin=1497, vmax=1510)
-cm = ax[1].pcolormesh(x_a / 1e3, z_a_decomp[z_i], c_tau_d[z_i, :],
-                      cmap=plt.cm.coolwarm, vmin=1497, vmax=1510)
+c_diff = c_tau_d - c_rud
 
-ax[0].set_xlim(0, 199)
-ax[0].set_ylim(150, 0)
-fig.supylabel('Depth (m)')
-ax[1].set_xlabel('Position, $x$ (km)')
+fig, ax = plt.subplots(figsize=(cf.jasa_1clm, 2.5))
+cm = ax.pcolormesh(x_a / 1e3, z_a, c_diff, cmap=plt.cm.PuOr,
+                      vmin=-2.5, vmax=2.5)
+cb = fig.colorbar(cm)
+cb.set_label('$\Delta /, c$ (m/s)')
 
-pos = ax[0].get_position()
-pos.x0 += 0.07
-pos.x1 += 0.07
-pos.y0 += 0.04
+ax.set_xlim(175, 400)
+ax.set_ylim(150, 0)
+ax.set_ylabel('Depth (m)')
+ax.set_xlabel('Position, $x$ (km)')
+
+pos = ax.get_position()
+pos.x0 += 0.06
+pos.x1 += 0.03
+pos.y0 += 0.08
 pos.y1 += 0.09
-ax[0].set_position(pos)
+ax.set_position(pos)
 
-
-pos = ax[1].get_position()
-pos.x0 += 0.07
-pos.x1 += 0.07
-pos.y0 += 0.02
-pos.y1 += 0.07
-ax[1].set_position(pos)
+pos = cb.ax.get_position()
+pos.x0 += 0.03
+pos.x1 += 0.03
+pos.y0 += 0.08
+pos.y1 += 0.09
+cb.ax.set_position(pos)
 
 fig.savefig('reports/jasa/figures/sound_speed_comp.png', dpi=300)
 
