@@ -1,4 +1,7 @@
 %% Create a stable version of gridded data for contour processing
+diary progress
+addpath(genpath('~/gsw'))
+
 load('../../data/raw/section4_fields.mat')
 x_a = xx;
 z_a = zz;
