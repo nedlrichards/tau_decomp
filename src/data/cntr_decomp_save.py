@@ -11,33 +11,19 @@ from src import RDModes, Config
 import pyducts
 
 sec4 = Section()
-fc = 400
+#fc = 400
+fc = 1e3
 save_dir = f'data/processed/field_{int(fc)}'
 if False:
     save_dir = join('/hb/scratch/edrichar/computed_results/', save_dir)
 
-total_lvls  = np.load('data/processed/inputed_spice.npz')['lvls']
-stab_spice = sec4.stable_spice(total_lvls)
-stab_lvls = sec4.stable_cntr_height(stab_spice)
-
-#stab_spice  = np.load('data/processed/inputed_spice.npz')['lvls']
-
-z_a, c_bg = sec4.compute_c_field(stab_lvls)
-z_a, c_tilt = sec4.compute_c_field(stab_spice)
-
-sig_bg, tau_bg = grid_field(sec4.z_a, stab_lvls, sec4.sig_lvl)
-sig_tilt, tau_tilt = grid_field(sec4.z_a, stab_spice, sec4.sig_lvl)
-
-delta_spice = sec4.spice - tau_tilt
-tau_spice = tau_bg + delta_spice
-
-sa_spice, ct_spice = SA_CT_from_sigma0_spiciness0(sig_bg, tau_spice)
-
-_, _, _, c_spice = append_climatolgy(sec4.z_a, ct_spice, sa_spice,
-                                     sec4.z_clim, sec4.temp_clim, sec4.sal_clim)
-
-_, _, _, c_total = append_climatolgy(sec4.z_a, sec4.theta, sec4.salinity,
-                                     sec4.z_clim, sec4.temp_clim, sec4.sal_clim)
+fields = np.load('data/processed/decomposed_fields.npz')
+x_a = fields['x_a']
+z_a = fields['z_a']
+c_bg = fields['c_bg']
+c_spice = fields['c_spice']
+c_tilt = fields['c_tilt']
+c_total = fields['c_total']
 
 sld_z, _ = sonic_layer_depth(z_a, c_bg, z_max=150)
 sld_m = z_a[:, None] > sld_z
@@ -134,7 +120,8 @@ def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
     np.savez(join(save_dir, f'tl_section_{int(xs/1e3):03d}'), **tmp_dict)
     print(f'saved tl_section_{int(xs/1e3)}')
 
-run_func = lambda xs: save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True)
+#run_func = lambda xs: save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True)
+run_func = lambda xs: save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=False)
 
 #for xs in np.arange(31, 90) * 1e4:
     #run_func(xs)

@@ -7,11 +7,11 @@ from src import MLEnergyPE, MLEnergy, Config, list_tl_files
 
 plt.ion()
 
-fc = 400
+fc = 1e3
 cf = Config(fc)
 
 bg_ri_eng = np.load('data/processed/bg_ri_eng.npz')
-bg_ri_eng = bg_ri_eng['e_ri']
+bg_ri_eng = bg_ri_eng[f'e_ri_{int(fc)}']
 
 tl_list = list_tl_files(fc)
 

@@ -6,17 +6,18 @@ from scipy.stats import linregress
 
 from src import MLEnergyPE, MLEnergy, Config, list_tl_files, sonic_layer_depth
 
+plt.style.use('elr')
 plt.ion()
 
-fc = 400
+fc = 1000
 cf = Config(fc)
 
 bg_ri_eng = np.load('data/processed/bg_ri_eng.npz', allow_pickle=True)
 x_s = bg_ri_eng['x_s']
 r_a = bg_ri_eng['r_a']
-bg_ri_eng_0 = bg_ri_eng['e_ri_0']
-loop_len = bg_ri_eng['loop_len']
-bg_ri_eng = bg_ri_eng['e_ri']
+bg_ri_eng_0 = bg_ri_eng[f'e_ri_0_{int(fc)}']
+loop_len = bg_ri_eng[f'loop_len_{int(fc)}']
+bg_ri_eng = bg_ri_eng[f'e_ri_{int(fc)}']
 
 tl_list = list_tl_files(fc)
 # mode 1 cutoff frequency
@@ -118,18 +119,3 @@ pos.y1 += 0.06
 ax.set_position(pos)
 
 fig.savefig('reports/jasa/figures/bg_eng_loss.png', dpi=300)
-
-"""
-fig, ax = plt.subplots()
-ax.plot(r_a / 1e3, (norm_eng - norm_eng_0).T, 'C0', linewidth=0.5)
-
-ax.set_xlabel('Range (km)')
-ax.set_ylabel('Background excess energy loss (dB)')
-
-pos = ax.get_position()
-pos.x0 += 0.04
-pos.x1 += 0.06
-pos.y0 += 0.04
-pos.y1 += 0.06
-ax.set_position(pos)
-"""

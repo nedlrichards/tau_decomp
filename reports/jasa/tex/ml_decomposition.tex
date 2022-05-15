@@ -111,11 +111,36 @@ with the spice field is defined as $\tau_{bg} + \Delta \tau_{spice}$, and simila
     \caption{\label{fig:c_rms}{The mean sound speed profile and the RMS profile of the deviation from the background field of the measured, tilt and spice fields. }}
 \end{figure}
 
-\section{\label{sec:propagation}Acoustic propagation with separated spice and tilt}
+\section{\label{sec:propagation}Mixed layer acoustic propagation}
+Numerical simulation is used to predict the effect of the separated tilt and spice soundspeed structures on acoustic porpagation in the mixed layer duct. The focus is on mixed layer duct propgation over a single convergence zone length, Fig. \ref{fig:decomp_xmission}. The acoustic energy in the mixed layer duct propagation is dominated by a few modes a few kilometers from the source up to the first converegence zone. Outside of the source region acoustic energy in the mixed layer is monotonically decreasing.
+
 \begin{figure}
 \includegraphics{../figures/decomp_xmission.png}
     \caption{\label{fig:decomp_x}{Left panels is sound speed field, right panel is acoustic pressure. The rows are the (a) tilt, (b) spice and (c) total fields.}}
 \end{figure}
+
+Since mixed layer propagation is largly vertically uniform, the integrated mixed layer energy is used as a primary quanitification of the duct.
+\begin{equation}
+    \textrm{Loss}_{\textrm{ML}} = -10 \, \textrm{log}_{10} \left( \frac{1}{D} \int^{D}_0 p p^* \,  dz \right)
+\end{equation}
+An simple fixed depth integral to $D=$120 m is used here instead of tracking the bottom of the mixed layer, since energy does not persist in the strong downward refracting region below the mixed layer.
+
+\subsection{Background field propgation}
+The background field is very similar to the range independent field predicted by the mean sound speed profile.
+\begin{figure}
+\includegraphics{../figures/mode_shapes.png}
+    \caption{\label{fig:c_rms}{The mean sound speed profile and the RMS profile of the deviation from the background field of the measured, tilt and spice fields.}}
+\end{figure}
+
+
+\subsection{Mixed layer blocking features}
+The mixed layer duct simulations is dominated by local features and propagation that is effected similarly over the entire propagation range. The most significant local features observed cause significant loss in the mixed layer duct, and are called blocking features. These are defined as regions where the acoustic energy falls by 3 dB over less than 5 km, relative to the background field. Blocking features are much more significant at 400 Hz than 1 kHz.
+
+\subsection{Propgation without blocking features}
+
+For regions without blocking features, the range dependence of the soundspeed field can slowly change the acousitc energy significantly, sometimes accumulating the total effect of a blocking feature. The range depence can also act to delay diffraction loss from the channel.
+
+The acoustic energy in the mixed layer at low frequencies is significantly affected by diffraction, which is apparent in range independent simulations. In this study, the background field is used to compute the diffraction effect in a slowly range dependent envionrment.
 
 \bibliographystyle{jasanum2}
 \bibliography{eRichards_master}
