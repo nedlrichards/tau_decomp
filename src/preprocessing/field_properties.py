@@ -12,11 +12,11 @@ class Field:
     def __init__(self, p_ref=100., num_sigma=300):
         """Standard processing"""
         self.cf = Config()
-        grid_data = loadmat('data/raw/section4_fields.mat')
+        grid_data = loadmat('data/processed/stablized_field.mat')
         self.num_sigma = num_sigma
 
-        self.x_a = np.squeeze(grid_data['xx'])
-        self.z_a = np.squeeze(grid_data['zz'])
+        self.x_a = np.squeeze(grid_data['x_a'])
+        self.z_a = np.squeeze(grid_data['z_a'])
 
         self.press = gsw.p_from_z(-self.z_a, self.cf.lat)
 
@@ -24,10 +24,9 @@ class Field:
         self.p_ref = p_ref
         z_ref_i = np.argmin(np.abs(self.p_ref - self.press))
 
-        # transform to TEOS-10
-        self.xy_sa = gsw.SA_from_SP(grid_data['sali'], self.press[:, None],
-                                 self.cf.lon, self.cf.lat)
-        self.xy_ct = gsw.CT_from_pt(self.xy_sa, grid_data['thetai'])
+        # load stabalized properties
+        self.xy_sa = grid_data['SA_stable']
+        self.xy_ct = grid_data['CT_stable']
 
         # derived quantities
         self.xy_sig = gsw.rho(self.xy_sa, self.xy_ct, p_ref)
@@ -65,15 +64,15 @@ class Field:
         self.sig_ref = np.mean(self.xy_sig[z_ref_i, :])
         self.sa_ct_ref = self.sig_mean_ier(self.sig_ref)
 
-        self.beta, self.alpha, _  = gsw.rho_first_derivatives(*self.sa_ct_ref,
+        self.beta_0, self.alpha_0, _  = gsw.rho_first_derivatives(*self.sa_ct_ref,
                                                               self.p_ref)
 
         ct_diff = self.xsig_ct - self.sig_mean_ct[:, None]
         sa_diff = self.xsig_sa - self.sig_mean_sa[:, None]
 
         self.xsig_gamma = np.sign(ct_diff) \
-                        * np.sqrt((self.alpha * ct_diff) ** 2
-                                  + (self.beta * sa_diff) ** 2)
+                        * np.sqrt((self.alpha_0 * ct_diff) ** 2
+                                  + (self.beta_0 * sa_diff) ** 2)
 
         # spice in xy space
         xy_mean = self.sig_mean_ier(self.xy_sig)
@@ -84,8 +83,8 @@ class Field:
         sa_diff = self.xy_sa - self.xy_mean_sa
 
         self.xy_gamma = np.sign(ct_diff) \
-                      * np.sqrt((self.alpha * ct_diff) ** 2
-                                + (self.beta * sa_diff) ** 2)
+                      * np.sqrt((self.alpha_0 * ct_diff) ** 2
+                                + (self.beta_0 * sa_diff) ** 2)
 
     def c_from_sig_gamma(self, sig, gamma, pressure, sig_err=1e-4):
         """Compute sound speed from inverse of spice transformation"""
@@ -111,15 +110,15 @@ class Field:
             xy_pert += dt_test
 
             # recompute spice
-            g_est = np.sign(xy_pert[1]) * np.sqrt((self.alpha * xy_pert[1]) ** 2
-                                                 + (self.beta * xy_pert[0]) ** 2)
+            g_est = np.sign(xy_pert[1]) * np.sqrt((self.alpha_0 * xy_pert[1]) ** 2
+                                                 + (self.beta_0 * xy_pert[0]) ** 2)
             d_gamma = gamma - g_est
             dt_test = self._adjust_spice(d_gamma)
             xy_pert += dt_test
 
             # final estimate of sigma, gamma
-            g_est = np.sign(xy_pert[1]) * np.sqrt((self.alpha * xy_pert[1]) ** 2
-                                                + (self.beta * xy_pert[0]) ** 2)
+            g_est = np.sign(xy_pert[1]) * np.sqrt((self.alpha_0 * xy_pert[1]) ** 2
+                                                + (self.beta_0 * xy_pert[0]) ** 2)
             sa_ct_est = xy_mean + xy_pert
             sig_est = gsw.rho(*sa_ct_est, self.p_ref)
             curr_err = sig_est - sig
@@ -132,9 +131,9 @@ class Field:
         """Adjust from current xy by d_gamma"""
 
         # linearized guess at properties
-        theta = np.arctan2(-self.alpha, self.beta)
-        d_ct = (d_gamma / np.abs(self.alpha) / np.sqrt(2))
-        d_sa = (d_gamma / np.abs(self.alpha) / np.sqrt(2)) * np.tan(theta)
+        theta = np.arctan2(-self.alpha_0, self.beta_0)
+        d_ct = (d_gamma / np.abs(self.alpha_0) / np.sqrt(2))
+        d_sa = (d_gamma / np.abs(self.alpha_0) / np.sqrt(2)) * np.tan(theta)
 
         return np.array([d_sa, d_ct])
 
