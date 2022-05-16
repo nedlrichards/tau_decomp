@@ -16,7 +16,7 @@ transect_file = 'data/raw/section4_fields.mat'
 stable_transcet_file = 'data/raw/stable_prof.mat'
 climatology_file = 'data/raw/NPAL05prosGDEM.mat'
 
-class Section:
+class SectionLvls:
     """Common data used in section processing"""
 
     def __init__(self):
@@ -28,33 +28,37 @@ class Section:
         transect = loadmat(transect_file)
         stab_data = loadmat(stable_transcet_file)
 
-        self.x_a = np.squeeze(np.asarray(transect['xx'], dtype=np.float64))
-        self.x_a *= 1e3
+        self.x_a = self.field.x_a
         self.dx = (self.x_a[-1] - self.x_a[0]) / (self.x_a.size - 1)
-        self.z_a = np.squeeze(transect['zz'])
+        self.z_a = self.field.z_a
+        self.dz = (self.z_a[-1] - self.z_a[0]) / (self.z_a.size - 1)
 
-        self.pressure = gsw.p_from_z(-self.z_a, self.cf.lat)
+        self.pressure = self.field.press
+        self.salinity = self.field.xy_sa
+        self.theta = self.field.xy_ct
 
         self.lp_cutoff = 50e3
 
         filter_keywords = dict(rp=0.1, rs=40, btype='lowpass', ftype='cheby2',
                                fs=1 / self.dx)
 
+        # pole, zero filter allows for "Gust" treatment of edges
         self.sos_lp = iirfilter(17, 1 / self.lp_cutoff, output='sos',
                                 **filter_keywords)
-        self.b_lp, self.a_lp = iirfilter(7, 1 / self.lp_cutoff, **filter_keywords)
+        self.b_lp, self.a_lp = iirfilter(7, 1 / self.lp_cutoff,
+                                         **filter_keywords)
 
-        self.salinity = stab_data['SA_stab']
-        self.theta = stab_data['CT_stab']
 
-        self.sigma0 = gsw.density.sigma0(self.salinity, self.theta)
+        self.sigma = self.field.xy_sig
         #self.local_spice = LocalSpice()
         #self.spice = self.local_spice.xy_gamma.copy()
         self.spice = gsw.spiciness0(self.salinity, self.theta)
-        self.c = gsw.sound_speed(self.salinity, self.theta,
-                                 self.pressure[:, None])
+        self.c = self.field.xy_c
 
-        self.lvls = lvl_profiles(self.z_a, self.sigma0, self.spice, self.cf.sig_lvl)
+        self.lvls = lvl_profiles(self.z_a,
+                                 self.sigma,
+                                 self.spice,
+                                 self.cf.sig_lvl)
 
         # last few contours should not have any nans
         cntr_nan = np.any(np.isnan(self.lvls[0, :, :]), axis=1)

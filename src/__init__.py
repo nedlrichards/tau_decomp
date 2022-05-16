@@ -10,4 +10,4 @@ from .preprocessing.prof_decomposition import lvl_profiles, grid_field
 from .preprocessing.climatology import append_climatolgy
 from .preprocessing.field_properties import Field
 
-from .preprocessing.section_load import Section
+from .preprocessing.section_load import SectionLvls

@@ -1,7 +1,7 @@
 """Incompute spice assuming spice change follows lower, complete, isopycnals"""
 
 import numpy as np
-from src import Section
+from src import SectionLvls
 
 def patch_spice(patch_index, filled_spice):
     """patch up spice series from denser isopycnals"""
@@ -46,7 +46,7 @@ def patch_spice(patch_index, filled_spice):
 if __name__ == '__main__':
     from src import grid_field, SA_CT_from_sigma0_spiciness0, append_climatolgy
 
-    sec4 = Section()
+    sec4 = SectionLvls()
     start_spice = sec4.lvls.copy()
     filled_spice = sec4.lvls.copy()
 
@@ -78,7 +78,7 @@ if __name__ == '__main__':
                                          sec4.z_clim, sec4.temp_clim, sec4.sal_clim)
 
     save_dict = {'filled_lvls':filled_spice, 'stable_spice':stab_spice,
-                 'stable_lvls':stab_lvls, 'c_bg':c_bg, 'c_tilt':c_tilt,
+                 'stable_spice_lvls':stab_lvls, 'c_bg':c_bg, 'c_tilt':c_tilt,
                  'c_spice':c_spice, 'c_total':c_total, 'sig':sec4.sig_lvl,
                  'x_a':sec4.x_a, 'z_a':z_a}
 

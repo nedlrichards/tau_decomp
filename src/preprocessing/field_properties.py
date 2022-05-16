@@ -15,8 +15,8 @@ class Field:
         grid_data = loadmat('data/processed/stablized_field.mat')
         self.num_sigma = num_sigma
 
-        self.x_a = np.squeeze(grid_data['x_a'])
-        self.z_a = np.squeeze(grid_data['z_a'])
+        self.x_a = np.squeeze(grid_data['x_a']).astype(np.float64) * 1e3
+        self.z_a = np.squeeze(grid_data['z_a']).astype(np.float64)
 
         self.press = gsw.p_from_z(-self.z_a, self.cf.lat)
 
@@ -25,11 +25,11 @@ class Field:
         z_ref_i = np.argmin(np.abs(self.p_ref - self.press))
 
         # load stabalized properties
-        self.xy_sa = grid_data['SA_stable']
-        self.xy_ct = grid_data['CT_stable']
+        self.xy_sa = (grid_data['SA_stable'].T).astype(np.float64)
+        self.xy_ct = (grid_data['CT_stable'].T).astype(np.float64)
 
         # derived quantities
-        self.xy_sig = gsw.rho(self.xy_sa, self.xy_ct, p_ref)
+        self.xy_sig = gsw.rho(self.xy_sa, self.xy_ct, p_ref) - 1000
         self.xy_c = gsw.sound_speed(self.xy_sa, self.xy_ct, self.press[:, None])
         self.r_prof = np.broadcast_to(self.x_a, self.xy_sa.shape)
 
@@ -54,7 +54,10 @@ class Field:
         # compute mean temperature, compute salinity from temperature
         mean_props = np.nanmean(props_xsig, axis=-1)
         self.sig_mean_ct = mean_props[1]
-        self.sig_mean_sa = gsw.SA_from_rho(self.sig_bins, mean_props[1], p_ref)
+        self.sig_mean_sa = gsw.SA_from_rho(self.sig_bins + 1000,
+                                           mean_props[1],
+                                           p_ref)
+
         mean_props = np.array([self.sig_mean_sa, self.sig_mean_ct])
 
         # interpoloator of mean properties from sigma
@@ -64,8 +67,8 @@ class Field:
         self.sig_ref = np.mean(self.xy_sig[z_ref_i, :])
         self.sa_ct_ref = self.sig_mean_ier(self.sig_ref)
 
-        self.beta_0, self.alpha_0, _  = gsw.rho_first_derivatives(*self.sa_ct_ref,
-                                                              self.p_ref)
+        der = gsw.rho_first_derivatives(*self.sa_ct_ref, self.p_ref)
+        self.beta_0, self.alpha_0, _  = der
 
         ct_diff = self.xsig_ct - self.sig_mean_ct[:, None]
         sa_diff = self.xsig_sa - self.sig_mean_sa[:, None]
