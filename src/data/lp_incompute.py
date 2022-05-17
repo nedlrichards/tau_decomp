@@ -2,6 +2,7 @@
 
 import numpy as np
 from src import SectionLvls
+from src import grid_field, append_climatolgy
 
 def patch_spice(patch_index, filled_spice):
     """patch up spice series from denser isopycnals"""
@@ -43,43 +44,44 @@ def patch_spice(patch_index, filled_spice):
 
     return patched_lvl
 
-if __name__ == '__main__':
-    from src import grid_field, SA_CT_from_sigma0_spiciness0, append_climatolgy
+sec4 = SectionLvls()
+start_spice = sec4.lvls.copy()
+filled_spice = sec4.lvls.copy()
 
-    sec4 = SectionLvls()
-    start_spice = sec4.lvls.copy()
-    filled_spice = sec4.lvls.copy()
+last_full_i = np.argmax(~np.any(np.isnan(start_spice[1, :, :]), axis=1))
+all_nan_i = np.argmax(~np.all(np.isnan(start_spice[1, :, :]), axis=1))
 
-    last_full_i = np.argmax(~np.any(np.isnan(start_spice[1, :, :]), axis=1))
-    all_nan_i = np.argmax(~np.all(np.isnan(start_spice[1, :, :]), axis=1))
+for i in range(last_full_i, all_nan_i, -1):
+    patched_lvl = patch_spice(i, filled_spice)
+    filled_spice[1, i, :] = patched_lvl
 
-    for i in range(last_full_i, all_nan_i, -1):
-        patched_lvl = patch_spice(i, filled_spice)
-        filled_spice[1, i, :] = patched_lvl
+stable_spice = sec4.stable_spice(filled_spice)
+stable_lvls = sec4.stable_cntr_height(filled_spice)
+stable_spice_lvls = sec4.stable_cntr_height(stable_spice)
 
-    stab_spice = sec4.stable_spice(filled_spice)
-    stab_lvls = sec4.stable_cntr_height(stab_spice)
+z_a, c_bg = sec4.compute_c_field(stable_spice_lvls)
+z_a, c_tilt = sec4.compute_c_field(stable_spice)
+z_a, c_spice_dmr = sec4.compute_c_field(stable_lvls)
 
-    z_a, c_bg = sec4.compute_c_field(stab_lvls)
-    z_a, c_tilt = sec4.compute_c_field(stab_spice)
+sig_bg, tau_bg = grid_field(sec4.z_a, stable_spice_lvls, sec4.sig_lvl)
+sig_tilt, tau_tilt = grid_field(sec4.z_a, stable_spice, sec4.sig_lvl)
 
-    sig_bg, tau_bg = grid_field(sec4.z_a, stab_lvls, sec4.sig_lvl)
-    sig_tilt, tau_tilt = grid_field(sec4.z_a, stab_spice, sec4.sig_lvl)
+delta_spice = sec4.spice - tau_tilt
+tau_spice = tau_bg + delta_spice
 
-    delta_spice = sec4.spice - tau_tilt
-    tau_spice = tau_bg + delta_spice
+sa_spice, ct_spice = sec4.field.sa_ct_from_sig_gamma(sig_bg, tau_spice)
 
-    sa_spice, ct_spice = SA_CT_from_sigma0_spiciness0(sig_bg, tau_spice)
+_, _, _, c_spice = append_climatolgy(sec4.z_a, ct_spice, sa_spice,
+                                        sec4.z_clim, sec4.temp_clim, sec4.sal_clim)
 
-    _, _, _, c_spice = append_climatolgy(sec4.z_a, ct_spice, sa_spice,
-                                         sec4.z_clim, sec4.temp_clim, sec4.sal_clim)
+_, _, _, c_total = append_climatolgy(sec4.z_a, sec4.theta, sec4.salinity,
+                                        sec4.z_clim, sec4.temp_clim, sec4.sal_clim)
 
-    _, _, _, c_total = append_climatolgy(sec4.z_a, sec4.theta, sec4.salinity,
-                                         sec4.z_clim, sec4.temp_clim, sec4.sal_clim)
+save_dict = {'filled_lvls':filled_spice, 'stable_spice':stable_spice,
+                'stable_spice_lvls':stable_spice_lvls,
+                'stable_lvls':stable_lvls, 'c_bg':c_bg, 'c_tilt':c_tilt,
+                'c_spice':c_spice, 'c_spice_dmr':c_spice_dmr,
+                'c_total':c_total, 'sig':sec4.sig_lvl,
+                'x_a':sec4.x_a, 'z_a':z_a}
 
-    save_dict = {'filled_lvls':filled_spice, 'stable_spice':stab_spice,
-                 'stable_spice_lvls':stab_lvls, 'c_bg':c_bg, 'c_tilt':c_tilt,
-                 'c_spice':c_spice, 'c_total':c_total, 'sig':sec4.sig_lvl,
-                 'x_a':sec4.x_a, 'z_a':z_a}
-
-    np.savez('data/processed/inputed_decomp.npz', **save_dict)
+np.savez('data/processed/inputed_decomp.npz', **save_dict)

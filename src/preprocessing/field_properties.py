@@ -89,7 +89,7 @@ class Field:
                       * np.sqrt((self.alpha_0 * ct_diff) ** 2
                                 + (self.beta_0 * sa_diff) ** 2)
 
-    def c_from_sig_gamma(self, sig, gamma, pressure, sig_err=1e-4):
+    def sa_ct_from_sig_gamma(self, sig, gamma, sig_err=1e-4):
         """Compute sound speed from inverse of spice transformation"""
         sig = np.asarray(sig)
         gamma = np.asarray(gamma)
@@ -107,7 +107,7 @@ class Field:
         while np.any(np.abs(curr_err) > sig_err):
             # refine estimate of sigma
             sa_ct_est = xy_mean + xy_pert
-            sig_est = gsw.rho(sa_ct_est[0], sa_ct_est[1], self.p_ref)
+            sig_est = gsw.rho(sa_ct_est[0], sa_ct_est[1], self.p_ref) - 1000
             d_sig = sig_est - sig
             dt_test = self._adjust_sigma(sa_ct_est, d_sig)
             xy_pert += dt_test
@@ -123,12 +123,10 @@ class Field:
             g_est = np.sign(xy_pert[1]) * np.sqrt((self.alpha_0 * xy_pert[1]) ** 2
                                                 + (self.beta_0 * xy_pert[0]) ** 2)
             sa_ct_est = xy_mean + xy_pert
-            sig_est = gsw.rho(*sa_ct_est, self.p_ref)
+            sig_est = gsw.rho(*sa_ct_est, self.p_ref) - 1000
             curr_err = sig_est - sig
 
-        c = gsw.sound_speed(*sa_ct_est, pressure)
-
-        return c
+        return sa_ct_est[0], sa_ct_est[1]
 
     def _adjust_spice(self, d_gamma):
         """Adjust from current xy by d_gamma"""

@@ -50,9 +50,8 @@ class SectionLvls:
 
 
         self.sigma = self.field.xy_sig
-        #self.local_spice = LocalSpice()
-        #self.spice = self.local_spice.xy_gamma.copy()
-        self.spice = gsw.spiciness0(self.salinity, self.theta)
+        self.spice = self.field.xy_gamma
+        #self.spice = gsw.spiciness0(self.salinity, self.theta)
         self.c = self.field.xy_c
 
         self.lvls = lvl_profiles(self.z_a,
@@ -107,6 +106,7 @@ class SectionLvls:
         lp_lvls[1, :, :] = lvls[1, :, :]
 
         return lp_lvls
+
 
     def stable_spice(self, lvls, break_spice=False):
         """Compute estimate of stable spice"""
@@ -168,6 +168,7 @@ class SectionLvls:
             # move to next segment
             seg_start = seg_start + seg_size
 
+
     def _lp_filter(self, contour, seg_start, seg_size):
         """Perform a lp filter or linear fit depending on segment length"""
         seg_spice = contour[1, seg_start: seg_start + seg_size]
@@ -189,12 +190,10 @@ class SectionLvls:
             contour[1, seg_start: seg_start + seg_size] = line
 
 
-
     def compute_c_field(self, lvls, append_clim=True):
         """Create gridded sound speed field with climatolgy appended"""
-        sigma, tau = grid_field(self.z_a, lvls, self.sig_lvl)
-        1/0
-        sa, ct = SA_CT_from_sigma0_spiciness0(sigma, tau)
+        sigma, spice = grid_field(self.z_a, lvls, self.sig_lvl)
+        sa, ct = self.field.sa_ct_from_sig_gamma(sigma, spice)
 
         if append_clim:
             z_clim_a, _, _, c = append_climatolgy(self.z_a, ct, sa,

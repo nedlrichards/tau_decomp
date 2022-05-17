@@ -1,4 +1,4 @@
-from numpy import array, linspace, concatenate
+from numpy import array, arange
 from matplotlib.pyplot import cm
 from copy import copy
 
@@ -26,15 +26,14 @@ class Config:
         self.lat = 30.
         self.lon = -140.
 
-        num_sig=[60, 40]
-        sig_range = (24.80, 25.43, 26.60)
-        high_samp = linspace(sig_range[0], sig_range[1], num_sig[0])
-        low_samp = linspace(sig_range[1], sig_range[2], num_sig[1])[1:]
-        self.sig_lvl = concatenate([high_samp,low_samp])
+        # isopycnal spacings for sigma re 100 m
+        d_iso = 0.01  # fine isopycnals spacing
+        sig_start = 25.27
+        sig_end = 26.99
+        self.sig_lvl = arange(sig_start, sig_end, d_iso)
 
         # stable contours
         self.top_cntr = [[14, 923], [19, 905], [20, 757], [21, 710], [23, 618],
-                         [21, 710], [23, 618], [26, 612], [28, 601], [30, 564],
-                         [31, 526], [33, 514], [36, 460], [38, 418], [40, 402],
-                         [42, 268], [44, 205], [48, 129], [50, 55],  [53, 0]]
-
+                         [26, 612], [28, 601], [30, 564], [31, 526], [33, 514],
+                         [36, 460], [38, 418], [40, 402], [42, 268], [44, 205],
+                         [48, 129], [50, 55],  [53, 0]]
