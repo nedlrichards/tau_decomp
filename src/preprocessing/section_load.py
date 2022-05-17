@@ -84,10 +84,20 @@ class SectionLvls:
         lp_lvls = np.zeros(lvls.shape)
 
         for tp0, tp1 in zip(self.cf.top_cntr[:-1], self.cf.top_cntr[1:]):
-            lp_lvls[0, tp0[0]: tp1[0], tp0[1]:] = \
-                filtfilt(self.b_lp, self.a_lp,
-                         lvls[0, tp0[0]: tp1[0], tp0[1]:],
-                         method="gust")
+            # linear interpolation if datasat is too short for filter
+            if (self.x_a[-1] - tp0[1] * self.dx) < 2 * self.lp_cutoff:
+                orig = lvls[0, tp0[0]: tp1[0], tp0[1]:]
+                proc = lp_lvls[0, tp0[0]: tp1[0], tp0[1]:]
+                x = np.arange(tp0[1], self.x_a.size)
+                for o, p in zip(orig, proc):
+                    lr = linregress(x, o)
+                    p = lr.intercept + lr.slope * x
+            else:
+
+                lp_lvls[0, tp0[0]: tp1[0], tp0[1]:] = \
+                    filtfilt(self.b_lp, self.a_lp,
+                             lvls[0, tp0[0]: tp1[0], tp0[1]:],
+                             method="gust")
 
         # filter the rest of the contours
         lp_lvls[0, self.cf.top_cntr[-1][0]:, :] = \

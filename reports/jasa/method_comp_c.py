@@ -11,22 +11,28 @@ cf = Config()
 # sound speed comparison
 decomp_fields = np.load('data/processed/inputed_decomp.npz')
 z_a = decomp_fields['z_a']
+z_a_sub = decomp_fields['z_a_sub']
 x_a = decomp_fields['x_a']
 
 z_i = z_a < 300
 
-c_tau_d = decomp_fields['c_spice'][z_i, :]
+c_spice = decomp_fields['c_spice'][z_i, :]
 c_rud = decomp_fields['c_spice_dmr'][z_i, :]
 
-c_diff = c_tau_d - c_rud
+c_diff = c_spice - c_rud
 
-# show line of last contour
+# plot where methods switch
 stable_lvls = decomp_fields['stable_lvls']
 filled_lvls = decomp_fields['filled_lvls']
 
 last_cntr_i = np.argmax(stable_lvls[0, :, :] > 1, axis=0)
-last_z = stable_lvls[0, last_cntr_i, np.arange(stable_lvls.shape[-1])]
+
 last_z_hp = filled_lvls[0, last_cntr_i, np.arange(stable_lvls.shape[-1])]
+last_z_hp_i = np.argmin(np.abs(last_z_hp - z_a[:, None]), axis=0)
+
+last_z = stable_lvls[0, last_cntr_i, np.arange(stable_lvls.shape[-1])]
+last_z_i = np.argmin(np.abs(last_z - z_a[:, None]), axis=0)
+
 
 fig, ax = plt.subplots(figsize=(cf.jasa_1clm, 2.5))
 cm = ax.pcolormesh(x_a / 1e3, z_a[z_i], c_diff, cmap=plt.cm.BrBG,
@@ -57,4 +63,4 @@ pos.y0 += 0.08
 pos.y1 += 0.09
 cb.ax.set_position(pos)
 
-fig.savefig('reports/jasa/figures/sound_speed_comp.png', dpi=300)
+#fig.savefig('reports/jasa/figures/sound_speed_comp.png', dpi=300)
