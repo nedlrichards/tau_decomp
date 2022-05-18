@@ -110,3 +110,5 @@ envs/
 *.env
 *.mod
 *.prt
+
+*.pptx

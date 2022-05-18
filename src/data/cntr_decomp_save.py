@@ -4,20 +4,22 @@ import numpy as np
 from os.path import join
 from scipy.interpolate import UnivariateSpline
 
-from src import Section, sonic_layer_depth
+from src import SectionLvls, sonic_layer_depth
 from src import grid_field, SA_CT_from_sigma0_spiciness0, append_climatolgy
 from src import RDModes, Config
 
 import pyducts
 
-sec4 = Section()
+sec4 = SectionLvls()
 #fc = 400
 fc = 1e3
+
 save_dir = f'data/processed/field_{int(fc)}'
 if False:
     save_dir = join('/hb/scratch/edrichar/computed_results/', save_dir)
 
-fields = np.load('data/processed/decomposed_fields.npz')
+cf = Config(fc)
+fields = np.load('data/processed/inputed_decomp.npz')
 x_a = fields['x_a']
 z_a = fields['z_a']
 c_bg = fields['c_bg']
@@ -58,15 +60,12 @@ D = z_a[-1]
 z_save = 150.  # restrict size of PE result
 
 def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
-    cf = Config(fc)
 
     rf = pyducts.ram.RamIn(cf.fc, cf.z_src, rmax, D,
                            bottom_HS=cf.bottom_HS, dr=100., zmax_plot=D)
 
     tmp_dict = {"z_a":z_a}
     tmp_dict["xs"] = xs
-
-    sec4 = Section()
 
     zplot, rplot, p_bg, x_i = run_ram(rf, xs, sec4.x_a, c_bg)
     tmp_dict["x_a"] = sec4.x_a[x_i]
@@ -127,4 +126,3 @@ run_func = lambda xs: save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, sa
     #run_func(xs)
 
 list(map(run_func, x_start))
-#run_func(420e3)

@@ -15,7 +15,8 @@ from src import sonic_layer_depth
 cmap = copy(plt.cm.magma_r)
 cmap.set_under('w')
 
-fc = 400
+#fc = 400
+fc = 1e3
 
 def plot_comp(section):
     tl_data = np.load(os.path.join(f'data/processed/field_{int(fc)}', section))
@@ -155,11 +156,10 @@ def plot_comp(section):
 
     x_s = int(tl_data['xs']/1e3)
 
-    fig.savefig(f'reports/figures/decomp_{int(fc)}/' + f'decomp_section_{x_s}km.png', dpi=300)
+    fig.savefig(f'reports/jasa/figures/decomp_{int(fc)}/' + f'decomp_section_{x_s}km.png', dpi=300)
     plt.close(fig)
 
 #for sec in filter(lambda x: len(x.split('.')) == 2, os.listdir(f'data/processed/field_{int(fc)}')):
-for sec in os.listdir('data/processed/field_400/'):
-#sec = 'xmission_000.npz'
+for sec in os.listdir(f'data/processed/field_{int(fc)}/'):
     plot_comp(sec)
 
