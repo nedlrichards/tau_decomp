@@ -10,18 +10,18 @@ import matplotlib.transforms
 from copy import copy
 import os
 
-from src import sonic_layer_depth
+from src import sonic_layer_depth, list_tl_files, Config
 
 plt.ion()
-cmap = copy(plt.cm.magma_r)
-cmap.set_under('w')
+cf = Config()
 
 fc = 400
-section = 'tl_section_230.npz'
+sec_num = 23
 savedir = 'reports/jasa/figures'
 
-#def plot_comp(section):
-tl_data = np.load(os.path.join(f'data/processed/field_{int(fc)}', section))
+tl_files = list_tl_files(fc, source_depth='shallow')
+tl_data = np.load(tl_files[sec_num])
+
 zplot = tl_data['zplot']
 z_a = tl_data['z_a']
 x_a = tl_data['x_a']
@@ -44,26 +44,25 @@ c_sld = np.ma.array(c_total[z_i, :], mask=sld_m)
 
 c_plot_ref = np.mean(c_sld)
 
-fig, axes = plt.subplots(3, 2, sharey=True, sharex=True, figsize=(7.5, 3.75))
+fig, axes = plt.subplots(3, 2, sharey=True, sharex=True, figsize=(cf.jasa_2clm, 3.75))
 vmax = np.ma.max(c_sld)
 vmin = np.ma.min(c_sld)
 x_t = x_a[0] / 1e3 + 2
-bbox = dict(boxstyle="round", fc="w", ec="0.5", alpha=1.0)
 cm = axes[0, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_tilt[z_i, :],
                             cmap=plt.cm.coolwarm,
                             vmax=vmax, vmin=vmin,
                             rasterized=True)
-axes[0,0].text(x_t, 25, '(a)', bbox=bbox, zorder=50, ha='center')
+axes[0,0].text(x_t, 25, '(a)', bbox=cf.bbox, zorder=50, ha='center')
 cm = axes[1, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_spice[z_i, :],
                             cmap=plt.cm.coolwarm,
                             vmax=vmax, vmin=vmin,
                             rasterized=True)
-axes[1,0].text(x_t, 25, '(b)', bbox=bbox, zorder=50, ha='center')
+axes[1,0].text(x_t, 25, '(b)', bbox=cf.bbox, zorder=50, ha='center')
 cm = axes[2, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_total[z_i, :],
                             cmap=plt.cm.coolwarm,
                             vmax=vmax, vmin=vmin,
                             rasterized=True)
-axes[2,0].text(x_t, 25, '(c)', bbox=bbox, zorder=50, ha='center')
+axes[2,0].text(x_t, 25, '(c)', bbox=cf.bbox, zorder=50, ha='center')
 
 axes[0, 0].set_ylim(150, 0)
 axes[0, 0].set_xlim(x_a[0] / 1e3, x_a[-1] / 1e3)
@@ -85,13 +84,13 @@ for label in cbar.ax.xaxis.get_majorticklabels():
 
 cm = axes[0, 1].pcolormesh(rplot / 1e3, zplot,
                         20 * np.log10(np.abs(p_tilt)).T,
-                        cmap=cmap, vmax=-50, vmin=-90, rasterized=True)
+                        cmap=cf.cmap, vmax=-50, vmin=-90, rasterized=True)
 cm = axes[1, 1].pcolormesh(rplot / 1e3, zplot,
                         20 * np.log10(np.abs(p_spice)).T,
-                        cmap=cmap, vmax=-50, vmin=-90, rasterized=True)
+                        cmap=cf.cmap, vmax=-50, vmin=-90, rasterized=True)
 cm = axes[2, 1].pcolormesh(rplot / 1e3, zplot,
                         20 * np.log10(np.abs(p_total)).T,
-                        cmap=cmap, vmax=-50, vmin=-90, rasterized=True)
+                        cmap=cf.cmap, vmax=-50, vmin=-90, rasterized=True)
 
 cax = fig.add_axes([0.565, 0.91, 0.40, 0.03])
 cbar = fig.colorbar(cm, cax=cax, orientation='horizontal')
@@ -151,11 +150,4 @@ axes[2, 1].set_position(pos)
 
 
 fig.savefig(os.path.join(savedir, 'decomp_xmission.png'), dpi=300)
-
-#x_s = int(tl_data['xs']/1e3)
-    #fig.savefig(f'figures/decomp_{int(fc)}/' + f'decomp_section_{x_s}km.png', dpi=300)
-    #plt.close(fig)
-
-#for sec in filter(lambda x: len(x.split('.')) == 2, os.listdir(f'processed_{int(fc)}')):
-    #plot_comp(sec)
 

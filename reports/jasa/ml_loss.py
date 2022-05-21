@@ -8,12 +8,13 @@ from src import MLEnergyPE, MLEnergy, Config, list_tl_files
 plt.ion()
 
 fc = 400
-cf = Config(fc)
+source_depth = "shallow"
+cf = Config(source_depth=source_depth, fc=fc)
 
-bg_ri_eng = np.load('data/processed/bg_ri_eng.npz')
+bg_ri_eng = np.load("data/processed/bg_ri_eng_" + source_depth + ".npz")
 bg_ri_eng = bg_ri_eng[f'e_ri_{int(fc)}']
 
-tl_list = list_tl_files(fc)
+tl_list = list_tl_files(fc, source_depth=source_depth)
 
 pe_ml_engs = []
 
@@ -45,24 +46,6 @@ move_sum[:, :, win_len:] = move_sum[:, :, win_len:] - move_sum[:, :, :-win_len]
 move_sum = move_sum[:, :, win_len - 1:] * dr
 
 max_int = np.max(-move_sum, axis=-1)
-
-fig, ax = plt.subplots(figsize=(cf.jasa_1clm,3))
-ax.plot(x_s / 1e3, max_int[1:, :].T, marker='.')
-ax.set_xlabel('Starting position (km)')
-ax.set_ylabel('Maxium loss over 5 km (dB)')
-ax.set_ylim(-0.5, 18)
-ax.set_xlim(0, 900)
-ax.grid()
-ax.legend(['tilt', 'spice', 'observed'])
-
-pos = ax.get_position()
-pos.x0 += 0.06
-pos.x1 += 0.05
-pos.y0 += 0.04
-pos.y1 += 0.06
-ax.set_position(pos)
-
-fig.savefig('reports/jasa/figures/integrated_loss.png', dpi=300)
 
 # threshold loss features
 fig, ax = plt.subplots(3, 1, sharex=True, sharey=True, figsize=(cf.jasa_1clm,3))

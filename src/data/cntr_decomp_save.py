@@ -13,12 +13,13 @@ import pyducts
 sec4 = SectionLvls()
 #fc = 400
 fc = 1e3
+z_src = 200.
 
 save_dir = f'data/processed/field_{int(fc)}'
 if False:
     save_dir = join('/hb/scratch/edrichar/computed_results/', save_dir)
 
-cf = Config(fc)
+cf = Config(z_src=z_src, fc=fc)
 fields = np.load('data/processed/inputed_decomp.npz')
 x_a = fields['x_a']
 z_a = fields['z_a']

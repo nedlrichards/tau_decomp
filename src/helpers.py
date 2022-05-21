@@ -4,9 +4,9 @@ import numpy as np
 from os import listdir
 from os.path import join
 
-def list_tl_files(fc):
+def list_tl_files(fc, source_depth='shallow'):
     """List all files at a partiular frequency"""
-    tl_dir = f'data/processed/field_{int(fc)}'
+    tl_dir = f'data/processed/field_{int(fc)}_' + source_depth
     run_list = listdir(tl_dir)
     tl_list = [r for r in run_list if r.split('_')[0] == 'tl']
     tl_list.sort()

@@ -6,10 +6,10 @@ from src import RDModes, Config
 
 class MLEnergyPE:
     """Simple energy calculations from PE result"""
-    def __init__(self, fc, run_file):
+    def __init__(self, run_file, source_depth="shallow"):
         """Calculate range independent modes"""
-        self.cf = Config(fc)
         self.tl_data = np.load(run_file)
+        self.cf = Config(source_depth=source_depth, fc=self.tl_data['fc'][()])
 
         self.xs = self.tl_data['xs']
         self.r_a = self.tl_data['rplot'] - self.xs
@@ -27,68 +27,46 @@ class MLEnergyPE:
 class MLEnergy:
     """Different methods to calculate or estimate mixed layer energy"""
 
-    def __init__(self, run_file):
+    def __init__(self, run_file, source_depth="shallow", bg_only=False):
         """Calculate range independent modes"""
         self.tl_data = np.load(run_file)
-        self.cf = Config(self.tl_data['fc'][()])
-
-        bg_modes = RDModes(self.tl_data['c_bg'],
-                           self.tl_data['x_a'],
-                           self.tl_data['z_a'],
-                           self.cf.fc, self.cf.z_src,
-                           c_bounds=self.cf.c_bounds, s=None)
-
-        tilt_modes = RDModes(self.tl_data['c_tilt'],
-                             self.tl_data['x_a'],
-                             self.tl_data['z_a'],
-                             self.cf.fc, self.cf.z_src,
-                             c_bounds=self.cf.c_bounds, s=None)
-
-        spice_modes = RDModes(self.tl_data['c_spice'],
-                              self.tl_data['x_a'],
-                              self.tl_data['z_a'],
-                              self.cf.fc, self.cf.z_src,
-                              c_bounds=self.cf.c_bounds, s=None)
-
-        total_modes = RDModes(self.tl_data['c_total'],
-                              self.tl_data['x_a'],
-                              self.tl_data['z_a'],
-                              self.cf.fc, self.cf.z_src,
-                              c_bounds=self.cf.c_bounds, s=None)
-
-        self.field_modes = {'bg':bg_modes, 'tilt':tilt_modes,
-                            'spice':spice_modes, 'total':total_modes}
+        self.cf = Config(source_depth=source_depth, fc=self.tl_data['fc'][()])
 
         # common axes
         self.xs = self.tl_data['xs']
         self.r_a = self.tl_data['rplot'] - self.xs
+        self.z_a_modes = self.tl_data['z_a']
         self.z_a = self.tl_data['zplot']
         self.dz = (self.z_a[-1] - self.z_a[0]) / (self.z_a.size - 1)
         self.z_i = self.z_a < self.cf.z_int
 
-        # loop lengths
+        self.field_modes = {}
+        self.llen = {}
+        self.set_1 = {}
+
+        self._start_field_type('bg', self.field_modes, self.llen, self.set_1)
+        if bg_only:
+            return
+
+        self._start_field_type('tilt', self.field_modes, self.llen, self.set_1)
+        self._start_field_type('spice', self.field_modes, self.llen, self.set_1)
+        self._start_field_type('total', self.field_modes, self.llen, self.set_1)
+
+
+    def _start_field_type(self, field_type, field_modes, llen_dict, set_1_dict):
+        """Common startup by field type"""
+        modes = RDModes(self.tl_data['c_' + field_type], self.r_a,
+                        self.z_a_modes, self.cf.fc, self.cf.z_src,
+                        c_bounds=self.cf.c_bounds, s=None)
+
         eps = np.spacing(1)
-        bg_llen = -2 * pi / (np.diff(np.real(bg_modes.k_bg)) - eps)
-        tilt_llen = -2 * pi / (np.diff(np.real(tilt_modes.k_bg)) - eps)
-        spice_llen = -2 * pi / (np.diff(np.real(spice_modes.k_bg)) - eps)
-        total_llen = -2 * pi / (np.diff(np.real(total_modes.k_bg)) - eps)
-        self.llen = {'bg':bg_llen, 'tilt':tilt_llen,
-                     'spice':spice_llen, 'total':total_llen}
+        llen = -2 * pi / (np.diff(np.real(modes.k_bg)) - eps)
+        set_1 = self.mode_set_1(llen)
+        #bg_set_2 = self.mode_set_2(self.llen['bg'], bg_set_1)
 
-        bg_set_1 = self.mode_set_1(self.llen['bg'])
-        tilt_set_1 = self.mode_set_1(self.llen['tilt'])
-        spice_set_1 = self.mode_set_1(self.llen['spice'])
-        total_set_1 = self.mode_set_1(self.llen['total'])
-        self.set_1 = {'bg':bg_set_1, 'tilt':tilt_set_1,
-                     'spice':spice_set_1, 'total':total_set_1}
-
-        bg_set_2 = self.mode_set_2(self.llen['bg'], bg_set_1)
-        tilt_set_2 = self.mode_set_2(self.llen['tilt'], tilt_set_1)
-        spice_set_2 = self.mode_set_2(self.llen['spice'], spice_set_1)
-        total_set_2 = self.mode_set_2(self.llen['total'], total_set_1)
-        self.set_2 = {'bg':bg_set_2, 'tilt':tilt_set_2,
-                     'spice':spice_set_2, 'total':total_set_2}
-
+        field_modes[field_type] = modes
+        llen_dict[field_type] = llen
+        set_1_dict[field_type] = set_1
 
     def field_ml_eng(self, field_type, indicies=None):
         """Compute pressure from one field type"""
@@ -145,6 +123,7 @@ class MLEnergy:
         am = np.hstack([[am[0] - 1], am, [am[-1] + 1]])
         dom_modes[am] = True
         return list(np.where(dom_modes)[0])
+
 
     def mode_set_2(self, llen, m1):
         """Common calculation of mode set 2 from loop length"""

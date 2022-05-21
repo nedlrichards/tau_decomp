@@ -9,17 +9,20 @@ import matplotlib.ticker as plticker
 from copy import copy
 import os
 
-from src import sonic_layer_depth
+from src import sonic_layer_depth, list_tl_files
 
 #plt.ion()
 cmap = copy(plt.cm.magma_r)
 cmap.set_under('w')
 
-#fc = 400
-fc = 1e3
+fc = 400
+#fc = 1e3
+source_depth = 'deep'
 
-def plot_comp(section):
-    tl_data = np.load(os.path.join(f'data/processed/field_{int(fc)}', section))
+save_dir = f'reports/jasa/figures/decomp_{int(fc)}_' + source_depth
+
+def plot_comp(tl_file):
+    tl_data = np.load(tl_file)
     zplot = tl_data['zplot']
     z_a = tl_data['z_a']
     x_a = tl_data['x_a']
@@ -156,10 +159,9 @@ def plot_comp(section):
 
     x_s = int(tl_data['xs']/1e3)
 
-    fig.savefig(f'reports/jasa/figures/decomp_{int(fc)}/' + f'decomp_section_{x_s}km.png', dpi=300)
+    fig.savefig(os.path.join(save_dir, f'decomp_section_{x_s}km.png'), dpi=300)
     plt.close(fig)
 
-#for sec in filter(lambda x: len(x.split('.')) == 2, os.listdir(f'data/processed/field_{int(fc)}')):
-for sec in os.listdir(f'data/processed/field_{int(fc)}/'):
-    plot_comp(sec)
+for tl in list_tl_files(fc, source_depth=source_depth):
+    plot_comp(tl)
 

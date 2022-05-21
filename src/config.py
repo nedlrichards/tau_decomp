@@ -5,12 +5,19 @@ from copy import copy
 class Config:
     """Common enviornment configuration"""
 
-    def __init__(self, fc=400.):
+    def __init__(self, source_depth="shallow", fc=400.):
         """define config"""
         self.fc = fc
         self.bottom_HS = [1600., 1000., 0.1]
         self.c_bounds = [1503, 1545]
-        self.z_src = 40.
+
+        if source_depth=="shallow":
+            self.z_src = 40.
+        elif source_depth == "deep":
+            self.z_src = 200.
+        else:
+            raise(ValueError("Source depth must be either shallow or deep"))
+
         self.z_int = 120.
 
         # plot specifications
@@ -21,7 +28,7 @@ class Config:
         self.jasa_1clm = 3.4  # 1 column figure width, in
         self.jasa_2clm = 7.05  # 2 column figure width, in
 
-        self.field_types = ['bg', 'tilt', 'spice', 'total']
+        self.field_types = ['bg', 'total', 'tilt', 'spice']
 
         self.lat = 30.
         self.lon = -140.
