@@ -28,11 +28,21 @@ eng_bg = eng.bg_eng
 range_bounds = (5e3, 50e3)
 bg_stats = eng.field_stats(eng_bg, range_bounds=range_bounds)
 
+cmap = plt.cm.cividis
+i_co = 30
+clrs = np.ones(eng_bg.shape[0]) * 0.85
+clrs[i_co:] = 0.5
+alpha = np.ones(eng_bg.shape[0])
+alpha[i_co:] = 0.4
+clrs = cmap(clrs)
+
 fig, ax = plt.subplots(figsize=(cf.jasa_1clm, 2.5))
-ax.plot(r_a / 1e3, eng_bg.T, '0.7', linewidth=0.5)
+
+for i, (e, c, a) in enumerate(zip(eng_bg, clrs, alpha)):
+    ax.plot(r_a / 1e3, e, color=c, alpha=a, linewidth=0.5)
 
 r_a_plt , mean_rgs = eng.rgs('mean', bg_stats, range_bounds=range_bounds,
-                         scale_r=True)
+                             scale_r=True)
 ax.plot(r_a_plt, mean_rgs, 'k', linewidth=2)
 
 _ , rms_rgs = eng.rgs('rms', bg_stats, range_bounds=range_bounds,
@@ -41,9 +51,9 @@ ax.plot(r_a_plt, rms_rgs, 'k', linewidth=2)
 ax.plot(r_a_plt, 2 * mean_rgs - rms_rgs, 'k', linewidth=1)
 
 ax.plot(*eng.rgs('10th', bg_stats, range_bounds=range_bounds, scale_r=True),
-        'C1', linewidth=1, linestyle='--')
+        'C1', linewidth=1.5, linestyle='--')
 ax.plot(*eng.rgs('90th', bg_stats, range_bounds=range_bounds, scale_r=True),
-        'C1', linewidth=1, linestyle='--')
+        'C1', linewidth=1.5, linestyle='--')
 
 ax.set_ylim(-18, -10)
 
