@@ -1,9 +1,9 @@
 import numpy as np
 from os.path import join
-
+from scipy.stats import linregress
 from src import MLEnergyPE, Config, list_tl_files
 
-class EngNorm:
+class EngProc:
     """common processing for mixed layer energy processing"""
     def __init__(self, fc, source_depth):
         """parameters of investigation grid"""
@@ -24,6 +24,8 @@ class EngNorm:
         dy_fields = self.cf.field_types.copy()
         dy_fields.remove('bg')
 
+        fields = {f:[] for f in dy_fields}
+
         for tl in list_tl_files(fc, source_depth=source_depth):
             ml_pe = MLEnergyPE(tl)
             for fld in dy_fields:
@@ -35,12 +37,15 @@ class EngNorm:
             ml_eng.append(np.array(fields[fld]))
         self.dynamic_eng = np.array(ml_eng)
 
-    def blocking_feature(self, range_bounds, integration_length=5, block_co=3):
+    def blocking_feature(self, range_bounds=(5e3, 50e3),
+                         integration_length=5e3, block_co=3):
         """Compute integrated loss indices blocking features"""
         dr = (self.r_a[-1] - self.r_a[0]) / (self.r_a.size - 1)
-        num_int = int(np.ceil(self.integration_length * 1e3 / dr))
+        num_int = int(np.ceil(self.integration_length / dr))
 
         diff_eng = self.dynamic_eng - self.bg_eng
+        r_i = (self.r_a > range_bounds[0]) & (self.r_a < range_bounds[1])
+        diff_eng = diff_eng[:, r_i]
 
         move_sum = np.cumsum(diff_eng, dtype=float, axis=-1)
         # integration with a size num_int moving window
@@ -52,62 +57,35 @@ class EngNorm:
         max_int = np.max(-move_sum, axis=-1)
         return max_int
 
+    def field_stats(self, field_eng, range_bounds=(5e3, 50e3)):
+        """common statistics taken over field realization"""
+        r_i = (self.r_a > range_bounds[0]) & (self.r_a < range_bounds[1])
 
+        f_mean = np.mean(field_eng[:, r_i], axis=0)
+        f_rms = np.sqrt(np.var(field_eng[:, r_i], axis=0))
+        f_10 = np.percentile(field_eng[:, r_i], 10, axis=0,
+                             method='median_unbiased')
+        f_90 = np.percentile(field_eng[:, r_i], 90, axis=0,
+                             method='median_unbiased')
 
+        r_a = self.r_a[r_i]
+        f_mean_rgs = linregress(r_a, y=f_mean)
+        f_rms_rgs = linregress(r_a, y=f_mean + f_rms)
+        f_10_rgs = linregress(r_a, y=f_10)
+        f_90_rgs = linregress(r_a, y=f_90)
 
-fc = 400
-#fc = 1e3
+        stats = {'mean':f_mean, 'rms':f_rms, '10th':f_10, '90th':f_90,
+                 'mean_rgs':f_mean_rgs, 'rms_rgs':f_rms_rgs,
+                 '10th_rgs':f_10_rgs, '90th_rgs':f_90_rgs}
+        return stats
 
-source_depth = "shallow"
-#source_depth = "deep"
+    def rgs(self, stat_type, stat_dict, range_bounds=(5e3, 50e3), scale_r=False):
+        """compute linear regression line from object"""
+        r_i = (self.r_a > range_bounds[0]) & (self.r_a < range_bounds[1])
+        r_a = self.r_a[r_i]
+        lin_rgs = stat_dict[stat_type + '_rgs']
+        stat_fit = lin_rgs.intercept + r_a * lin_rgs.slope
+        if scale_r:
+            r_a /= 1e3
+        return r_a, stat_fit
 
-cf = Config(source_depth=source_depth, fc=fc)
-
-pe_ml_engs = []
-
-x_s = []
-all_eng = []
-for r in list_tl_files(fc, source_depth=source_depth):
-    e = MLEnergyPE(r)
-    x_s.append(e.xs)
-    o_r = np.array([e.ml_energy(ft) for ft in cf.field_types])
-    all_eng.append(o_r[:, None, :])
-
-r_a = e.r_a
-x_s = np.array(x_s)
-
-all_eng = np.concatenate(all_eng, axis=1)
-
-norm_eng = np.log10(all_eng[1:, :, :]) - np.log10(all_eng[0, :, :])
-norm_eng *= 10
-
-dr = (r_a[-1] - r_a[0]) / (r_a.size - 1)
-diff_i = (r_a > 5e3) & (r_a < 45e3)
-
-# strange transpose arrises from indexing
-diff_eng = np.diff(norm_eng[:, :, diff_i], axis=-1) / dr
-
-win_len = 50
-move_sum = np.cumsum(diff_eng, dtype=float, axis=-1)
-move_sum[:, :, win_len:] = move_sum[:, :, win_len:] - move_sum[:, :, :-win_len]
-move_sum = move_sum[:, :, win_len - 1:] * dr
-
-max_int = np.max(-move_sum, axis=-1)
-
-fig, ax = plt.subplots(figsize=(cf.jasa_1clm,2.5))
-ax.plot(x_s / 1e3, max_int.T)
-ax.set_xlabel('Starting position (km)')
-ax.set_ylabel('Maxium loss over 5 km (dB)')
-ax.set_ylim(-0.5, 15)
-ax.set_xlim(0, 900)
-ax.grid()
-#ax.legend(['tilt', 'spice', 'observed'])
-ax.set_yticks([0, 3, 6, 9, 12])
-pos = ax.get_position()
-pos.x0 += 0.04
-pos.x1 += 0.05
-pos.y0 += 0.07
-pos.y1 += 0.07
-ax.set_position(pos)
-
-fig.savefig('reports/jasa/figures/integrated_loss.png', dpi=300)
