@@ -2,6 +2,8 @@ import numpy as np
 from math import pi
 from os.path import join
 import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+from matplotlib.cm import ScalarMappable
 from scipy.stats import linregress
 
 from src import EngProc
@@ -55,6 +57,11 @@ ax.plot(*eng.rgs('10th', bg_stats, range_bounds=range_bounds, scale_r=True),
 ax.plot(*eng.rgs('90th', bg_stats, range_bounds=range_bounds, scale_r=True),
         'C1', linewidth=1.5, linestyle='--')
 
+cax = fig.add_axes([0.25, 0.3, .02, .1])
+lcmap = ListedColormap([clrs[0], clrs[-1]])
+sm = ScalarMappable(cmap=lcmap)
+cb = fig.colorbar(sm, cax=cax, ticks=[0.25, 0.75])
+cb.set_ticklabels([r'$x_{src}\;eq$300 km', '$x_{src}$ >300km'])
 ax.set_ylim(-18, -10)
 
 ax.set_xlabel('Position, $x$ (km)')
