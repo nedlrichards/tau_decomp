@@ -88,6 +88,8 @@ target/
 # Mypy cache
 .mypy_cache/
 
+*.jpg
+*.jpeg
 *.png
 *.in
 *.line

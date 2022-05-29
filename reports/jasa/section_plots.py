@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import linregress
 from os.path import join
 
-from src import Section, sonic_layer_depth, grid_field, Config
+from src import sonic_layer_depth, Config
 
 plt.ion()
 bbox = dict(boxstyle='round', fc='w')
@@ -13,28 +13,28 @@ savedir = 'reports/jasa/figures'
 
 cf = Config()
 
-sec4 = Section()
-stab_height = sec4.stable_cntr_height(sec4.lvls)
-#stab_spice = sec4.stable_spice(sec4.lvls)
-stab_spice  = np.load('data/processed/inputed_spice.npz')['lvls']
-stab_lvls = sec4.stable_spice(stab_height)
+c_fields = np.load('data/processed/inputed_decomp.npz')
 
-#z_a, c_total = sec4.compute_c_field(sec4.lvls)
-#z_a, c_bg = sec4.compute_c_field(stab_lvls)
-z_a = sec4.z_a
+z_a = c_fields['z_a']
+x_a = c_fields['x_a']
+
+c_bg = c_fields['c_bg']
+c_tilt = c_fields['c_tilt']
+c_spice = c_fields['c_spice']
+c_total = c_fields['c_total']
 
 plt_i = z_a <= 150.
 #c_field = c_bg[plt_i, :]
-c_field = sec4.c[plt_i, :]
+c_field = c_total[plt_i, :]
 
 sld_z, _ = sonic_layer_depth(z_a[plt_i], c_field)
 sld_m = z_a[:, None] > sld_z
-c_sld = np.ma.array(sec4.c, mask=sld_m)
+c_sld = np.ma.array(c_total, mask=sld_m)
 mean_c = np.mean(c_sld, axis=0).data
 sec_mean_c = mean_c.mean()
 
 fig, ax = plt.subplots(figsize=(cf.jasa_2clm,  3))
-cm = ax.pcolormesh(sec4.x_a / 1e3, z_a[plt_i], c_field - 1500,
+cm = ax.pcolormesh(x_a / 1e3, z_a[plt_i], c_field - 1500,
                    cmap=plt.cm.coolwarm,
                    vmax = sec_mean_c + 6 - 1500, vmin = sec_mean_c - 6 - 1500)
 
@@ -64,7 +64,11 @@ cb.ax.set_position(pos)
 
 fig.savefig(join(savedir, 'sound_speed_transcet.png'), dpi=300)
 
-ax.plot(sec4.x_a / 1e3, sld_z, '0.2', linewidth=1)
+ax.plot(x_a / 1e3, sld_z, '0.2', linewidth=1)
 
 fig.savefig(join(savedir, 'sound_speed_transcet_sld.png'), dpi=300)
 
+reg = linregress(x_a, sld_z)
+ax.plot(x_a / 1e3, x_a * reg.slope + reg.intercept, '0.4')
+
+fig.savefig(join(savedir, 'sound_speed_transcet_rgs.png'), dpi=300)

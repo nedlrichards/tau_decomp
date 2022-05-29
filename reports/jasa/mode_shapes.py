@@ -5,18 +5,20 @@ import os
 from src import RDModes, Config, list_tl_files
 import matplotlib.pyplot as plt
 
+plt.style.use('elr')
+
 plt.ion()
 
 fc = 400
 z_int = 150.
-cf = Config(fc)
+cf = Config(fc=fc)
 
 tl_files = list_tl_files(fc)
 tl_data = np.load(tl_files[23])
 
 r_a = tl_data['rplot']
 rd_modes = RDModes(tl_data['c_bg'], tl_data['x_a'], tl_data['z_a'],
-                    cf.fc, cf.z_src, s=None)
+                    cf.fc, cf.z_src, s=None, c_bounds=cf.c_bounds)
 
 xs = tl_data['xs']
 dr = (rd_modes.r_plot[-1] - rd_modes.r_plot[0]) / (rd_modes.r_plot.size - 1)

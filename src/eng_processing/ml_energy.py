@@ -30,7 +30,9 @@ class MLEnergy:
     def __init__(self, run_file, source_depth="shallow", bg_only=False):
         """Calculate range independent modes"""
         self.tl_data = np.load(run_file)
-        self.cf = Config(source_depth=source_depth, fc=self.tl_data['fc'][()])
+        self.cf = Config(source_depth=source_depth,
+                         fc=self.tl_data['fc'][()],
+                         c_bounds=[1503., 1525.])
 
         # common axes
         self.xs = self.tl_data['xs']
@@ -44,7 +46,7 @@ class MLEnergy:
         self.llen = {}
         self.set_1 = {}
 
-        self._start_field_type('bg', self.field_modes, self.llen, self.set_1)
+        self._start_field_type('bg')
         if bg_only:
             return
 
@@ -53,20 +55,20 @@ class MLEnergy:
         self._start_field_type('total', self.field_modes, self.llen, self.set_1)
 
 
-    def _start_field_type(self, field_type, field_modes, llen_dict, set_1_dict):
+    def _start_field_type(self, field_type):
         """Common startup by field type"""
         modes = RDModes(self.tl_data['c_' + field_type], self.r_a,
-                        self.z_a_modes, self.cf.fc, self.cf.z_src,
-                        c_bounds=self.cf.c_bounds, s=None)
+                        self.z_a_modes, self.cf)
 
         eps = np.spacing(1)
         llen = -2 * pi / (np.diff(np.real(modes.k_bg)) - eps)
         set_1 = self.mode_set_1(llen)
         #bg_set_2 = self.mode_set_2(self.llen['bg'], bg_set_1)
 
-        field_modes[field_type] = modes
-        llen_dict[field_type] = llen
-        set_1_dict[field_type] = set_1
+        self.field_modes[field_type] = modes
+        self.llen[field_type] = llen
+        self.set_1[field_type] = set_1
+
 
     def field_ml_eng(self, field_type, indicies=None):
         """Compute pressure from one field type"""
@@ -77,15 +79,12 @@ class MLEnergy:
         if indicies is not None:
             psi_0 = np.zeros_like(psi_rd)
             psi_0[:, indicies] = psi_rd[:, indicies]
-            p_rd = rd_modes.synthesize_pressure(psi_0,
-                                                self.z_a,
-                                                r_synth=self.r_a)
-            en_rd = np.sum(np.abs(p_rd) ** 2, axis=1) * self.dz
-        else:
-            p_rd = rd_modes.synthesize_pressure(psi_rd,
-                                                self.z_a,
-                                                r_synth=self.r_a)
-            en_rd = np.sum(np.abs(p_rd) ** 2, axis=1) * self.dz
+            psi_rd = psi_0
+
+        p_rd = rd_modes.synthesize_pressure(psi_rd,
+                                            self.z_a,
+                                            r_synth=self.r_a)
+        en_rd = np.sum(np.abs(p_rd) ** 2, axis=1) * self.dz
 
         return en_rd
 

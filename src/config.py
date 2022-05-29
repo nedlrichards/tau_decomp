@@ -5,11 +5,12 @@ from copy import copy
 class Config:
     """Common enviornment configuration"""
 
-    def __init__(self, source_depth="shallow", fc=400.):
+    def __init__(self, source_depth="shallow", fc=400.,
+                 c_bounds=[1503., 1545.]):
         """define config"""
         self.fc = fc
         self.bottom_HS = [1600., 1000., 0.1]
-        self.c_bounds = [1503, 1545]
+        self.c_bounds = c_bounds
 
         if source_depth=="shallow":
             self.z_src = 40.
@@ -17,6 +18,7 @@ class Config:
             self.z_src = 200.
         else:
             raise(ValueError("Source depth must be either shallow or deep"))
+        self.source_depth = source_depth
 
         self.z_int = 120.
 

@@ -5,33 +5,35 @@ import matplotlib.pyplot as plt
 from scipy.stats import linregress
 from os.path import join
 
-from src import Section, sonic_layer_depth, grid_field
+from src import sonic_layer_depth
 
 plt.ion()
 bbox = dict(boxstyle='round', fc='w')
 savedir = 'reports/jasa/figures'
 
-sec4 = Section()
-stab_height = sec4.stable_cntr_height(sec4.lvls)
-#stab_spice = sec4.stable_spice(sec4.lvls)
-stab_spice  = np.load('data/processed/inputed_spice.npz')['lvls']
-stab_lvls = sec4.stable_spice(stab_height)
+c_fields = np.load('data/processed/inputed_decomp.npz')
+
+z_a = c_fields['z_a']
+x_a = c_fields['x_a']
+
+c_bg = c_fields['c_bg']
+c_tilt = c_fields['c_tilt']
+c_spice = c_fields['c_spice']
+c_total = c_fields['c_total']
 
 prof_i = 150
 
-z_a = sec4.z_a
-
 plt_i = z_a <= 150.
-c_field = sec4.c[plt_i, :]
+c_field = c_total[plt_i, :]
 
-prop_i = sec4.z_a <= 150.
+prop_i = z_a <= 150.
 
 sld_z, _ = sonic_layer_depth(z_a[plt_i], c_field)
 
 fig, ax = plt.subplots(figsize=(6.5, 3))
-ax.plot(sec4.x_a / 1e3, sld_z, 'k')
-reg = linregress(sec4.x_a, sld_z)
-ax.plot(sec4.x_a / 1e3, sec4.x_a * reg.slope + reg.intercept, 'C0')
+ax.plot(x_a / 1e3, sld_z, 'k')
+reg = linregress(x_a, sld_z)
+ax.plot(x_a / 1e3, x_a * reg.slope + reg.intercept, 'C0')
 #ax[0].text(120, 20, f'm={reg.slope * 1e3:0.3f} m'+'  km$^{-1}$',
         #bbox=bbox)
 
@@ -50,7 +52,7 @@ pos.y1 += 0.08
 ax.set_position(pos)
 
 fig.savefig(join(savedir, 'sld_linregress.png'), dpi=300)
-
+"""
 fig, ax = plt.subplots(3, 1, sharex=True, figsize=(6.5, 6))
 ax[0].plot(sec4.x_a / 1e3, sld_z, 'k')
 reg = linregress(sec4.x_a, sld_z)
@@ -108,3 +110,4 @@ ax[2].set_position(pos)
 
 fig.savefig(join(savedir, 'sld_dens_linregress.png'), dpi=300)
 
+"""

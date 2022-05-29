@@ -4,71 +4,48 @@ from os.path import join
 import matplotlib.pyplot as plt
 
 from src import MLEnergyPE, MLEnergy, Config, list_tl_files
+from src import EngProc
 
 plt.ion()
+plt.style.use('elr')
 
 fc = 400
+#fc = 1e3
 source_depth = "shallow"
-cf = Config(source_depth=source_depth, fc=fc)
 
-bg_ri_eng = np.load("data/processed/bg_ri_eng_" + source_depth + ".npz")
-bg_ri_eng = bg_ri_eng[f'e_ri_{int(fc)}']
+eng = EngProc(fc=fc, source_depth=source_depth)
 
-tl_list = list_tl_files(fc, source_depth=source_depth)
+cf = eng.cf
+r_a = eng.r_a
+bg_eng = eng.bg_eng
+dynamic_eng = eng.dynamic_eng
 
-pe_ml_engs = []
+range_bounds = (5e3, 50e3)
+max_int_loss = eng.blocking_feature(range_bounds=range_bounds,
+                                    comp_len=5e3)
 
-x_s = []
-all_eng = []
-for r in tl_list:
-    e = MLEnergyPE(cf.fc, r)
-    x_s.append(e.xs)
-    o_r = np.array([e.ml_energy(ft) for ft in cf.field_types])
-    all_eng.append(o_r[:, None, :])
-
-r_a = e.r_a
-x_s = np.array(x_s)
-
-all_eng = np.concatenate(all_eng, axis=1)
-
-norm_eng = np.log10(all_eng) - np.log10(bg_ri_eng)
-norm_eng *= 10
-
-dr = (r_a[-1] - r_a[0]) / (r_a.size - 1)
-diff_i = (r_a > 5e3) & (r_a < 45e3)
-
-# strange transpose arrises from indexing
-diff_eng = np.diff(norm_eng[:, :, diff_i], axis=-1) / dr
-
-win_len = 50
-move_sum = np.cumsum(diff_eng, dtype=float, axis=-1)
-move_sum[:, :, win_len:] = move_sum[:, :, win_len:] - move_sum[:, :, :-win_len]
-move_sum = move_sum[:, :, win_len - 1:] * dr
-
-max_int = np.max(-move_sum, axis=-1)
+m_i = max_int_loss > 3
+norm_eng = dynamic_eng - bg_eng
 
 # threshold loss features
 fig, ax = plt.subplots(3, 1, sharex=True, sharey=True, figsize=(cf.jasa_1clm,3))
-m_i = max_int[1, :] > 3
-ax[0].plot(r_a / 1e3, norm_eng[1, m_i, :].T, linewidth=.5, color='0.2')
-ax[0].plot(r_a / 1e3, norm_eng[1, ~m_i, :].T, linewidth=.5, color='C0')
+ax[0].plot(r_a / 1e3, norm_eng[0, ~m_i[0], :].T, linewidth=.5, color='0.4')
+ax[0].plot(r_a / 1e3, norm_eng[0, m_i[0], :].T, linewidth=.5, color='C1')
 
-m_i = max_int[2, :] > 3
-ax[1].plot(r_a / 1e3, norm_eng[2, m_i, :].T, linewidth=.5, color='0.2')
-ax[1].plot(r_a / 1e3, norm_eng[2, ~m_i, :].T, linewidth=.5, color='C0')
+ax[1].plot(r_a / 1e3, norm_eng[1, ~m_i[1], :].T, linewidth=.5, color='0.4')
+ax[1].plot(r_a / 1e3, norm_eng[1, m_i[1], :].T, linewidth=.5, color='C1')
 
-m_i = max_int[3, :] > 3
-ax[2].plot(r_a / 1e3, norm_eng[3, m_i, :].T, linewidth=.5, color='0.2')
-ax[2].plot(r_a / 1e3, norm_eng[3, ~m_i, :].T, linewidth=.5, color='C0')
+ax[2].plot(r_a / 1e3, norm_eng[2, ~m_i[2], :].T, linewidth=.5, color='0.4')
+ax[2].plot(r_a / 1e3, norm_eng[2, m_i[2], :].T, linewidth=.5, color='C1')
 
 ax[0].set_xlim(5, 45)
 ax[1].set_ylim(-15, 5)
 
-ax[0].text(5, 3, '(a)', bbox=cf.bbox)
-ax[1].text(5, 3, '(b)', bbox=cf.bbox)
-ax[2].text(5, 3, '(c)', bbox=cf.bbox)
+ax[0].text(5, 3, eng.dy_fields[0], bbox=cf.bbox)
+ax[1].text(5, 3, eng.dy_fields[1], bbox=cf.bbox)
+ax[2].text(5, 3, eng.dy_fields[2], bbox=cf.bbox)
 
-fig.supylabel('Compensated ML energy')
+fig.supylabel('ML energy (db re Background)')
 ax[2].set_xlabel('Range (km)')
 
 pos = ax[0].get_position()
@@ -92,59 +69,88 @@ pos.y0 += 0.04
 pos.y1 += 0.06
 ax[2].set_position(pos)
 
-fig.savefig('reports/jasa/figures/ml_energy.png', dpi=300)
+#fig.savefig('reports/jasa/figures/ml_energy.png', dpi=300)
 
-def eng_stats(field_tl, indicies=None):
-    """Compute mean and variance for given field"""
+p_total_stats = eng.field_stats(norm_eng[0, ~m_i[0], :])
+p_tilt_stats = eng.field_stats(norm_eng[1, ~m_i[1], :])
+p_spice_stats = eng.field_stats(norm_eng[2, ~m_i[2], :])
 
-    if indicies is None:
-        eng_m = field_tl
-    else:
-        eng_m = field_tl[indicies, :]
-
-    e_mean = np.mean(eng_m, axis=0)
-    e_var = np.var(eng_m, axis=0)
-    return e_mean, np.sqrt(e_var)
-
-
-m_i = ~(max_int > 3)
+total_stats = eng.field_stats(norm_eng[0])
+tilt_stats = eng.field_stats(norm_eng[1])
+spice_stats = eng.field_stats(norm_eng[2])
 
 fig, ax = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(cf.jasa_2clm,3))
 
-tilt_m_0, tilt_r_0 = eng_stats(norm_eng[1, :, :])
-tilt_m, tilt_r = eng_stats(norm_eng[1, :, :], m_i[1, :])
+ax[0].plot(p_total_stats['r_a'] / 1e3, p_total_stats['mean'], linewidth=3)
+ax[0].plot(p_tilt_stats['r_a'] / 1e3, p_tilt_stats['mean'], linewidth=3)
+ax[0].plot(p_spice_stats['r_a'] / 1e3, p_spice_stats['mean'], linewidth=3)
 
-spice_m_0, spice_r_0 = eng_stats(norm_eng[2, :, :])
-spice_m, spice_r = eng_stats(norm_eng[2, :, :], m_i[2, :])
+ax[0].plot(p_total_stats['r_a'] / 1e3, p_total_stats['rms'],
+           linewidth=1, color='C0')
+ax[0].plot(p_tilt_stats['r_a'] / 1e3, p_tilt_stats['rms'],
+           linewidth=1, color='C1')
+ax[0].plot(p_spice_stats['r_a'] / 1e3, p_spice_stats['rms'],
+           linewidth=1, color='C2')
+ax[0].plot(p_total_stats['r_a'] / 1e3,
+           2 * p_total_stats['mean'] - p_total_stats['rms'],
+           linewidth=1, color='C0')
+ax[0].plot(p_tilt_stats['r_a'] / 1e3,
+           2 * p_tilt_stats['mean'] - p_tilt_stats['rms'],
+           linewidth=1, color='C1')
+ax[0].plot(p_spice_stats['r_a'] / 1e3,
+           2 * p_spice_stats['mean'] - p_spice_stats['rms'],
+           linewidth=1, color='C2')
 
-total_m_0, total_r_0 = eng_stats(norm_eng[3, :, :])
-total_m, total_r = eng_stats(norm_eng[3, :, :], m_i[3, :])
+ax[0].legend(eng.dy_fields)
+"""
+ax[0].plot(p_total_stats['r_a'] / 1e3, p_total_stats['10th'],
+           linewidth=1, linestyle='--', color='C0')
+ax[0].plot(p_tilt_stats['r_a'] / 1e3, p_tilt_stats['10th'],
+           linewidth=1, linestyle='--', color='C1')
+ax[0].plot(p_spice_stats['r_a'] / 1e3, p_spice_stats['10th'],
+           linewidth=1, linestyle='--', color='C2')
+ax[0].plot(p_total_stats['r_a'] / 1e3, p_total_stats['90th'],
+           linewidth=1, linestyle='--', color='C0')
+ax[0].plot(p_tilt_stats['r_a'] / 1e3, p_tilt_stats['90th'],
+           linewidth=1, linestyle='--', color='C1')
+ax[0].plot(p_spice_stats['r_a'] / 1e3, p_spice_stats['90th'],
+           linewidth=1, linestyle='--', color='C2')
+"""
 
-ax[0].plot(r_a / 1e3, total_m, linewidth=3, color='k')
-ax[0].plot(r_a / 1e3, tilt_m, linewidth=3, color='C0')
-ax[0].plot(r_a / 1e3, spice_m, linewidth=3, color='C1')
+ax[1].plot(total_stats['r_a'] / 1e3, total_stats['mean'], linewidth=3)
+ax[1].plot(tilt_stats['r_a'] / 1e3, tilt_stats['mean'], linewidth=3)
+ax[1].plot(spice_stats['r_a'] / 1e3, spice_stats['mean'], linewidth=3)
 
-ax[0].plot(r_a / 1e3, total_m + total_r, linewidth=2, color='k', linestyle='--')
-ax[0].plot(r_a / 1e3, total_m - total_r, linewidth=2, color='k', linestyle='--')
+ax[1].plot(p_total_stats['r_a'] / 1e3, total_stats['rms'],
+           linewidth=1, color='C0')
+ax[1].plot(p_tilt_stats['r_a'] / 1e3, tilt_stats['rms'],
+           linewidth=1, color='C1')
+ax[1].plot(p_spice_stats['r_a'] / 1e3, spice_stats['rms'],
+           linewidth=1, color='C2')
+ax[1].plot(p_total_stats['r_a'] / 1e3,
+           2 * total_stats['mean'] - total_stats['rms'],
+           linewidth=1, color='C0')
+ax[1].plot(p_tilt_stats['r_a'] / 1e3,
+           2 * tilt_stats['mean'] - tilt_stats['rms'],
+           linewidth=1, color='C1')
+ax[1].plot(p_spice_stats['r_a'] / 1e3,
+           2 * spice_stats['mean'] - spice_stats['rms'],
+           linewidth=1, color='C2')
 
-ax[0].plot(r_a / 1e3, tilt_m + tilt_r, linewidth=2, color='C0', linestyle='--')
-ax[0].plot(r_a / 1e3, tilt_m - tilt_r, linewidth=2, color='C0', linestyle='--')
+ax[1].plot(p_total_stats['r_a'] / 1e3, total_stats['10th'],
+           linewidth=1, linestyle='--', color='C0')
+ax[1].plot(p_tilt_stats['r_a'] / 1e3, tilt_stats['10th'],
+           linewidth=1, linestyle='--', color='C1')
+ax[1].plot(p_spice_stats['r_a'] / 1e3, spice_stats['10th'],
+           linewidth=1, linestyle='--', color='C2')
 
-ax[0].plot(r_a / 1e3, spice_m + spice_r, linewidth=2, color='C1', linestyle='--')
-ax[0].plot(r_a / 1e3, spice_m - spice_r, linewidth=2, color='C1', linestyle='--')
+ax[1].plot(p_total_stats['r_a'] / 1e3, total_stats['90th'],
+           linewidth=1, linestyle='--', color='C0')
+ax[1].plot(p_tilt_stats['r_a'] / 1e3, tilt_stats['90th'],
+           linewidth=1, linestyle='--', color='C1')
+ax[1].plot(p_spice_stats['r_a'] / 1e3, spice_stats['90th'],
+           linewidth=1, linestyle='--', color='C2')
 
-ax[1].plot(r_a / 1e3, total_m_0, linewidth=3, color='k')
-ax[1].plot(r_a / 1e3, tilt_m_0, linewidth=3, color='C0')
-ax[1].plot(r_a / 1e3, spice_m_0, linewidth=3, color='C1')
-
-ax[1].plot(r_a / 1e3, total_m_0 + total_r_0, linewidth=2, color='k', linestyle='--')
-ax[1].plot(r_a / 1e3, total_m_0 - total_r_0, linewidth=2, color='k', linestyle='--')
-
-ax[1].plot(r_a / 1e3, tilt_m_0 + tilt_r_0, linewidth=2, color='C0', linestyle='--')
-ax[1].plot(r_a / 1e3, tilt_m_0 - tilt_r_0, linewidth=2, color='C0', linestyle='--')
-
-ax[1].plot(r_a / 1e3, spice_m_0 + spice_r_0, linewidth=2, color='C1', linestyle='--')
-ax[1].plot(r_a / 1e3, spice_m_0 - spice_r_0, linewidth=2, color='C1', linestyle='--')
 
 ax[0].text(7, 5, 'W/O blocking', bbox=cf.bbox)
 ax[1].text(7, 5, 'With blocking', bbox=cf.bbox)
@@ -152,7 +158,7 @@ ax[1].text(7, 5, 'With blocking', bbox=cf.bbox)
 ax[0].set_xlim(5, 45)
 ax[0].set_ylim(-15, 5)
 
-ax[0].set_ylabel('Compensated ML energy (dB)')
+ax[0].set_ylabel('ML energy (dB re Background)')
 fig.supxlabel('Position, $x$ (km)')
 
 pos = ax[0].get_position()
@@ -169,4 +175,5 @@ pos.y0 += 0.04
 pos.y1 += 0.06
 ax[1].set_position(pos)
 
-fig.savefig('reports/jasa/figures/ml_energy_stats.png', dpi=300)
+#fig.savefig('reports/jasa/figures/ml_energy_stats.png', dpi=300)
+

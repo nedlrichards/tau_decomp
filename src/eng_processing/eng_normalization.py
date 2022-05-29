@@ -1,22 +1,28 @@
 import numpy as np
 from os.path import join
 from scipy.stats import linregress
-from src import MLEnergyPE, Config, list_tl_files
+from src import MLEnergy, MLEnergyPE, Config, list_tl_files
 
 class EngProc:
     """common processing for mixed layer energy processing"""
-    def __init__(self, fc, source_depth):
+    def __init__(self, cf):
         """parameters of investigation grid"""
-        self.fc = fc
-        self.source_depth = source_depth
-        self.cf = Config(fc=fc, source_depth=source_depth)
+        self.cf = cf
 
         # load background field energy for a reference
         eng_bg = []
-        for tl in list_tl_files(fc, source_depth=source_depth):
-            ml_pe = MLEnergyPE(tl)
-            eng_bg.append(10 * np.log10(ml_pe.ml_energy('bg') * ml_pe.r_a))
+        xs = []
 
+        for tl in list_tl_files(cf.fc, source_depth=cf.source_depth):
+            #ml_pe = MLEnergyPE(tl)
+            #eng_bg.append(10 * np.log10(ml_pe.ml_energy('bg') * ml_pe.r_a))
+            #xs.append(ml_pe.xs)
+            ml = MLEnergy(tl, self.cf.source_depth, bg_only=True)
+            bg_eng, _ = ml.background_diffraction()
+            eng_bg.append(10 * np.log10(bg_eng * ml.r_a))
+            xs.append(ml.xs)
+
+        self.xs = np.array(xs)
         self.bg_eng = np.array(eng_bg)
         self.r_a = ml_pe.r_a
 
@@ -26,7 +32,7 @@ class EngProc:
 
         fields = {f:[] for f in dy_fields}
 
-        for tl in list_tl_files(fc, source_depth=source_depth):
+        for tl in list_tl_files(cf.fc, source_depth=cf.source_depth):
             ml_pe = MLEnergyPE(tl)
             for fld in dy_fields:
                 fields[fld].append(10 * np.log10(ml_pe.ml_energy(fld) * ml_pe.r_a))
@@ -36,26 +42,24 @@ class EngProc:
         for fld in dy_fields:
             ml_eng.append(np.array(fields[fld]))
         self.dynamic_eng = np.array(ml_eng)
+        self.dy_fields = dy_fields
 
-    def blocking_feature(self, range_bounds=(5e3, 50e3),
-                         integration_length=5e3, block_co=3):
+
+    def blocking_feature(self, range_bounds=(5e3, 50e3), comp_len=5e3):
         """Compute integrated loss indices blocking features"""
         dr = (self.r_a[-1] - self.r_a[0]) / (self.r_a.size - 1)
-        num_int = int(np.ceil(self.integration_length / dr))
+        num_int = int(np.ceil(comp_len / dr))
 
         diff_eng = self.dynamic_eng - self.bg_eng
         r_i = (self.r_a > range_bounds[0]) & (self.r_a < range_bounds[1])
-        diff_eng = diff_eng[:, r_i]
+        diff_eng = diff_eng[:, :, r_i]
 
-        move_sum = np.cumsum(diff_eng, dtype=float, axis=-1)
-        # integration with a size num_int moving window
-        move_sum[:, :, num_int:] = move_sum[:, :, num_int:] \
-                                - move_sum[:, :, :-num_int]
-        move_sum = move_sum[:, :, win_len - 1:] * dr
+        # cumulative loss
+        loss = diff_eng[:, :, num_int:] - diff_eng[:, :, :-num_int]
+        max_int = np.max(-loss, axis=-1)
 
-        # max integrated loss
-        max_int = np.max(-move_sum, axis=-1)
         return max_int
+
 
     def field_stats(self, field_eng, range_bounds=(5e3, 50e3)):
         """common statistics taken over field realization"""
@@ -74,10 +78,12 @@ class EngProc:
         f_10_rgs = linregress(r_a, y=f_10)
         f_90_rgs = linregress(r_a, y=f_90)
 
-        stats = {'mean':f_mean, 'rms':f_rms, '10th':f_10, '90th':f_90,
+        stats = {"r_a":self.r_a[r_i], 'mean':f_mean, 'rms':f_rms,
+                 '10th':f_10, '90th':f_90,
                  'mean_rgs':f_mean_rgs, 'rms_rgs':f_rms_rgs,
                  '10th_rgs':f_10_rgs, '90th_rgs':f_90_rgs}
         return stats
+
 
     def rgs(self, stat_type, stat_dict, range_bounds=(5e3, 50e3), scale_r=False):
         """compute linear regression line from object"""

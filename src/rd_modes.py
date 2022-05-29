@@ -6,23 +6,18 @@ from scipy.signal import find_peaks
 from os import path
 
 from src import sonic_layer_depth
-from src import Config
 
 import pyducts
+from modepy import PRModes
 
-cf = Config()
 
 class RDModes:
     """compute range dependent mode coupling for a gaussian pertubation"""
 
-    def __init__(self, c_field, x_a, z_a, fc, z_src,
-                 bottom_HS=None, c_bounds=[0, 3000.],
-                 r_decimation=10, s=1/8, psi_k_bg=None):
+    def __init__(self, c_field, x_a, z_a, config, r_decimation=10, psi_k_bg=None):
         """Setup position and verticle profiles for gaussian"""
+        self.cf = config
         self.c_field = c_field
-        self.fc = fc
-        self.c_bounds = c_bounds
-        self.z_src = z_src
 
         self.bg_prof = np.mean(c_field, axis=1)
         self.dc = c_field - self.bg_prof[:, None]
@@ -43,21 +38,17 @@ class RDModes:
         self.r_plot = (np.arange(num_steps) + 1) * self.plot_dx
 
         self.c0 = np.mean(self.bg_prof)
-        self.omega = 2 * pi * fc
+        self.omega = 2 * pi * self.cf.fc
         self.k0 = self.omega / self.c0
 
         self.rho0 = 1000.
-        # try to supress reflections if halfspace is none
-        if bottom_HS is None:
-            self.bottom_HS = cf.bottom_HS
-        else:
-            self.bottom_HS = bottom_HS
-
         self.run_file = path.join('envs', f'auto_gen')
-        self.s = s
+        #self.s = s
 
         if psi_k_bg is None:
-            psi_bg, self.k_bg = self.run_kraken_bg()
+            #psi_bg, self.k_bg = self.run_kraken_bg()
+            modes = PRModes(self.z_a, self.bg_prof, self.cf.fc)
+            self.k_bg, psi_bg = modes(c_bounds=self.cf.c_bounds)
         else:
             psi_bg, self.k_bg = psi_k_bg
 
@@ -105,18 +96,18 @@ class RDModes:
     def run_kraken_bg(self):
         """Run kraken to compute modes"""
         dux = pyducts.modes.Kraken(self.run_file, 100., self.z_a,
-                                   c_bounds=self.c_bounds)
+                                   c_bounds=self.cf.c_bounds)
         if self.s is not None:
             bg_ier = UnivariateSpline(self.z_a, self.bg_prof, k=1, s=self.s)
-            dux.write_env(self.fc,
+            dux.write_env(self.cf.fc,
                         bg_ier.get_knots(),
                         bg_ier.get_coeffs(),
-                        bottom_HS=self.bottom_HS)
+                        bottom_HS=self.cf.bottom_HS)
         else:
-            dux.write_env(self.fc,
+            dux.write_env(self.cf.fc,
                         self.z_a,
                         self.bg_prof,
-                        bottom_HS=self.bottom_HS)
+                        bottom_HS=self.cf.bottom_HS)
 
         dux.run_kraken()
         psi_bg, k_bg, _ = pyducts.modes.read_mod(self.run_file)
@@ -129,7 +120,7 @@ class RDModes:
         # run kraken, range dependent
         rf = self.run_file + "_rd"
         dux_rd = pyducts.modes.Kraken(rf, self.r_plot, self.z_a,
-                                      z_src=self.z_src, c_bounds=self.c_bounds)
+                                      z_src=self.cf.z_src, c_bounds=self.cf.c_bounds)
 
         for i, prof in enumerate(self.c_field.T):
             # resample profiles to compute delta
@@ -140,11 +131,11 @@ class RDModes:
                 prof = [self.z_a, prof]
 
             if i == 0:
-                dux_rd.write_env(self.fc, prof[0], prof[1],
-                              append=False, bottom_HS=self.bottom_HS)
+                dux_rd.write_env(self.cf.fc, prof[0], prof[1],
+                              append=False, bottom_HS=self.cf.bottom_HS)
             else:
-                dux_rd.write_env(self.fc, prof[0], prof[1],
-                              append=True, bottom_HS=self.bottom_HS)
+                dux_rd.write_env(self.cf.fc, prof[0], prof[1],
+                              append=True, bottom_HS=self.cf.bottom_HS)
 
         dux_rd.run_kraken()
         self.dux_rd = dux_rd
@@ -165,7 +156,7 @@ class RDModes:
         """Direct Crank-Nickolson solution, coupled modes"""
         # setup source term
         phi_s = np.exp(1j * pi / 4) / (self.rho0 * np.sqrt(8 * pi)) \
-              * self.psi_ier(self.z_src)
+              * self.psi_ier(self.cf.z_src)
 
         a_cn = [phi_s]
         rho_last = self.rho(self.r_plot[0])

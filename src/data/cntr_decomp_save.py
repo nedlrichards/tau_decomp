@@ -13,13 +13,14 @@ import pyducts
 sec4 = SectionLvls()
 #fc = 400
 fc = 1e3
-z_src = 200.
+#source_depth = "deep"
+source_depth = "shallow"
 
 save_dir = f'data/processed/field_{int(fc)}'
 if False:
     save_dir = join('/hb/scratch/edrichar/computed_results/', save_dir)
 
-cf = Config(z_src=z_src, fc=fc)
+cf = Config(source_depth=source_depth, fc=fc)
 fields = np.load('data/processed/inputed_decomp.npz')
 x_a = fields['x_a']
 z_a = fields['z_a']
@@ -60,7 +61,7 @@ x_start = np.arange(int((sec4.x_a[-1] - rmax) / d_section) + 1) * d_section
 D = z_a[-1]
 z_save = 150.  # restrict size of PE result
 
-def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
+def save_tl(xs, z_save, save_couple=True):
 
     rf = pyducts.ram.RamIn(cf.fc, cf.z_src, rmax, D,
                            bottom_HS=cf.bottom_HS, dr=100., zmax_plot=D)
@@ -90,8 +91,8 @@ def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
 
 
     if save_couple:
-        rd_modes = RDModes(tmp_dict['c_bg'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds, s=None)
+        rd_modes = RDModes(tmp_dict['c_bg'], tmp_dict['x_a'],
+                           tmp_dict['z_a'], cf)
 
         tmp_dict['r_modes'] = (rd_modes.r_plot + tmp_dict['xs']) / 1e3
         tmp_dict['bg_mode_amps'] = rd_modes.couple_cn()
@@ -100,30 +101,24 @@ def save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True):
         #psi_k_bg = (rd_modes.psi_bg, rd_modes.k_bg)
         print('bg')
 
-        rd_modes = RDModes(tmp_dict['c_tilt'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,s=None)
-                        #psi_k_bg=psi_k_bg)
+        rd_modes = RDModes(tmp_dict['c_tilt'], tmp_dict['x_a'],
+                           tmp_dict['z_a'], cf)
         tmp_dict['tilt_mode_amps'] = rd_modes.couple_cn()
         print('tilt')
 
-        rd_modes = RDModes(tmp_dict['c_spice'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,s=None)
+        rd_modes = RDModes(tmp_dict['c_spice'], tmp_dict['x_a'],
+                           tmp_dict['z_a'],cf)
                         #psi_k_bg=psi_k_bg)
         tmp_dict['spice_mode_amps'] = rd_modes.couple_cn()
         print('spice')
 
-        rd_modes = RDModes(tmp_dict['c_total'], tmp_dict['x_a'], tmp_dict['z_a'],
-                        cf.fc, cf.z_src, c_bounds=cf.c_bounds,s=None)
-                        #psi_k_bg=psi_k_bg)
+        rd_modes = RDModes(tmp_dict['c_total'], tmp_dict['x_a'],
+                           tmp_dict['z_a'], cf)
         tmp_dict['total_mode_amps'] = rd_modes.couple_cn()
 
     np.savez(join(save_dir, f'tl_section_{int(xs/1e3):03d}'), **tmp_dict)
     print(f'saved tl_section_{int(xs/1e3)}')
 
-#run_func = lambda xs: save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=True)
-run_func = lambda xs: save_tl(xs, fc, z_save, c_bg, c_tilt, c_spice, c_total, save_couple=False)
-
-#for xs in np.arange(31, 90) * 1e4:
-    #run_func(xs)
+run_func = lambda xs: save_tl(xs, z_save, save_couple=False)
 
 list(map(run_func, x_start))

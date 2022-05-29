@@ -6,24 +6,19 @@ from matplotlib.colors import ListedColormap
 from matplotlib.cm import ScalarMappable
 from scipy.stats import linregress
 
-from src import EngProc
+from src import EngProc, Config
 
 plt.style.use('elr')
 plt.ion()
-
-def rgs(lin_rgs):
-    """compute linear regression line from object"""
-    return lin_rgs.intercept + r_a[diff_i] * lin_rgs.slope
-
 
 fc = 400
 #fc = 1e3
 source_depth="shallow"
 #source_depth="deep"
 
-eng = EngProc(fc=fc, source_depth=source_depth)
+cf = Config(fc=fc, source_depth=source_depth)
+eng = EngProc(cf)
 
-cf = eng.cf
 r_a = eng.r_a
 eng_bg = eng.bg_eng
 
@@ -61,7 +56,7 @@ cax = fig.add_axes([0.25, 0.3, .02, .1])
 lcmap = ListedColormap([clrs[0], clrs[-1]])
 sm = ScalarMappable(cmap=lcmap)
 cb = fig.colorbar(sm, cax=cax, ticks=[0.25, 0.75])
-cb.set_ticklabels([r'$x_{src}\;eq$300 km', '$x_{src}$ >300km'])
+cb.set_ticklabels([r'$x_{src}\leq$300 km', '$x_{src}$ >300km'])
 ax.set_ylim(-18, -10)
 
 ax.set_xlabel('Position, $x$ (km)')

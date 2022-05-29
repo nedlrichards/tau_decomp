@@ -3,7 +3,8 @@ from math import pi
 from os.path import join
 import matplotlib.pyplot as plt
 
-from src import MLEnergyPE, Config, list_tl_files
+from src import EngProc
+
 plt.style.use('elr')
 
 plt.ion()
@@ -14,47 +15,25 @@ fc = 400
 source_depth = "shallow"
 #source_depth = "deep"
 
-cf = Config(source_depth=source_depth, fc=fc)
+eng = EngProc(fc=fc, source_depth=source_depth)
 
-pe_ml_engs = []
+cf = eng.cf
+r_a = eng.r_a
+eng_bg = eng.bg_eng
 
-x_s = []
-all_eng = []
-for r in list_tl_files(fc, source_depth=source_depth):
-    e = MLEnergyPE(r)
-    x_s.append(e.xs)
-    o_r = np.array([e.ml_energy(ft) for ft in cf.field_types])
-    all_eng.append(o_r[:, None, :])
-
-r_a = e.r_a
-x_s = np.array(x_s)
-
-all_eng = np.concatenate(all_eng, axis=1)
-
-norm_eng = np.log10(all_eng[1:, :, :]) - np.log10(all_eng[0, :, :])
-norm_eng *= 10
-
-dr = (r_a[-1] - r_a[0]) / (r_a.size - 1)
-diff_i = (r_a > 5e3) & (r_a < 45e3)
-
-# strange transpose arrises from indexing
-diff_eng = np.diff(norm_eng[:, :, diff_i], axis=-1) / dr
-
-win_len = 50
-move_sum = np.cumsum(diff_eng, dtype=float, axis=-1)
-move_sum[:, :, win_len:] = move_sum[:, :, win_len:] - move_sum[:, :, :-win_len]
-move_sum = move_sum[:, :, win_len - 1:] * dr
-
-max_int = np.max(-move_sum, axis=-1)
+range_bounds = (5e3, 50e3)
+max_int_loss = eng.blocking_feature(range_bounds=range_bounds,
+                                    comp_len=5e3)
 
 fig, ax = plt.subplots(figsize=(cf.jasa_1clm,2.5))
-ax.plot(x_s / 1e3, max_int.T)
+#ax.plot(x_s / 1e3, max_int.T)
+ax.plot(eng.xs / 1e3, max_int_loss.T)
 ax.set_xlabel('Starting position (km)')
 ax.set_ylabel('Maxium loss over 5 km (dB)')
 ax.set_ylim(-0.5, 15)
 ax.set_xlim(0, 900)
 ax.grid()
-#ax.legend(['tilt', 'spice', 'observed'])
+ax.legend(eng.dy_fields)
 ax.set_yticks([0, 3, 6, 9, 12])
 pos = ax.get_position()
 pos.x0 += 0.04
