@@ -25,82 +25,88 @@
 The paper is organized as follows: Section~\ref{sec:decompostion} discusses the dynamic decompostion of the observed sound speed field into spice and tilt structures.
 
 \section{North Pacific transcet}
-The focus of this study is a 970 km SeaSoar conductivity, salinity and depth (CTD) transcet taken over 4 days in the North Pacific\citep{cole2010seasonal}. The observation extended from the sea surface to 430 m depth, with an average cycle length of 1.28 km. The SeaSoar observations are gridded with 1 km horizontal and 0.5 m vertical resolution before analysis. The soundspeed, $c$, computed from the CTD data using the Thermodynamic Equation of SeaWater 2010 (TEOS-10), is shown in Fig. \ref{fig:transcet}. The mixed layer is apparent as relatively high sound speed over a significantly lower sound speed layer that extends into the deep ocean. Horizontal and vertical differences in soundspeed are apparent throughout the mixed layer \citep{colosi2020observations}, caused by internal waves, eddies and ocean spice. This study will first separate the variations due to internal waves and eddies from ocean spice, and then compare the acoustic propagation though the separated fields.
+This study is based on a 970 km SeaSoar conductivity, salinity and depth (CTD) transect taken over 4 days in the North Pacific\citep{cole2010seasonal}, Fig. \ref{fig:transcet}. The observation extended from the sea surface to 430 m depth, with an average cycle length of 1.28 km. The SeaSoar observations were first gridded with 1 km horizontal and 0.5 m vertical resolution. The transcet is largely parrellel to the 16 $^\circ C$ isotherm, calculated from the World Ocean Atlas decadal spring average.
+
+\begin{figure}
+\includegraphics{../figures/transcet.png}
+    \caption{\label{fig:transcet}{Location of SeaSoar transcet, with overlay of spring 50 m isotherms.}}
+\end{figure}
+
+
+Sound speed, $c$, computed from the CTD data using the Thermodynamic Equation of SeaWater 2010 (TEOS-10), is shown in Fig. \ref{fig:c_grid}. The mixed layer is apparent as relatively high sound speed over a strong negative sound speed gradient that extends into the deep ocean. Horizontal and vertical differences in sound speed are apparent throughout the mixed layer observations \citep{colosi2020observations}, caused by internal waves, eddies and ocean spice. This study will first separate the variations due to internal waves and eddies from ocean spice, and then compare the acoustic propagation though the separated fields.
 
 \begin{figure}
 \includegraphics{../figures/sound_speed_transcet_sld.png}
-\caption{\label{fig:transcet}{Sound speed observation of the mixed layer, the sonic layer depth is black line.}}
+\caption{\label{fig:c_grid}{Sound speed observation of the mixed layer, the black line is the sonic layer depth.}}
 \end{figure}
 
-The straightforward physical model of the mixed layer is turbulence from the air-sea interface homogonize the vertical properties and lead to an unstratified layer. An example of a nominal mixed layer is the 252 km profile in Fig. \ref{fig:profiles}. Although marginal stratification is required for dynamic stability, the potential density, $\sigma$, of the mixed layer is essentially constant. The spice profile, $\gamma$, which quantifies density compensated changes in ocean properties, is also essentially constant. The sound speed is dominated by the adiabatic pressure gradient, roughly 0.16 (m/s) / m. The downward soundspeed gradient creates an upward diffracting duct bounded on the top by the perfectly reflecting free surface.
+The straightforward physical model of the mixed layer is wind induced mixing at the air-sea interface homogenizes the vertical properties and leads to an unstratified layer. An example of a homogenized mixed layer profile was measured at 252 km, shown in Fig. \ref{fig:profiles}. Although marginal stratification is required for dynamic stability, the potential density, $\sigma$, of the mixed layer is essentially constant. The spice profile, $\gamma$, which quantifies density compensated changes in ocean properties, is also essentially constant. The sound speed is dominated by the adiabatic pressure gradient, roughly 0.16 (m/s) / m. The downward sound speed gradient creates an upward diffracting duct bounded on the top by the free surface, modeled as a perfect reflector.
 
 \begin{figure}
 \includegraphics{../figures/sld_profile.png}
     \caption{\label{fig:profiles}{(a) Potential density (b) spiciness and (c) sound speed measured at 249 km (blue curves) and 252 km (orange curves).}}
 \end{figure}
 
-The sonic layer depth (SLD), the depth of maximum $c$ above the thremocline, is the only free variable for vertically homogonous model for the mixed layer. Increases in the SLD increase the viabilty of the mixed layer duct, one meteric of this is the mode cutoff frequency. The SLD is shown as horizontal grey lines in Fig. \ref{fig:profiles}(c), and the black line in Fig. \ref{fig:transcet}. Over the entire trances, the SLD increases with range, and a linear regression fit begins at 78.5 m and has a slope of 2 m / 100 km. While the large scale trend of increasing SLD indicates the mixed layer duct is strenthening, variablity is observed in SLD depth over the transcet. The rapid variation in 3 km between the profiles at 249 and 252 km is one such example that indicates fine scale range depence of the mixed layer is acoustically significant.
+The sonic layer depth (SLD), the depth of maximum $c$ above the thermocline, is the only free variable for vertically homogeneous mixed layer. Increases in the SLD increase the viability of the mixed layer duct, one metric of this is the mode cutoff frequency. The SLD is shown as horizontal grey lines in Fig. \ref{fig:profiles}(c), and the black line in Fig. \ref{fig:c_grid}. Over the entire trances, the SLD increases with range, and a linear regression fit begins at 78.5 m and has a slope of 2 m / 100 km. While the large scale trend of increasing SLD indicates the mixed layer duct is strengthening, significant variability is observed in SLD depth over the transect. The rapid variation in 3 km between the profiles at 249 and 252 km is one such example that indicates fine scale range dependence of the mixed layer is acoustically significant.
 
-The transcet showed that the mixed layer has vertical soundspeed structure, from eddies which create stratification in the upper mixed layer, and from density compensated salinity and temperature variation, or spice. The local spice, $\gamma$, is used as a meaure of the density compensated variation \citep{klymak2015spice},
+The transect shows that the mixed layer sometimes has significant vertical sound speed structure. This structure can arise from from ocean processes that create stratification in the upper mixed layer, like eddies. Alternatively, vertical structure in sound speed can arise from density compensated salinity and temperature variation, or spice. The local spice, $\gamma$, is used as a measure of the density compensated variation \citep{klymak2015spice},
 \begin{equation}
     \gamma=\textrm{sgn}(T-\bar{T}) \sqrt{\alpha_0^2(T-\bar{T})^2 +\beta_0^2(S-\bar{S})^2},
     \label{eq:gamma}
 \end{equation}
-where $\bar{T}$ and $\bar{S}$ are the means of temperature and salinity at constant density, and a representative ($\bar{T}$, $\bar{S}$) value defines $\alpha_0=\partial \sigma / \partial T$ and $\beta_0=\partial \sigma / \partial S$. $\gamma$ is potential variable that represents linearized distance in density units along (T, S) isopycnals. Density compensation occurs when salinity and temperature increase or decrease proportially, these changes in both variables are reenforcing in sound speed. The effect of spice is a dominant factor in the sound speed profile at 249 km in Fig. \ref{fig:profiles}.
+where $\bar{T}$ and $\bar{S}$ are the means of temperature and salinity at constant density, and a representative ($\bar{T}$, $\bar{S}$) value defines $\alpha_0=\partial \sigma / \partial T$ and $\beta_0=\partial \sigma / \partial S$. $\gamma$ is potential variable that represents linearized distance in density units along (T, S) isopycnals. Density compensation occurs when salinity and temperature increase or decrease proportionally, these changes in both variables are reinforcing in sound speed. The effect of spice is a dominant factor in the sound speed profile at 249 km in Fig. \ref{fig:profiles}.
 
-The SLD increases over the transect, a linear regression fit begins at 78.5 m and has a slope of 2 m / 100 km. The density at 40 m depth decreases with range, with a linear regression intercept at $\sigma=25.3$ kg/m$^3$ and a slope of -0.04 (kg/m$^3$) / 100 km. The decrease in density means that as range increases, mixed layer isopycnals transition to positions with stable stratification below the mixed layer.
+The density at 40 m depth decreases with range, with a linear regression intercept at $\sigma=25.3$ kg/m$^3$ and a slope of -0.04 (kg/m$^3$) / 100 km. The decrease in density means that as range increases, mixed layer isopycnals transition to positions with stable stratification below the mixed layer.
 
 \section{\label{sec:decomposition}Spice and tilt decompostion}
-A dynamic decomposition is used to separated the observed sound speed variations into contributions from: (1) isopycnal tilt and (2) density compensated sound speed variation proportional to ocean spice. This decompostion follows the method proposed for a similar SeaSoar transcet by Dzieciuch \emph{et al.}\citep{dzieciuch2004}, although spice in the mixed layer is treated differently here. The decomposition is first described for the case where spice is observed in a stratfied ocean, which is applied below the mixed layer. A modified treatment of spice in the margninally stratified mixed layer is discussed next. Finally, the decomposed sound speed fields are compared.
+A dynamic decomposition is used to separated the observed sound speed variations into contributions from: (1) isopycnal tilt and (2) density compensated sound speed variation proportional to ocean spice. This decomposition follows the method proposed for a similar SeaSoar transect by Dzieciuch \emph{et al.}\citep{dzieciuch2004}, although spice in the mixed layer is treated differently here. The decomposition is first described for the case where spice is observed in a stratified ocean, which is applied below the mixed layer. A modified treatment of spice in the marginally stratified mixed layer is discussed next. Finally, the decomposed sound speed fields are compared.
 
 \begin{figure}
 \includegraphics{../figures/sig_tau_interp.png}
-    \caption{\label{fig:cntrs}{Contours of: (a) Potential density (b) spiciness. The lowpass estimate of each stable isopycnal position is shown in red in panel (a). The lowpass estimate of the $\sigma=25.31$ (kg/m$^3$) is shown in (b), to represent common processing of all isopycnals. The full record shows isopycnals shoal and enter the mixed layer with decreasing range. The stable isopycnal estimate ends at the first location the isopycnal enters the mixed layer. Intermittant outcropping of the isopycnal are apperent as gaps in the $\sigma=25.21$ (kg/m$^3$) isopycnal position. The spice record has been imputed at the isopycnal outcroppings to form a continous series.}}
+    \caption{\label{fig:cntrs}{Contours of: (a) Potential density (b) spiciness. The lowpass estimate of each stable isopycnal position is shown in red in panel (a). The lowpass estimate of the $\sigma=25.31$ (kg/m$^3$) is shown in (b), to represent common processing of all isopycnals. The full record shows isopycnals shoal and enter the mixed layer with decreasing range. The stable isopycnal estimate ends at the first location the isopycnal enters the mixed layer. Intermittent outcropping of the isopycnal are apparent as gaps in the $\sigma=25.21$ (kg/m$^3$) isopycnal position. The spice record has been imputed at the isopycnal outcroppings to form a continuous series.}}
 \end{figure}
 
-\subsection{Staratified ocean decomposition}
-The dynamic decomposition begins by defining a field quanitity, $\sigma$ is used as a simple demonstration, by interpolation of values along isopycnals. This definition allows for the generation of new fields that vary only in isopycnal positions, used to correct for dynamic isopycnal tilt. The isopycnal positions are defined as $\sigma(x, z) = z^{-1}(x, \sigma)$, and are discretized as $z_i(x; \sigma_i)$. A two dimensional linear interpolation is defined for $\sigma$ as
+\subsection{Stratified ocean decomposition}
+The dynamic decomposition begins by defining a gridded quantity, $\sigma$ is used as a simple demonstration, by interpolation of values along isopycnals. This definition allows for the generation of new fields that differs from the observed field only in isopycnal positions, which is used to remove dynamic isopycnal tilt. The isopycnal positions are defined as $\sigma(x, z) = z^{-1}(x, \sigma)$, which is discretized as $z_i(x; \sigma_i)$. A two dimensional linear interpolation is defined for $\sigma$,
 \begin{equation}
     \sigma\approx\mathcal{L}(x, y; \sigma_i, z_i).
     \label{eq:lin_intr}
 \end{equation}
-The positions $z_i(x, \sigma)$ are then modeled as the superposition of finescale dynamics and a stable background position $\bar{z}(x, \sigma)$. The background density field, $\bar{\sigma}$, is defined by substituting $\bar{z}(x, \sigma)$ for $z(x, \sigma)$ in Eq. \eqref{eq:lin_intr}. The estimate of $\bar{\sigma}$ is then a vertically streched version of the observed $\sigma$ field without finescale tilt dynamics.
+The positions $z_i(x, \sigma)$ are then modeled as the superposition of fine scale dynamics and a stable background position $\bar{z}(x, \sigma)$. The background density field, $\bar{\sigma}$, is defined by substituting $\bar{z}(x, \sigma)$ for $z(x, \sigma)$ in Eq. \eqref{eq:lin_intr}. The estimate of $\bar{\sigma}$ is then a vertically stretched version of the observed $\sigma$ field without fine scale tilt dynamics.
 
-The same isopycnal surfaces can be used to define and then compute estimates of other field quantites without finescale isopycnal tilt. While sound speed is ultimately the field quantity of interest, the variable of ocean spice is used here instead,
+The background isopycnal position is estimated with a spatial lowpass filter. This study uses a cutoff of 50 km for the estimate of $\bar{z}(x, \sigma)$, which is shown as red lines in Fig. \ref{fig:cntrs}(a). The estimated position where the isopycnal moves below the mixed layer is used as the start of the $\bar{z}(x, \sigma)$ estimate, apparent around 250 km for $\sigma=25.25$ (kg/m$^3$). A conservative estimate is made for the start position of $\bar{z}(x, \sigma)$ is made by eye. In contrast, isopycnals in the mixed layer are considered unstable and no attempt is made to estimate a background isopycnal position.
+
+The same isopycnal surfaces can also define estimates of other field quantities without fine scale isopycnal tilt. While sound speed is ultimately the field quantity of interest, the variable of ocean spice is used here instead,
 \begin{equation}
     \gamma\approx\mathcal{L}(x, z; \gamma_i(x), z_i),
     \label{eq:lin_intr_gamma}
 \end{equation}
-where the range dependent $\gamma_i(x)$ is measured along the $\sigma_i$ isopycnal. The accuracy of Eq. \eqref{eq:lin_intr_gamma} depends on the ocean statification through the positions of the isopycnals, $z_i$, and has the smallest error in well stratified regions.
+where the range dependent $\gamma_i(x)$ is measured along the $\sigma_i$ isopycnal. The accuracy of Eq. \eqref{eq:lin_intr_gamma} depends on the ocean stratification through the positions of the isopycnals, $z_i$, and has the smallest error in well stratified regions.
 
-when $\gamma$ has significant non-linear variation over depths with little $\sigma$ gradient. In well stratified areas of the ocean, however, Eq. \ref{eq:lin_intr} and Eq. \ref{eq:lin_intr_gamma} are accurate and suffienct to compute soundspeed with the inverse of Eq. \eqref{eq:gamma}, $c(S, T, p)=c(\gamma^{-1}, p)$.
+when $\gamma$ has significant non-linear variation over depths with little $\sigma$ gradient. In well stratified areas of the ocean, however, Eq. \ref{eq:lin_intr} and Eq. \ref{eq:lin_intr_gamma} are accurate and sufficient to compute sound speed with the inverse of Eq. \eqref{eq:gamma}, $c(S, T, p)=c(\gamma^{-1}, p)$.
 
-The background isopycnal position is estimated with a spatial lowpass filter. This study uses a cutoff of 50 km for the estimate of $\bar{z}(x, \sigma)$, which is shown as red lines in Fig. \ref{fig:cntrs}(a). The estimated position where the isopycnal moves below the mixed layer is used as the start of the $\bar{z}(x, \sigma)$ estimate, apparent around 250 km for $\sigma=25.25$ (kg/m$^3$). A conservative estimate is made for the start position of $\bar{z}(x, \sigma)$ is made by eye. In contrast, isopycnals in the mixed layer are considered unstable and no attempt is made to estimate a background isopycnal position.
+The position of three isopycnals are shown in Fig. \ref{fig:cntrs}(a). Isopycnals below the mixed layer, \emph{i.e.} $\sigma = 25.29$ kg/m$^3$, are continuous in $x$ and vary slowly in $z$. Isopycnals above the mixed layer, \emph{i.e.} $\sigma = 25.21$ kg/m$^3$, may outcrop, causing discontinuities in $x$, and vary rapidly in $z$. The large scale trend of decreasing mixed layer density with $x$ means that isopycnals transition from unstable mixed layer isopycnals to stable isopycnals below the mixed layer.
 
-with a fine $\sigma_i$ spacing in the mixed layer and a coarser spacing for deeper isopycnals. The position of three isopycnals are shown in Fig. \ref{fig:cntrs}(a). Isopycnals below the mixed layer, \emph{i.e.} $\sigma = 25.29$ kg/m$^3$, are continous in $x$ and vary relativly slowly in $z$. Isopycnals above the mixed layer, \emph{i.e.} $\sigma = 25.21$ kg/m$^3$, may outcrop, causing discontinuities in $x$, and vary rapidly in $z$. The large scale trend of decreasing mixed layer density with $x$ means that isopycnals transistion from unstable mixed layer isopycnals to stable isopycnals below the mixed layer.
+The $\gamma$ field in Eq. \eqref{eq:lin_intr_gamma} allows for the additional definition of a stable background value along isopycnals, $\hat{\gamma}_i(x)$. This leads to four possible $\gamma$ fields with the combination of parameter pairs: the stable field, ($\bar{\gamma}_i$, $\bar{z}_i$); the tilt field, ($\bar{gamma_i}$, $z_i$); the spice field, ($gamma_i$, $\bar{z}_i$); and the total field, ($gamma_i$, $z_i$).
 
-The $\gamma$ field in Eq. \eqref{eq:lin_intr_gamma} allows for the additional definition of a stable background value along isopycnals, $\hat{\gamma}_i(x)$. This leads to four possible $\gamma$ fields with the combination of paramter pairs: the stable field, ($\bar{\gamma}_i$, $\bar{z}_i$); the tilt field, ($\bar{gamma_i}$, $z_i$); the spice field, ($gamma_i$, $\bar{z}_i$); and the total field, ($gamma_i$, $z_i$).
-
-The sound speed can be computed from ($\sigma$, $\gamma$) through an inverse of Eq. \eqref{eq:gamma}. The inverse function is implimented in a few iterations. The values of $\alpha_0$ and $\beta_0$ used for Eq. \eqref{eq:gamma} define an angle $\theta_0$ of maximum $d\gamma$. The angle of 0 $d\sigma$ is not constant however, and is determined by the local values of ($\alpha$, $\beta$) as $\theta - \pi / 2$. The linearized estimate of ($\sigma$, $\gamma$) is first estimated from $\theta_0$. Then, iteratively, the value of $\sigma$ is first refined with the local value of $\theta$ and then gamma is corrected with $\theta_0$.
-
+The sound speed can be computed from ($\sigma$, $\gamma$) through an inverse of Eq. \eqref{eq:gamma}. The inverse function is computed by iteration. The values of $\alpha_0$ and $\beta_0$ used for Eq. \eqref{eq:gamma} define an angle $\theta_0$ of maximum $d\gamma$ and zero $d\sigma$. The linearized estimate of ($\sigma$, $\gamma$) is first estimated from $\theta_0$. Then, iteratively, the value of $\sigma$ is first refined with the local value of $\theta$ and then gamma is corrected with $\theta_0$.
 
 Internal waves largely followed the Garret-Munk spectrum up to the mixed layer, while eddies were the largest contribution to tilt in the mixed layer.  The decomposition works by contouring the observed field into isopycnals, and then spatially lowpass filtering isopycnal position and spice along the isopycnal to estimate an unperturbed background condition.
 
 \subsection{Mixed layer decomposition}
-Estimation of the stable isopycnal position and spice with a lowpass filter is most effective outside of the mixed layer where the ocean is well stratified in regions of significant spice variation. Two challenges in the dynamic decomposition of \citep{dzieciuch2004} arrise in the mixed layer: (1) significant variations of $\tau$ occcur in positions with small $\sigma$ gradients, and (2) isopycnal locations vary rapidly and may not have a stable position. The $\sigma$ field is only effected by (2), which is treated by truncating $\hat{z}_i(x; \sigma_i)$ when an isopycnal shows significant surface excursions or outcropping. The last stable isopycanl density is then extrapolated to the surface, resulting in a completely mixed layer. However, both challenges are significant to the construction of $\gamma$ since this interpolation depends on the isopycnal positions.
+Estimation of the stable isopycnal position and spice with a lowpass filter is most effective outside of the mixed layer where the ocean is well stratified in regions of significant spice variation. Two challenges in the dynamic decomposition of \citep{dzieciuch2004} arise in the mixed layer: (1) significant variations of $\tau$ occur in positions with small $\sigma$ gradients, and (2) isopycnal locations vary rapidly and may not have a stable position. Both challenges are related to the constraint of sampling the spice field at isopycnal positions imposed by the dynamic decomposition of \citep{dzieciuch2004}, and a and a linear superposition model for $\gamma$ in the mixed layer is proposed to avoid this sampling requirement.
 
-These challenges are particularly relevant the construction of the $\gamma$ fields, the 
+The $\sigma$ field is only effected by (2), which is treated by truncating $\hat{z}_i(x; \sigma_i)$ when an isopycnal shows significant surface excursions or outcropping. The last stable isopycnal density is then extrapolated to the surface, resulting in a completely mixed layer. However, both challenges are significant to the construction of $\gamma$ since this interpolation depends on the isopycnal positions.
 
-Both challenges are related to the constraint of sampling the spice field at isopycnal positions imposed by the dynamic decompostion of \citep{dzieciuch2004}, and a and a linear superposition model for $\gamma$ in the mixed layer is proposed to avoid this sampling requirement.
+
 
 First, while the error of the interpolator for $\sigma$ can be made small by increasing the number of isopycnals, the position of isopycnals may not occur in regions of significant spice variation. While dynamic stability limits on N$^2$ prevent $\partial \sigma / \partial z$ from reaching 0, observations come close to the theoretical sampling limit where significant changes in $\partial \tau / \partial z$ occur at positions with very small changes in $\sigma$.
 
+ Inside the marginally stratified mixed layer, however, non-linear spice variation can occur between isopycnals with very fine spacing. An example of two mixed layer $\sigma$ and $\gamma$ profiles are shown in Fig. \ref{fig:profiles} (a) and (b), which were taken 3 km apart. Both $\sigma$ profiles are well mixed above the pycnocline at around 110 m, and the vertical spacing of isopycnals is large. However the profile at 249 km shows significant spice variation above the pycnocline, and a linear interpolation for $\gamma$ that uses isopycnal positions will be undersampled in this region.
 
- Inside the marginally stratified mixed layer, however, non-linear spice variation can occur between isopycnals with very fine spacing. An example of two mixed layer $\sigma$ and $\gamma$ profiles are shown in Fig. \ref{fig:profiles} (a) and (b), which were taken 3 km appart. Both $\sigma$ profiles are well mixed above the pycnocline at around 110 m, and the vertical spacing of isopycnals is large. However the profile at 249 km shows significant spice variation above the pycnocline, and a linear interpolation for $\gamma$ that uses isopycnal positions will be undersampled in this region.
+Secondly, the low-passed isopycnal positions are an estimate of where the isopycnals would be in the absence of isopycnal tilt from internal waves and eddies. While isopycnals are observed in the mixed layer, the position of isopycnals in the mixed layer are highly variable and yield physically implausible low-passed positions. In keeping with the well mixed assumption, this study does not attempt to estimate a stable position for isopycnals in the mixed layer.
 
-Secondly, the lowpassed isopycnal positions are an estimate of where the isopycnals would be in the absence of isopycnal tilt from internal waves and eddies. While isopycnals are observed in the mixed layer, the position of isopycnals in the mixed layer are highly variable and yield physically implausable lowpassed positions. In keeping with the well mixed assumption, this study does not attempt to estimate a stable position for isopycnals in the mixed layer.
-
-A linear superposition model is used instead of a linear interpolator for the estimate of $\tau$ in the mixed layer. In essence, all observed $\tau$ variablitly that is not explained by the tilt field is included in the spice field, without any warping to account for the mean isopycnal levels. The linear superposition model is written
+A linear superposition model is used instead of a linear interpolator for the estimate of $\tau$ in the mixed layer. In essence, all observed $\tau$ variability that is not explained by the tilt field is included in the spice field, without any warping to account for the mean isopycnal levels. The linear superposition model is written
 \begin{equation}
     \tau_{observed} = \tau_{bg} + \Delta \tau_{tilt} + \Delta \tau_{spice},
 \end{equation}
@@ -112,35 +118,52 @@ with the spice field is defined as $\tau_{bg} + \Delta \tau_{spice}$, and simila
 \end{figure}
 
 \section{\label{sec:propagation}Mixed layer acoustic propagation}
-Numerical simulation is used to predict the effect of the separated tilt and spice soundspeed structures on acoustic porpagation in the mixed layer duct. The focus is on mixed layer duct propgation over a single convergence zone length, Fig. \ref{fig:decomp_xmission}. The acoustic energy in the mixed layer duct propagation is dominated by a few modes a few kilometers from the source up to the first converegence zone. Outside of the source region acoustic energy in the mixed layer is monotonically decreasing.
+Acoustic propagation simulations are used to predict the effect of the separated tilt and spice sound speed structures on acoustic propagation in the mixed layer duct, with a focus on a single convergence zone length, Fig. \ref{fig:decomp_xmission}. A few kilometers from the source the acoustic energy in the mixed layer duct propagation is dominated by a few modes up to the first convergence zone. Outside of the source region acoustic energy in the mixed layer is monotonically decreasing.
 
 \begin{figure}
 \includegraphics{../figures/decomp_xmission.png}
     \caption{\label{fig:decomp_x}{Left panels is sound speed field, right panel is acoustic pressure. The rows are the (a) tilt, (b) spice and (c) total fields.}}
 \end{figure}
 
-Since mixed layer propagation is largly vertically uniform, the integrated mixed layer energy is used as a primary quanitification of the duct.
+Since mixed layer propagation is largely vertically uniform, the integrated mixed layer energy is used as a primary quantification of the duct.
 \begin{equation}
     \textrm{Loss}_{\textrm{ML}} = -10 \, \textrm{log}_{10} \left( \frac{1}{D} \int^{D}_0 p p^* \,  dz \right)
 \end{equation}
-An simple fixed depth integral to $D=$120 m is used here instead of tracking the bottom of the mixed layer, since energy does not persist in the strong downward refracting region below the mixed layer.
+An fixed integration depth, $D=$120 m, is sufficient since energy does not persist in the strong downward refracting region below the mixed layer.
 
-\subsection{Background field propgation}
+\subsection{Background field prorogation}
 The background field is very similar to the range independent field predicted by the mean sound speed profile.
 \begin{figure}
 \includegraphics{../figures/mode_shapes.png}
-    \caption{\label{fig:c_rms}{The mean sound speed profile and the RMS profile of the deviation from the background field of the measured, tilt and spice fields.}}
+    \caption{\label{fig:bg_modes}{Shapes of the three mode closest to the longest loop length pair.}}
 \end{figure}
+
+Since the only significant boundry interaction was the pressre release at $z=0$, normal modes were calculated using a tridiagonal eigenvalue decompostion. The modes with significant mixed layer interaction were identified by long loop lengths,
+\begin{equation}
+    l_{mn} = \frac{2 \pi}{k_n - k_m}.
+    \label{eq:loop_length}
+\end{equation}
+The longest loop lengths were observed for mixed layer mode 1, shown in Fig. \ref{fig:bg_modes}.
+
+The multiple mixed layer modes with the same number of zero crossings in the mixed layer interfere and cause acoustic leakage out of the mixed layer.
+\begin{figure}
+\includegraphics{../figures/bg_eng_loss.png}
+    \caption{Acoustic energy in the background mixed layer for a 400 Hz source at 400 m depth. Significantly more loss is observed at ranges less than 300 km, shown as yellow lines. The loss is shown as thick black line, and mean plus and minus the RMS estimate are thin black lines. The 10th and 90th percentile estimates are dashed blue lines. The difference in agreement between the two percentiles and the RMS indicate a relativly small number of high loss events significantly impact the variance estimate.}
+    \label{fig:bg_eng}
+\end{figure}
+
+
+
 
 
 \subsection{Mixed layer blocking features}
 The mixed layer duct simulations is dominated by local features and propagation that is effected similarly over the entire propagation range. The most significant local features observed cause significant loss in the mixed layer duct, and are called blocking features. These are defined as regions where the acoustic energy falls by 3 dB over less than 5 km, relative to the background field. Blocking features are much more significant at 400 Hz than 1 kHz.
 
-\subsection{Propgation without blocking features}
+\subsection{Propagation without blocking features}
 
-For regions without blocking features, the range dependence of the soundspeed field can slowly change the acousitc energy significantly, sometimes accumulating the total effect of a blocking feature. The range depence can also act to delay diffraction loss from the channel.
+For regions without blocking features, the range dependence of the sound speed field can slowly change the acoustic energy significantly, sometimes accumulating the total effect of a blocking feature. The range dependence can also act to delay diffraction loss from the channel.
 
-The acoustic energy in the mixed layer at low frequencies is significantly affected by diffraction, which is apparent in range independent simulations. In this study, the background field is used to compute the diffraction effect in a slowly range dependent envionrment.
+The acoustic energy in the mixed layer at low frequencies is significantly affected by diffraction, which is apparent in range independent simulations. In this study, the background field is used to compute the diffraction effect in a slowly range dependent environment.
 
 \bibliographystyle{jasanum2}
 \bibliography{eRichards_master}

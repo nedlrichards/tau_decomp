@@ -40,6 +40,7 @@ for i, (e, c, a) in enumerate(zip(eng_bg, clrs, alpha)):
 
 r_a_plt , mean_rgs = eng.rgs('mean', bg_stats, range_bounds=range_bounds,
                              scale_r=True)
+
 ax.plot(r_a_plt, mean_rgs, 'k', linewidth=2)
 
 _ , rms_rgs = eng.rgs('rms', bg_stats, range_bounds=range_bounds,

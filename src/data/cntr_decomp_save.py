@@ -1,22 +1,21 @@
 """Compare results of gridded and reconstructed total field"""
 
 import numpy as np
+from math import pi
 from os.path import join
 from scipy.interpolate import UnivariateSpline
 
-from src import SectionLvls, sonic_layer_depth
-from src import grid_field, SA_CT_from_sigma0_spiciness0, append_climatolgy
-from src import RDModes, Config
+from src import SectionLvls, RDModes, Config, section_cfield
 
 import pyducts
 
 sec4 = SectionLvls()
-#fc = 400
-fc = 1e3
+fc = 400
+#fc = 1e3
 #source_depth = "deep"
 source_depth = "shallow"
 
-save_dir = f'data/processed/field_{int(fc)}'
+save_dir = f'data/processed/field_{int(fc)}_'+ source_depth
 if False:
     save_dir = join('/hb/scratch/edrichar/computed_results/', save_dir)
 
@@ -29,96 +28,109 @@ c_spice = fields['c_spice']
 c_tilt = fields['c_tilt']
 c_total = fields['c_total']
 
-sld_z, _ = sonic_layer_depth(z_a, c_bg, z_max=150)
-sld_m = z_a[:, None] > sld_z
-c_sld = np.ma.array(c_bg, mask=sld_m)
-mean_c = np.mean(c_sld, axis=0).data
-
-def run_ram(rf, xs, x_a, cg):
+def run_ram(rf, x_a, z_a, cfield):
     """ram is the model of choice"""
 
     # RD TL from ram
     rf.write_frontmatter()
 
-    x_i = np.bitwise_and(x_a >= xs, x_a < xs + rmax)
-
-    for x, c_p in zip(x_a[x_i], cg.T[x_i]):
-        #c_ier = UnivariateSpline(z_a, c_p, s=1, k=1)
-        #z_ds = c_ier.get_knots()
-        #c_ds = c_ier.get_coeffs()
-        #rf.write_profile(x - xs, z_ds, c_ds)
+    xs = x_a[0]
+    for x, c_p in zip(x_a, cfield.T):
         rf.write_profile(x - xs, z_a, c_p)
 
     pyducts.ram.run_ram()
 
     zplot, rplot, p_ram = pyducts.ram.read_grid()
-    return zplot, xs + rplot, p_ram, x_i
+    return zplot, xs + rplot, p_ram
 
 # split transect into small sections
-rmax = 60e3
 d_section = 10e3
-x_start = np.arange(int((sec4.x_a[-1] - rmax) / d_section) + 1) * d_section
+x_start = np.arange(int((sec4.x_a[-1] - cf.rmax) / d_section) + 1) * d_section
 D = z_a[-1]
 z_save = 150.  # restrict size of PE result
 
+def compute_rd_modes(c_field, x_a, z_a, cf):
+        rd_modes = RDModes(c_field, x_a, z_a, cf)
+
+        ll = -2 * pi / (np.diff(rd_modes.k_bg))
+        p_i = np.argmax(ll)
+        m_range = (-50, 170)
+
+        cm_i = np.arange(p_i + m_range[0], p_i + m_range[1])
+        cm_i = cm_i[cm_i >= 0]
+
+
+
+        rd_trunc = RDModes(c_field, x_a, z_a, cf,
+                        psi_k_bg=(rd_modes.psi_bg[cm_i, :], rd_modes.k_bg[cm_i]))
+
+        trunc_mode_amps = rd_trunc.couple_cn()
+        r_modes = (rd_modes.r_plot + x_a[0]) / 1e3
+
+        return r_modes, trunc_mode_amps, rd_trunc.psi_bg, rd_trunc.k_bg
+
+
 def save_tl(xs, z_save, save_couple=True):
 
-    rf = pyducts.ram.RamIn(cf.fc, cf.z_src, rmax, D,
+    rf = pyducts.ram.RamIn(cf.fc, cf.z_src, cf.rmax, D,
                            bottom_HS=cf.bottom_HS, dr=100., zmax_plot=D)
 
-    tmp_dict = {"z_a":z_a}
-    tmp_dict["xs"] = xs
+    tmp_dict = {"z_a":z_a, "xs":xs, "fc":cf.fc}
 
-    zplot, rplot, p_bg, x_i = run_ram(rf, xs, sec4.x_a, c_bg)
-    tmp_dict["x_a"] = sec4.x_a[x_i]
+    x_sec, c_bg_sec = section_cfield(xs, x_a, c_bg, rmax=cf.rmax)
+    zplot, rplot, p_bg = run_ram(rf, x_sec, z_a, c_bg_sec)
+    tmp_dict["x_a"] = x_sec
     tmp_dict["zplot"] = zplot[zplot <= z_save]
     tmp_dict["rplot"] = rplot
-    tmp_dict["c_bg"] = c_bg[:, x_i]
     tmp_dict["p_bg"] = p_bg[:, zplot <= z_save]
-    tmp_dict["fc"] = cf.fc
 
-    zplot, rplot, p_tilt, x_i = run_ram(rf, xs, sec4.x_a, c_tilt)
-    tmp_dict["c_tilt"] = c_tilt[:, x_i]
+    x_sec, c_tilt_sec = section_cfield(xs, x_a, c_tilt, rmax=cf.rmax)
+    _, _, p_tilt = run_ram(rf, x_sec, z_a, c_tilt_sec)
     tmp_dict["p_tilt"] = p_tilt[:, zplot <= z_save]
 
-    zplot, rplot, p_spice, x_i = run_ram(rf, xs, sec4.x_a, c_spice)
-    tmp_dict["c_spice"] = c_spice[:, x_i]
+    x_sec, c_spice_sec = section_cfield(xs, x_a, c_spice, rmax=cf.rmax)
+    _, _, p_spice = run_ram(rf, x_sec, z_a, c_spice_sec)
     tmp_dict["p_spice"] = p_spice[:, zplot <= z_save]
 
-    zplot, rplot, p_total, x_i = run_ram(rf, xs, sec4.x_a, c_total)
-    tmp_dict["c_total"] = c_total[:, x_i]
+    x_sec, c_total_sec = section_cfield(xs, x_a, c_total, rmax=cf.rmax)
+    _, _, p_total = run_ram(rf, x_sec, z_a, c_total_sec)
     tmp_dict["p_total"] = p_total[:, zplot <= z_save]
 
 
     if save_couple:
-        rd_modes = RDModes(tmp_dict['c_bg'], tmp_dict['x_a'],
-                           tmp_dict['z_a'], cf)
+        x_sec, c_bg_sec = section_cfield(xs, x_a, c_bg, rmax=cf.rmax)
+        out = compute_rd_modes(c_bg_sec, x_sec, z_a, cf)
 
-        tmp_dict['r_modes'] = (rd_modes.r_plot + tmp_dict['xs']) / 1e3
-        tmp_dict['bg_mode_amps'] = rd_modes.couple_cn()
-        #tmp_dict['psi_bg'] = rd_modes.psi_bg
-        #tmp_dict['k_bg'] = rd_modes.k_bg
-        #psi_k_bg = (rd_modes.psi_bg, rd_modes.k_bg)
+        tmp_dict['r_modes'] = out[0]
+        tmp_dict['bg_mode_amps'] = out[1]
+        tmp_dict['psi_bg'] = out[2]
+        tmp_dict['k_bg'] = out[3]
         print('bg')
 
-        rd_modes = RDModes(tmp_dict['c_tilt'], tmp_dict['x_a'],
-                           tmp_dict['z_a'], cf)
-        tmp_dict['tilt_mode_amps'] = rd_modes.couple_cn()
+        x_sec, c_tilt_sec = section_cfield(xs, x_a, c_tilt, rmax=cf.rmax)
+        out = compute_rd_modes(c_tilt_sec, x_sec, z_a, cf)
+        tmp_dict['tilt_mode_amps'] = out[1]
+        tmp_dict['psi_tilt'] = out[2]
+        tmp_dict['k_tilt'] = out[3]
         print('tilt')
 
-        rd_modes = RDModes(tmp_dict['c_spice'], tmp_dict['x_a'],
-                           tmp_dict['z_a'],cf)
-                        #psi_k_bg=psi_k_bg)
-        tmp_dict['spice_mode_amps'] = rd_modes.couple_cn()
+        x_sec, c_spice_sec = section_cfield(xs, x_a, c_spice, rmax=cf.rmax)
+        out = compute_rd_modes(c_spice_sec, x_sec, z_a, cf)
+        tmp_dict['spice_mode_amps'] = out[1]
+        tmp_dict['psi_spice'] = out[2]
+        tmp_dict['k_spice'] = out[3]
         print('spice')
 
-        rd_modes = RDModes(tmp_dict['c_total'], tmp_dict['x_a'],
-                           tmp_dict['z_a'], cf)
-        tmp_dict['total_mode_amps'] = rd_modes.couple_cn()
+        x_sec, c_total_sec = section_cfield(xs, x_a, c_total, rmax=cf.rmax)
+        out = compute_rd_modes(c_total_sec, x_sec, z_a, cf)
+        tmp_dict['total_mode_amps'] = out[1]
+        tmp_dict['psi_total'] = out[2]
+        tmp_dict['k_total'] = out[3]
+        print('total')
 
     np.savez(join(save_dir, f'tl_section_{int(xs/1e3):03d}'), **tmp_dict)
     print(f'saved tl_section_{int(xs/1e3)}')
 
-run_func = lambda xs: save_tl(xs, z_save, save_couple=False)
+run_func = lambda xs: save_tl(xs, z_save, save_couple=True)
 
 list(map(run_func, x_start))

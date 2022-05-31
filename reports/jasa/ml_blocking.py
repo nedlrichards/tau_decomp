@@ -3,7 +3,7 @@ from math import pi
 from os.path import join
 import matplotlib.pyplot as plt
 
-from src import EngProc
+from src import EngProc, Config
 
 plt.style.use('elr')
 
@@ -15,7 +15,8 @@ fc = 400
 source_depth = "shallow"
 #source_depth = "deep"
 
-eng = EngProc(fc=fc, source_depth=source_depth)
+cf = Config(fc=fc, source_depth=source_depth)
+eng = EngProc(cf)
 
 cf = eng.cf
 r_a = eng.r_a

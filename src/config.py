@@ -21,6 +21,7 @@ class Config:
         self.source_depth = source_depth
 
         self.z_int = 120.
+        self.rmax = 60e3
 
         # plot specifications
         cmap = copy(cm.magma_r)

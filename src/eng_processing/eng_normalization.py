@@ -24,7 +24,7 @@ class EngProc:
 
         self.xs = np.array(xs)
         self.bg_eng = np.array(eng_bg)
-        self.r_a = ml_pe.r_a
+        self.r_a = ml.r_a
 
         # load dynamic fields
         dy_fields = self.cf.field_types.copy()

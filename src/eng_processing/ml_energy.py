@@ -93,7 +93,7 @@ class MLEnergy:
         # range independent mode amplitudes
         modes = self.field_modes['bg']
         psi_s = np.exp(1j * pi / 4) / (modes.rho0 * np.sqrt(8 * pi)) \
-                * modes.psi_ier(modes.z_src)
+                * modes.psi_ier(modes.cf.z_src)
         psi_s /= np.sqrt(modes.k_bg)
         psi_s *= 4 * pi
         # reference ml energy

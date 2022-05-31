@@ -30,3 +30,11 @@ def sonic_layer_depth(z_c, c_field, z_max=None, x_intrp=None):
     if x_intrp is not None:
         z_sld = np.interp(x_intrp[1], x_intrp[0], z_sld)
     return z_sld, i_sld
+
+
+def section_cfield(xs, x_a, c_field, rmax = 60e3):
+    """
+    extract a section of a sound speed transcet for use in xmission calculation
+    """
+    x_i = np.bitwise_and(x_a >= xs, x_a <= xs + rmax)
+    return x_a[x_i], c_field[:, x_i]
