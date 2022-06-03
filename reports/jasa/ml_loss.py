@@ -2,6 +2,7 @@ import numpy as np
 from math import pi
 from os.path import join
 import matplotlib.pyplot as plt
+from scipy.stats import linregress
 
 from src import MLEnergyPE, MLEnergy, Config, list_tl_files
 from src import EngProc
@@ -13,19 +14,18 @@ fc = 400
 #fc = 1e3
 source_depth = "shallow"
 
-eng = EngProc(fc=fc, source_depth=source_depth)
+proc_eng = np.load('data/processed/energy_processing.npz')
 
-cf = eng.cf
-r_a = eng.r_a
-bg_eng = eng.bg_eng
-dynamic_eng = eng.dynamic_eng
+cf = Config()
+
+r_a = proc_eng['r_a']
+bg_eng_400 = proc_eng["bg_eng_400"]
+dynamic_eng_400 = proc_eng["dynamic_eng_400"]
+m_i = proc_eng["m_i"]
 
 range_bounds = (5e3, 50e3)
-max_int_loss = eng.blocking_feature(range_bounds=range_bounds,
-                                    comp_len=5e3)
 
-m_i = max_int_loss > 3
-norm_eng = dynamic_eng - bg_eng
+norm_eng = dynamic_eng_400 - bg_eng_400
 
 # threshold loss features
 fig, ax = plt.subplots(3, 1, sharex=True, sharey=True, figsize=(cf.jasa_1clm,3))
@@ -41,9 +41,9 @@ ax[2].plot(r_a / 1e3, norm_eng[2, m_i[2], :].T, linewidth=.5, color='C1')
 ax[0].set_xlim(5, 45)
 ax[1].set_ylim(-15, 5)
 
-ax[0].text(5, 3, eng.dy_fields[0], bbox=cf.bbox)
-ax[1].text(5, 3, eng.dy_fields[1], bbox=cf.bbox)
-ax[2].text(5, 3, eng.dy_fields[2], bbox=cf.bbox)
+ax[0].text(5, 3, cf.field_types[1], bbox=cf.bbox)
+ax[1].text(5, 3, cf.field_types[2], bbox=cf.bbox)
+ax[2].text(5, 3, cf.field_types[3], bbox=cf.bbox)
 
 fig.supylabel('ML energy (db re Background)')
 ax[2].set_xlabel('Range (km)')
@@ -71,13 +71,39 @@ ax[2].set_position(pos)
 
 #fig.savefig('reports/jasa/figures/ml_energy.png', dpi=300)
 
-p_total_stats = eng.field_stats(norm_eng[0, ~m_i[0], :])
-p_tilt_stats = eng.field_stats(norm_eng[1, ~m_i[1], :])
-p_spice_stats = eng.field_stats(norm_eng[2, ~m_i[2], :])
+def field_stats(r_a, field_eng, range_bounds=(5e3, 50e3)):
+    """common statistics taken over field realization"""
+    r_i = (r_a > range_bounds[0]) & (r_a < range_bounds[1])
 
-total_stats = eng.field_stats(norm_eng[0])
-tilt_stats = eng.field_stats(norm_eng[1])
-spice_stats = eng.field_stats(norm_eng[2])
+    f_mean = np.mean(field_eng[:, r_i], axis=0)
+    f_rms = np.sqrt(np.var(field_eng[:, r_i], axis=0))
+    f_10 = np.percentile(field_eng[:, r_i], 10, axis=0,
+                            method='median_unbiased')
+    f_90 = np.percentile(field_eng[:, r_i], 90, axis=0,
+                            method='median_unbiased')
+
+    r_a = r_a[r_i]
+    f_mean_rgs = linregress(r_a, y=f_mean)
+    f_rms_rgs = linregress(r_a, y=f_mean + f_rms)
+    f_10_rgs = linregress(r_a, y=f_10)
+    f_90_rgs = linregress(r_a, y=f_90)
+
+    stats = {"r_a":r_a, 'mean':f_mean, 'rms':f_rms,
+                '10th':f_10, '90th':f_90,
+                'mean_rgs':f_mean_rgs, 'rms_rgs':f_rms_rgs,
+                '10th_rgs':f_10_rgs, '90th_rgs':f_90_rgs}
+    return stats
+
+
+
+
+p_total_stats = field_stats(r_a, norm_eng[0, ~m_i[0], :])
+p_tilt_stats = field_stats(r_a, norm_eng[1, ~m_i[1], :])
+p_spice_stats = field_stats(r_a, norm_eng[2, ~m_i[2], :])
+
+total_stats = field_stats(r_a, norm_eng[0])
+tilt_stats = field_stats(r_a, norm_eng[1])
+spice_stats = field_stats(r_a, norm_eng[2])
 
 fig, ax = plt.subplots(1, 2, sharex=True, sharey=True, figsize=(cf.jasa_2clm,3))
 
@@ -101,7 +127,7 @@ ax[0].plot(p_spice_stats['r_a'] / 1e3,
            2 * p_spice_stats['mean'] - p_spice_stats['rms'],
            linewidth=1, color='C2')
 
-ax[0].legend(eng.dy_fields)
+ax[0].legend(cf.field_types[1:])
 """
 ax[0].plot(p_total_stats['r_a'] / 1e3, p_total_stats['10th'],
            linewidth=1, linestyle='--', color='C0')

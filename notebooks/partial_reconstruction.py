@@ -1,6 +1,3 @@
-import matplotlib
-matplotlib.use('Agg')
-
 import numpy as np
 from math import pi
 from os import listdir

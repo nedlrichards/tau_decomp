@@ -11,6 +11,7 @@ class Config:
         self.fc = fc
         self.bottom_HS = [1600., 1000., 0.1]
         self.c_bounds = c_bounds
+        self.decomp_npz = 'data/processed/inputed_decomp.npz'
 
         if source_depth=="shallow":
             self.z_src = 40.

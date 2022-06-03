@@ -2,7 +2,7 @@ import numpy as np
 from math import pi
 from scipy.signal import find_peaks
 
-from src import RDModes, Config
+from src import RDModes, Config, section_cfield
 
 class MLEnergyPE:
     """Simple energy calculations from PE result"""
@@ -57,11 +57,15 @@ class MLEnergy:
 
     def _start_field_type(self, field_type):
         """Common startup by field type"""
-        modes = RDModes(self.tl_data['c_' + field_type], self.r_a,
-                        self.z_a_modes, self.cf)
+        decomp = np.load(self.cf.decomp_npz)
+        c_total = decomp['c_' + field_type]
+        x_a = decomp['x_a']
 
-        eps = np.spacing(1)
-        llen = -2 * pi / (np.diff(np.real(modes.k_bg)) - eps)
+        x_sec, c_sec = section_cfield(self.xs, x_a, c_total)
+
+        modes = RDModes(c_sec, x_sec, self.z_a_modes, self.cf)
+
+        llen = -2 * pi / (np.diff(np.real(modes.k_bg)))
         set_1 = self.mode_set_1(llen)
         #bg_set_2 = self.mode_set_2(self.llen['bg'], bg_set_1)
 

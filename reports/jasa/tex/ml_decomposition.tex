@@ -70,7 +70,7 @@ A dynamic decomposition is used to separated the observed sound speed variations
 
 \begin{figure}
 \includegraphics{../figures/sig_tau_interp.png}
-    \caption{\label{fig:cntrs}{Contours of: (a) Potential density (b) spice. The lowpass estimate of each stable isopycnal position is shown in red in panel (a). The lowpass estimate of the $\sigma=25.31$ (kg/m$^3$) is shown in (b), to represent common processing of all isopycnals. The full record shows isopycnals shoal and enter the mixed layer with decreasing range. The stable isopycnal estimate ends at the first location the isopycnal enters the mixed layer. Intermittent outcropping of the isopycnal are apparent as gaps in the $\sigma=25.21$ (kg/m$^3$) isopycnal position. The spice record has been imputed at the isopycnal outcroppings to form a continuous series.}}
+    \caption{\label{fig:cntrs}{Contours of: (a) Potential density (b) spice. The lowpass estimate of each stable isopycnal position is shown in red in panel (a). The lowpass estimate of the $\sigma=25.31$ (kg/m$^3$) is shown in (b) to represent common processing of all isopycnals. The full record shows isopycnals shoal and enter the mixed layer with decreasing range. The stable isopycnal estimate ends at the first location the isopycnal enters the mixed layer. Intermittent outcropping of the isopycnal are apparent as gaps in the $\sigma=25.21$ (kg/m$^3$) isopycnal position. The spice record has been imputed at the isopycnal outcroppings to form a continuous series.}}
 \end{figure}
 
 \subsection{Stratified ocean decomposition}
@@ -116,7 +116,7 @@ Acoustic propagation simulations are used to predict the effect of the separated
 
 \begin{figure}
 \includegraphics{../figures/decomp_xmission.png}
-    \caption{\label{fig:decomp_x}{Left panels is sound speed field, right panel is acoustic pressure. The rows are the (a) tilt, (b) spice and (c) total fields.}}
+    \caption{\label{fig:decomp_x}{Left panels is sound speed field, right panel is acoustic pressure. The rows are the (a) tilt, (b) spice and (c) total fields. The region up to about 7.5 km from the source has significant downgoing energy for all fields. The convergence zone is apparent as significant energy loops reflecting from the surface about 50 km from the source 50 km from the source. Acoustic loss from sound speed range dependence is apparent between these positions as downgoing energy below the duct around 125 m. The acoustic loss from range dependence is strongest around 250 and 260 km for the spice and total fields, and less loss is observed in the tilt and total fields around 240 km.}}
 \end{figure}
 
 Since mixed layer propagation is largely vertically uniform, the integrated mixed layer energy is used as a primary quantification of the duct.
@@ -126,10 +126,10 @@ Since mixed layer propagation is largely vertically uniform, the integrated mixe
 An fixed integration depth, $D=$120 m, is sufficient since energy does not persist in the strong downward refracting region below the mixed layer.
 
 \subsection{Background field prorogation}
-The background field is very similar to the range independent field predicted by the mean sound speed profile.
+The acoustic propagation from the background field is very similar to the range independent propgation predicted by the mean sound speed profile.
 \begin{figure}
 \includegraphics{../figures/mode_shapes.png}
-    \caption{\label{fig:bg_modes}{Shapes of the three mode closest to the longest loop length pair.}}
+    \caption{\label{fig:bg_modes}{(a) Mean sound speed profile of the background field, (b) Shapes of the three 400 Hz mode closest to the longest loop length pair. A significant tail for all mode entend through the mixed layer to the compensation depth of the mixed layer for all modes, and multiple mode shapes exist with no zero crossings in the mixed layer.}}
 \end{figure}
 
 Since the only significant boundry interaction was the pressre release at $z=0$, normal modes were calculated using a tridiagonal eigenvalue decompostion. The modes with significant mixed layer interaction were identified by long loop lengths,
@@ -142,15 +142,17 @@ The longest loop lengths were observed for mixed layer mode 1, shown in Fig. \re
 The multiple mixed layer modes with the same number of zero crossings in the mixed layer interfere and cause acoustic leakage out of the mixed layer.
 \begin{figure}
 \includegraphics{../figures/bg_eng_loss.png}
-    \caption{Acoustic energy in the background mixed layer for a 400 Hz source at 400 m depth. Significantly more loss is observed at ranges less than 300 km, shown as yellow lines. The loss is shown as thick black line, and mean plus and minus the RMS estimate are thin black lines. The 10th and 90th percentile estimates are dashed blue lines. The difference in agreement between the two percentiles and the RMS indicate a relativly small number of high loss events significantly impact the variance estimate.}
+    \caption{Acoustic energy in the background mixed layer for a 400 Hz source at 40 m depth. Significantly more loss is observed at ranges less than 300 km, shown as yellow lines. The mean loss is shown as thick black line, and the mean plus or minus the RMS estimate are thin black lines. The 10th and 90th percentile estimates are dashed blue lines. The difference in agreement between the two percentiles and the RMS indicate a relativly small number of high loss events significantly impact the variance estimate.}
     \label{fig:bg_eng}
 \end{figure}
 
-
-
-
-
 \subsection{Mixed layer blocking features}
+\begin{figure}
+\includegraphics{../figures/integrated_loss.png}
+    \caption{Maximum loss of mixed layer duct energy over 5 km, normalized by background loss. The acoustic energy is simulated for a 400 Hz and 40 m deep source every 10 km. Only the roughly 50 km away from the source and first convergence zone is considered in this calculation. Position independent blocking features have similar maximum loss over this entire span.}
+    \label{fig:bg_eng}
+\end{figure}
+
 The mixed layer duct simulations is dominated by local features and propagation that is effected similarly over the entire propagation range. The most significant local features observed cause significant loss in the mixed layer duct, and are called blocking features. These are defined as regions where the acoustic energy falls by 3 dB over less than 5 km, relative to the background field. Blocking features are much more significant at 400 Hz than 1 kHz.
 
 \subsection{Propagation without blocking features}
