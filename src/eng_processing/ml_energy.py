@@ -63,9 +63,10 @@ class MLEnergy:
         x_a = decomp['x_a']
 
         x_sec, c_sec = section_cfield(self.xs, x_a, c_total)
-        1/0
-        # TODO: don't need to compute mode shapes
-        modes = RDModes(c_sec, x_sec, self.z_a_modes, self.cf)
+        psi_k = (self.tl_data["psi_" + field_type],
+                 self.tl_data["k_" + field_type])
+        modes = RDModes(c_sec, x_sec, self.z_a_modes, self.cf,
+                         psi_k_bg=psi_k)
 
         llen = -2 * pi / (np.diff(np.real(modes.k_bg)))
         set_1 = self.mode_set_1(llen)
@@ -75,7 +76,7 @@ class MLEnergy:
         self.set_1[field_type] = set_1
 
 
-    def field_ml_eng(self, field_type, indicies=None):
+    def ml_energy(self, field_type, indicies=None):
         """Compute pressure from one field type"""
         # reduced mode set estimate of energy
         psi_rd = self.tl_data[field_type + '_mode_amps'].copy()
