@@ -39,6 +39,7 @@ class MLEnergy:
         self.r_a = self.tl_data['rplot'] - self.xs
         self.z_a_modes = self.tl_data['z_a']
         self.z_a = self.tl_data['zplot']
+
         self.dz = (self.z_a[-1] - self.z_a[0]) / (self.z_a.size - 1)
         self.z_i = self.z_a < self.cf.z_int
 
@@ -50,9 +51,9 @@ class MLEnergy:
         if bg_only:
             return
 
-        self._start_field_type('tilt', self.field_modes, self.llen, self.set_1)
-        self._start_field_type('spice', self.field_modes, self.llen, self.set_1)
-        self._start_field_type('total', self.field_modes, self.llen, self.set_1)
+        self._start_field_type('tilt')
+        self._start_field_type('spice')
+        self._start_field_type('total')
 
 
     def _start_field_type(self, field_type):
@@ -62,12 +63,12 @@ class MLEnergy:
         x_a = decomp['x_a']
 
         x_sec, c_sec = section_cfield(self.xs, x_a, c_total)
-
+        1/0
+        # TODO: don't need to compute mode shapes
         modes = RDModes(c_sec, x_sec, self.z_a_modes, self.cf)
 
         llen = -2 * pi / (np.diff(np.real(modes.k_bg)))
         set_1 = self.mode_set_1(llen)
-        #bg_set_2 = self.mode_set_2(self.llen['bg'], bg_set_1)
 
         self.field_modes[field_type] = modes
         self.llen[field_type] = llen
@@ -126,18 +127,3 @@ class MLEnergy:
         am = np.hstack([[am[0] - 1], am, [am[-1] + 1]])
         dom_modes[am] = True
         return list(np.where(dom_modes)[0])
-
-
-    def mode_set_2(self, llen, m1):
-        """Common calculation of mode set 2 from loop length"""
-        # mode 2 extends mode 1 out to minimum after 2nd peak
-        maxs = find_peaks(llen)[0]
-        maxs = maxs[np.argsort(llen[maxs])]
-        mins = find_peaks(-llen)[0]
-        p2 = maxs[-2]
-        t2 = mins[mins > p2][0]
-
-        m2 = m1.copy()
-        m2 += list(range(m2[-1] + 1, t2 + 1))
-
-        return m2
