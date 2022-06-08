@@ -27,9 +27,10 @@ class MLEnergyPE:
 class MLEnergy:
     """Different methods to calculate or estimate mixed layer energy"""
 
-    def __init__(self, run_file, source_depth="shallow", bg_only=False):
+    def __init__(self, run_file, source_depth="shallow", m1_percent=10.):
         """Calculate range independent modes"""
         self.tl_data = np.load(run_file)
+        self.m1_percent = m1_percent
         self.cf = Config(source_depth=source_depth,
                          fc=self.tl_data['fc'][()],
                          c_bounds=[1503., 1525.])
@@ -48,9 +49,6 @@ class MLEnergy:
         self.set_1 = {}
 
         self._start_field_type('bg')
-        if bg_only:
-            return
-
         self._start_field_type('tilt')
         self._start_field_type('spice')
         self._start_field_type('total')
@@ -65,14 +63,15 @@ class MLEnergy:
         x_sec, c_sec = section_cfield(self.xs, x_a, c_total)
         psi_k = (self.tl_data["psi_" + field_type],
                  self.tl_data["k_" + field_type])
+
         modes = RDModes(c_sec, x_sec, self.z_a_modes, self.cf,
                          psi_k_bg=psi_k)
+        self.field_modes[field_type] = modes
 
         llen = -2 * pi / (np.diff(np.real(modes.k_bg)))
-        set_1 = self.mode_set_1(llen)
-
-        self.field_modes[field_type] = modes
         self.llen[field_type] = llen
+
+        set_1 = self.mode_set_1(field_type)
         self.set_1[field_type] = set_1
 
 
@@ -95,9 +94,9 @@ class MLEnergy:
         return en_rd
 
 
-    def background_diffraction(self):
+    def background_diffraction(self, field_type):
         # range independent mode amplitudes
-        modes = self.field_modes['bg']
+        modes = self.field_modes[field_type]
         psi_s = np.exp(1j * pi / 4) / (modes.rho0 * np.sqrt(8 * pi)) \
                 * modes.psi_ier(modes.cf.z_src)
         psi_s /= np.sqrt(modes.k_bg)
@@ -108,23 +107,33 @@ class MLEnergy:
 
         # resticted mode calculation
         psi_m0 = np.zeros_like(psi_s)
-        psi_m0[self.set_1['bg']] = psi_s[self.set_1['bg']]
+        psi_m0[self.set_1[field_type]] = psi_s[self.set_1[field_type]]
         p_m0 = modes.synthesize_pressure(psi_m0, self.z_a, r_synth=self.r_a)
         en_ri_0 = np.sum(np.abs(p_m0) ** 2, axis=1) * self.dz
 
         return en_ri, en_ri_0
 
 
-    def mode_set_1(self, llen):
+    def mode_set_1(self, field_type):
         """Common calculation of mode set 1 from loop length"""
-        am = np.argmax(llen)
-        dom_modes = np.zeros(llen.size, dtype=np.bool_)
+        llen = self.llen[field_type]
+        pks = find_peaks(llen, height=np.max(llen) * 0.8)[0]
+        m1_ind = pks[0]
+        sld_z = self.field_modes[field_type].bg_sld
 
-        if llen[am + 1] > 6e4:
-            am = [am, am + 1]
-        else:
-            am = [am]
+        z_i = self.z_a_modes < sld_z
+        search_i = np.arange(m1_ind - 2, m1_ind + 3)
 
-        am = np.hstack([[am[0] - 1], am, [am[-1] + 1]])
-        dom_modes[am] = True
-        return list(np.where(dom_modes)[0])
+        psi_bg = self.field_modes[field_type].psi_bg
+
+        # test for no zero crossings in ML
+
+        x_test = np.diff(np.sign(psi_bg[search_i, :][:, z_i]))
+        is_m1 = ~np.any(np.abs(x_test) > 1.5, axis=-1)
+
+        mode_eng = np.sum(psi_bg[search_i, :][:, z_i] ** 2, axis=-1)
+        mode_eng /= np.max(mode_eng)
+        is_eng = mode_eng > self.m1_percent / 100.
+
+        mode1 = np.where(is_m1 & is_eng)[0] + search_i[0]
+        return mode1

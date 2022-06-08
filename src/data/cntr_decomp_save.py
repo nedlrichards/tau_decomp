@@ -49,8 +49,8 @@ x_start = np.arange(int((sec4.x_a[-1] - cf.rmax) / d_section) + 1) * d_section
 D = z_a[-1]
 z_save = 150.  # restrict size of PE result
 
-def compute_rd_modes(c_field, x_a, z_a, cf):
-        rd_modes = RDModes(c_field, x_a, z_a, cf)
+def compute_rd_modes(c_field, x_a, z_a, cf, psi_k=None):
+        rd_modes = RDModes(c_field, x_a, z_a, cf, psi_k_bg=psi_k)
 
         ll = -2 * pi / (np.diff(rd_modes.k_bg))
         p_i = np.argmax(ll)
@@ -58,8 +58,6 @@ def compute_rd_modes(c_field, x_a, z_a, cf):
 
         cm_i = np.arange(p_i + m_range[0], p_i + m_range[1])
         cm_i = cm_i[cm_i >= 0]
-
-
 
         rd_trunc = RDModes(c_field, x_a, z_a, cf,
                         psi_k_bg=(rd_modes.psi_bg[cm_i, :], rd_modes.k_bg[cm_i]))

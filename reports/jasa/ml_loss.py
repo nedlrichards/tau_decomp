@@ -14,18 +14,32 @@ fc = 400
 #fc = 1e3
 source_depth = "shallow"
 
-proc_eng = np.load('data/processed/energy_processing.npz')
+cf = Config(fc=fc, source_depth=source_depth)
+tl_files = list_tl_files(fc=fc)
 
-cf = Config()
+def ml_energy(tl_file):
+    eng_mode = MLEnergy(tl_file)
+    e_diffr = 10 * np.log10(eng_mode.background_diffraction() * eng_mode.r_a)
+    dyn_eng = []
+    for ft in cf.field_types:
+        dyn_eng.append(10 * np.log10(eng_mode.ml_energy(ft) * eng_mode.r_a))
+    return eng_mode.r_a, e_diffr, dyn_eng
 
-r_a = proc_eng['r_a']
-bg_eng_400 = proc_eng["bg_eng_400"]
-dynamic_eng_400 = proc_eng["dynamic_eng_400"]
-m_i = proc_eng["m_i"]
+bg_eng = []
+dynamic_eng = []
+
+for tl in tl_files:
+    r_a, bg, dy = ml_energy(tl)
+    bg_eng.append(bg)
+    dynamic_eng.append(dy)
+
+bg_eng = np.array(bg_eng)
+bg_eng = bg_eng[:, 0, :]
+dynamic_eng = np.array(dynamic_eng)
 
 range_bounds = (5e3, 50e3)
 
-norm_eng = dynamic_eng_400 - bg_eng_400
+norm_eng = dynamic_eng - bg_eng[:, None, :]
 
 # threshold loss features
 fig, ax = plt.subplots(3, 1, sharex=True, sharey=True, figsize=(cf.jasa_1clm,3))

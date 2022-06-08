@@ -13,6 +13,7 @@ class EngProc:
         eng_bg = []
         xs = []
 
+        fields = {f:[] for f in self.cf.field_types}
         for tl in list_tl_files(cf.fc, source_depth=cf.source_depth):
             #ml_pe = MLEnergyPE(tl)
             #eng_bg.append(10 * np.log10(ml_pe.ml_energy('bg') * ml_pe.r_a))
@@ -22,27 +23,17 @@ class EngProc:
             eng_bg.append(10 * np.log10(bg_eng * ml.r_a))
             xs.append(ml.xs)
 
+            for fld in self.cf.field_types:
+                fields[fld].append(10 * np.log10(ml.ml_energy(fld) * ml.r_a))
+
         self.xs = np.array(xs)
         self.bg_eng = np.array(eng_bg)
         self.r_a = ml.r_a
 
-        # load dynamic fields
-        dy_fields = self.cf.field_types.copy()
-        dy_fields.remove('bg')
-
-        fields = {f:[] for f in dy_fields}
-
-        for tl in list_tl_files(cf.fc, source_depth=cf.source_depth):
-            ml_pe = MLEnergyPE(tl)
-            for fld in dy_fields:
-                fields[fld].append(10 * np.log10(ml_pe.ml_energy(fld) * ml_pe.r_a))
-
         ml_eng = []
-
-        for fld in dy_fields:
+        for fld in self.cf.field_types:
             ml_eng.append(np.array(fields[fld]))
         self.dynamic_eng = np.array(ml_eng)
-        self.dy_fields = dy_fields
 
 
     def blocking_feature(self, range_bounds=(5e3, 50e3), comp_len=5e3):
