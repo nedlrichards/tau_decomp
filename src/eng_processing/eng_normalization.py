@@ -18,8 +18,8 @@ class EngProc:
             #ml_pe = MLEnergyPE(tl)
             #eng_bg.append(10 * np.log10(ml_pe.ml_energy('bg') * ml_pe.r_a))
             #xs.append(ml_pe.xs)
-            ml = MLEnergy(tl, self.cf.source_depth, bg_only=True)
-            bg_eng, _ = ml.background_diffraction()
+            ml = MLEnergy(tl, self.cf.source_depth)
+            bg_eng, _ = ml.background_diffraction('bg')
             eng_bg.append(10 * np.log10(bg_eng * ml.r_a))
             xs.append(ml.xs)
 

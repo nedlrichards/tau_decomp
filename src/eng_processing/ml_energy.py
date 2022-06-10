@@ -117,7 +117,9 @@ class MLEnergy:
     def mode_set_1(self, field_type):
         """Common calculation of mode set 1 from loop length"""
         llen = self.llen[field_type]
-        pks = find_peaks(llen, height=np.max(llen) * 0.8)[0]
+        hgt_bnd = np.mean([np.median(llen), np.max(llen)])
+        pks = find_peaks(llen, height=hgt_bnd)[0]
+
         m1_ind = pks[0]
         sld_z = self.field_modes[field_type].bg_sld
 
@@ -133,7 +135,8 @@ class MLEnergy:
 
         mode_eng = np.sum(psi_bg[search_i, :][:, z_i] ** 2, axis=-1)
         mode_eng /= np.max(mode_eng)
-        is_eng = mode_eng > self.m1_percent / 100.
 
+        is_eng = mode_eng > self.m1_percent / 100.
         mode1 = np.where(is_m1 & is_eng)[0] + search_i[0]
+
         return mode1

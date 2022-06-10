@@ -40,7 +40,7 @@ diff_ri = np.array(diff_ri)
 diff_rd = np.array(diff_rd)
 
 fig, ax = plt.subplots()
-ax.plot(r_a / 1e3, diff_rd.T)
+ax.plot(r_a / 1e3, diff_rd[1].T)
 """
 x_t_i = np.argmin(np.abs(r_a - 37e3))
 diff = np.array(diff)

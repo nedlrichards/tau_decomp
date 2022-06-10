@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from src import sonic_layer_depth
+from src import sonic_layer_depth, Config
 from os.path import join
 
 plt.style.use('elr')
+cf = Config()
 
 plt.ion()
 bbox = dict(boxstyle='round', fc='w')
@@ -26,7 +27,7 @@ rms_total = np.sqrt(np.var(c_total - c_bg, axis=1))
 
 z_sld, _ = sonic_layer_depth(z_a, c_mean[:, None], z_max=300)
 
-fig, ax = plt.subplots(1, 2, sharey=True, figsize=(4, 3))
+fig, ax = plt.subplots(1, 2, sharey=True, figsize=(cf.jasa_1clm, 3))
 ax[0].plot(c_mean, z_a, 'k')
 ax[0].plot([0, 1e4], [z_sld, z_sld], '0.4')
 ax[0].text(1498.5, z_sld-7, 'SLD', bbox=bbox)
@@ -69,7 +70,7 @@ ax[1].set_position(pos)
 
 fig.savefig(join(savedir, 'rms_profile.png'), dpi=300)
 
-fig, ax = plt.subplots(1, 2, figsize=(4, 3))
+fig, ax = plt.subplots(1, 2, figsize=(cf.jasa_1clm, 3))
 ax[0].plot(c_mean, z_a, 'k')
 ax[0].set_ylim(5e3, 0)
 ax[0].grid()

@@ -109,8 +109,6 @@ def field_stats(r_a, field_eng, range_bounds=(5e3, 50e3)):
     return stats
 
 
-
-
 p_total_stats = field_stats(r_a, norm_eng[0, ~m_i[0], :])
 p_tilt_stats = field_stats(r_a, norm_eng[1, ~m_i[1], :])
 p_spice_stats = field_stats(r_a, norm_eng[2, ~m_i[2], :])
