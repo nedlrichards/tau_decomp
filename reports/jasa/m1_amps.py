@@ -12,6 +12,7 @@ plt.ion()
 plt.style.use('elr')
 
 fc = 400
+source_depth = 'shallow'
 tl_files = list_tl_files(fc=fc)
 cf = Config(fc=fc)
 
@@ -91,9 +92,10 @@ fig.savefig('reports/jasa/figures/bg_m1_amp.png', dpi=300)
 field_i = 3
 fig, ax = plt.subplots(figsize=(cf.jasa_1clm, 2.5))
 
-for i, (e, m) in enumerate(zip(amps_dB[:, field_i, :], m_i[field_i, :])):
+for i, (e, c, m) in enumerate(zip(amps_dB[:, field_i, :], clrs, m_i[field_i, :])):
     clr = clrs[0] if m else clrs[-1]
     ax.plot(r_a / 1e3, e, color=clr, alpha=0.6)
+    #ax.plot(r_a / 1e3, e, color=c, alpha=0.6)
 
 #cax = fig.add_axes([0.27, 0.3, .02, .1])
 #lcmap = ListedColormap([clrs[0], clrs[-1]])
@@ -107,6 +109,7 @@ ax.set_xlabel('Range (km)')
 ax.set_ylabel('Mode 1 magnitude (dB re 1 m)')
 
 ax.set_ylim(-40, 5)
+ax.set_xlim(0, range_bounds[1] / 1e3)
 
 pos = ax.get_position()
 pos.x0 += 0.10
