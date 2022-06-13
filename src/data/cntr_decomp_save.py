@@ -60,7 +60,8 @@ def compute_rd_modes(c_field, x_a, z_a, cf, psi_k=None):
         cm_i = cm_i[cm_i >= 0]
 
         rd_trunc = RDModes(c_field, x_a, z_a, cf,
-                        psi_k_bg=(rd_modes.psi_bg[cm_i, :], rd_modes.k_bg[cm_i]))
+                           psi_k_bg=(rd_modes.psi_bg[cm_i, :],
+                                     rd_modes.k_bg[cm_i]))
 
         trunc_mode_amps = rd_trunc.couple_cn()
         r_modes = (rd_modes.r_plot + x_a[0]) / 1e3
