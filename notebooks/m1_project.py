@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 import os
 
-from src import MLEnergy, MLEnergyPE, list_tl_files, Config
+from src import MLEnergy, list_tl_files, Config
 from src import RDModes, section_cfield
 
 plt.ion()
@@ -18,6 +18,7 @@ percent_max = 99.99
 field_type = 'bg'
 
 tl_file = tl_files[60]
+
 
 tl_data = np.load(tl_file)
 p_field = tl_data['p_' + field_type]
@@ -42,30 +43,17 @@ eng_test = np.sum(np.abs(p_test) ** 2, axis=-1) * dz
 
 eng_mode = np.sum(np.abs(tl_data[field_type + '_mode_amps']) ** 2, axis=-1) * 1e3
 
-fig, ax = plt.subplots()
-#ax.plot(r_a / 1e3, 10 * np.log10(eng_field * r_a))
-ax.plot(r_test / 1e3, 10 * np.log10(eng_test * r_test))
-ax.plot(r_a / 1e3, 10 * np.log10(eng_mode))
+ml_eng = MLEnergy(tl_file)
 
-eng_mode = MLEnergy(tl_file, m1_percent=percent_max)
-ind = eng_mode.set_1[field_type]
-psi_1 = eng_mode.field_modes[field_type].psi_bg[ind]
-
-psi_ier = interp1d(tl_data['z_a'], np.squeeze(psi_1))
-psi_proj = psi_ier(z_a)
-z0_ind = np.argmax(np.abs(np.diff(np.sign(psi_proj))) > 1.5)
-
-eng_field = np.sum(np.abs(p_field[:, :z0_ind]) ** 2, axis=-1) * dz_pe
-p_test = rd_modes.synthesize_pressure(tl_data[field_type + "_mode_amps"], z_a[:z0_ind],
-                                      r_synth=r_a)
-eng_test = np.sum(np.abs(p_test) ** 2, axis=-1) * dz_pe
+ind = ml_eng.mode_set_1(field_type, m1_percent=99.9)
 eng_mode = np.sum(tl_data[field_type + '_mode_amps'][:, ind] ** 2, axis=-1) * 1e3
 
-proj_amp = np.sum(p_field[:, :z0_ind] * psi_proj[None, :z0_ind], axis=-1) * np.sqrt(r_a) * dz_pe / 1e3
-eng_proj = np.abs(proj_amp) ** 2 * 1e3
+proj_amp = ml_eng.proj_mode1(field_type)
+eng_proj = np.abs(proj_amp) ** 2
 
 fig, ax = plt.subplots()
-ax.plot(r_a / 1e3, 10 * np.abs(eng_field * r_a))
-ax.plot(r_a / 1e3, 10 * np.abs(eng_test * r_a))
-ax.plot(r_a / 1e3, 10 * np.abs(eng_mode))
-ax.plot(r_a / 1e3, 10 * np.abs(eng_proj))
+ax.plot(r_a / 1e3, 10 * np.log10(ml_eng.ml_energy(field_type) * ml_eng.r_a))
+ax.plot(r_a / 1e3, 10 * np.log10(eng_mode))
+ax.plot(r_a / 1e3, 10 * np.log10(eng_proj))
+ax.plot(r_a / 1e3, 20 * np.log10(np.abs(proj_amp)))
+

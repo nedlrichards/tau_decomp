@@ -1,7 +1,7 @@
 import numpy as np
 from os.path import join
 from scipy.stats import linregress
-from src import MLEnergy, MLEnergyPE, Config, list_tl_files
+from src import MLEnergy, Config, list_tl_files
 
 class EngProc:
     """common processing for mixed layer energy processing"""
@@ -10,35 +10,46 @@ class EngProc:
         self.cf = cf
 
         # load background field energy for a reference
-        eng_bg = []
         xs = []
 
-        fields = {f:[] for f in self.cf.field_types}
         for tl in list_tl_files(cf.fc, source_depth=cf.source_depth):
+            ml = MLEnergy(tl, self.cf.source_depth)
+            xs.append(ml.xs)
+
+        self.xs = np.array(xs)
+        self.r_a = ml.r_a
+
+
+    def diffraction_bg(self):
+        """Energy in range independent background duct"""
+        eng_bg = []
+        for tl in list_tl_files(self.cf.fc, source_depth=self.cf.source_depth):
             ml = MLEnergy(tl, self.cf.source_depth)
             bg_eng, _ = ml.background_diffraction('bg')
             eng_bg.append(10 * np.log10(bg_eng * ml.r_a))
-            xs.append(ml.xs)
 
-            for fld in self.cf.field_types:
-                fields[fld].append(10 * np.log10(ml.ml_energy(fld) * ml.r_a))
-
-        self.xs = np.array(xs)
-        self.bg_eng = np.array(eng_bg)
-        self.r_a = ml.r_a
-
-        ml_eng = []
-        for fld in self.cf.field_types:
-            ml_eng.append(np.array(fields[fld]))
-        self.dynamic_eng = np.array(ml_eng)
+        return np.array(eng_bg)
 
 
-    def blocking_feature(self, range_bounds=(5e3, 50e3), comp_len=5e3):
+    def dynamic_energy(self, field_types=None):
+        """Compute range dependent energy in surface duct"""
+        if field_types is None:
+            field_types = self.cf.field_types
+
+        fields = {f:[] for f in field_types}
+        for fld in field_types:
+            fields[fld].append(10 * np.log10(ml.ml_energy(fld) * ml.r_a))
+
+        return fields
+
+
+    def blocking_feature(self, dynamic_eng, bg_eng, range_bounds=(5e3, 50e3),
+                         comp_len=5e3):
         """Compute integrated loss indices blocking features"""
         dr = (self.r_a[-1] - self.r_a[0]) / (self.r_a.size - 1)
         num_int = int(np.ceil(comp_len / dr))
 
-        diff_eng = self.dynamic_eng - self.bg_eng
+        diff_eng = dynamic_eng - bg_eng
         r_i = (self.r_a > range_bounds[0]) & (self.r_a < range_bounds[1])
         diff_eng = diff_eng[:, :, r_i]
 
@@ -82,4 +93,3 @@ class EngProc:
         if scale_r:
             r_a /= 1e3
         return r_a, stat_fit
-

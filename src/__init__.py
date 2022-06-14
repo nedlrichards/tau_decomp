@@ -4,7 +4,7 @@ from .spice_convert import SA_CT_from_sigma0_spiciness0
 from .helpers import sonic_layer_depth, list_tl_files, section_cfield
 from .rd_modes import RDModes
 
-from .eng_processing.ml_energy import MLEnergy, MLEnergyPE
+from .eng_processing.ml_energy import MLEnergy
 from .eng_processing.eng_normalization import EngProc
 
 from .preprocessing.contour_manipulation import not_nan_segments, join_spice, reduce_field
