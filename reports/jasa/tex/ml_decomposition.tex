@@ -110,49 +110,61 @@ with the spice field is defined as $\tau_{bg} + \Delta \tau_{spice}$, and simila
 Internal waves largely followed the Garret-Munk spectrum up to the mixed layer, while eddies and fronts were the largest contribution to tilt in the mixed layer.
 
 \section{\label{sec:propagation}Mixed layer acoustic propagation}
-Acoustic propagation in the mixed layer duct for the separated background, tilt and spice sound speed fields are computed with numerical models. The parabolic equation (PE) is used for transmission loss prediction and mixed layer energy calculations. Normal modes are used to analylize the vertical distribution of the acoustic energy in the mixed layer duct. The smoothly varying background sound speed field is valuble for determining the viability of the mixed layer as an acoustic duct at the propagation frequencies of 400 and 1000 Hz. The range dependent effects of the tilt and spice dynamics are then compared to the observed fields to establish their relative importance to the acoustic propgation.
+Acoustic propagation in the mixed layer duct for the separated background, tilt and spice sound speed fields are computed with numerical models. The parabolic equation (PE) is used for transmission loss prediction and mixed layer energy calculations. Normal modes are used to describe the background mixed layer duct and analylize the vertical distribution of the acoustic energy in the mixed layer duct.
 
-with a focus on a single convergence zone length, Fig. \ref{fig:decomp_xmission}. A few kilometers from the source the acoustic energy in the mixed layer duct propagation is dominated by a few modes up to the first convergence zone. Outside of the source region acoustic energy in the mixed layer is monotonically decreasing.
-\begin{figure}
-\includegraphics{../figures/decomp_xmission.png}
-    \caption{\label{fig:decomp_x}{Left panels is sound speed field, right panel is acoustic pressure. The rows are the (a) tilt, (b) spice and (c) total fields. The region up to about 7.5 km from the source has significant downgoing energy for all fields. The convergence zone is apparent as significant energy loops reflecting from the surface about 50 km from the source 50 km from the source. Acoustic loss from sound speed range dependence is apparent between these positions as downgoing energy below the duct around 125 m. The acoustic loss from range dependence is strongest around 250 and 260 km for the spice and total fields, and less loss is observed in the tilt and total fields around 240 km.}}
-\end{figure}
+Acoustic frequencies are 400 and 1000 Hz. The majority of the analysis focuses on an acoustic source at 40 m depth, over a single convergence zone length.
 
-Three different measures of mixed layer energy are considered here: (1) a limited depth vertical integration of energy, (2) mixed layer mode 1 amplitude from the Dozier-Trappert approximation and (3) a limited depth projection of mixed layer mode 1. Method (1) is a simple computation from the result of the PE that assumes that the strong downward refraction below the mixed layer means that there is negligable energy directly below the mixed layer. Away from the source region and converegence zones, the integral is insensitive to the choice of D,
-\begin{equation}
-    \textrm{Loss}_{\textrm{ML}} = -10 \, \textrm{log}_{10} \left( \frac{1}{D} \int^{D}_0 p p^* \,  dz \right)
-\end{equation}
-An fixed integration depth, $D=$150 m, is choosen to be significantly beneath the SLD for all observations.
-
-Mode estimates of mixed layer energy are used to describe the vertical distribution of energy. The modal distribution of energy is described by the mode shapes, an example of which is shown in Fig. \ref{fig:bg_modes}. The mode shape with the most energy in the mixed layer and no zero crossing before the approximatly 100 m SLD depth. While this definition is sufficent to define the mixed layer mode 1, the mode with number + 1 has a very similar shape through the mixed layer. The interaction between these two modes leads to gradual cycle of energy in the mixed layer that preserves a vertical shape very close to mixed layer mode 1.
-
-The two modes with similar mixed layer shapes lead to two phenominon that make the amplitude of MLM1 a complicated metric. First, mixed layer energy described by the shape of MLM1 does not stay constant in the range independent case of constant mode amplitudes. Second, significant variations in MLM1 are observed even in very slowly range dependent background enviornments, which suggests significant interaction between these modes.
-
-A hybrid mode projection method is proposed that treates MLM1 as if it were a traditional mode 1 over the integration depth of the mixed layer,
-\begin{equation}
-    \frac{1}{D} \int^{D}_0 p \phi_{MLM1} \,  dz.
-\end{equation}
-
-\subsection{Background mixed layer duct}
-The acoustic propagation from the background field is very similar to the range independent propgation predicted by the mean sound speed profile.
+\subsection{Background field normal modes}
 \begin{figure}
 \includegraphics{../figures/mode_shapes.png}
     \caption{\label{fig:bg_modes}{(a) Mean sound speed profile of the background field, (b) Shapes of the three 400 Hz mode closest to the longest loop length pair. A significant tail for all mode entend through the mixed layer to the compensation depth of the mixed layer for all modes, and multiple mode shapes exist with no zero crossings in the mixed layer.}}
 \end{figure}
 
-Since the only significant boundry interaction was the pressre release at $z=0$, normal modes were calculated using a tridiagonal eigenvalue decompostion. The modes with significant mixed layer interaction were identified by long loop lengths,
+The acoustic propagation from the background field is very similar to the range independent propgation predicted by the mean sound speed profile. Since the only significant boundry interaction was the pressre release at $z=0$, normal modes were calculated using a tridiagonal eigenvalue decompostion. The modes with significant mixed layer interaction were identified by long loop lengths,
+
+In order to focus on the mixed layer propagation, the modes eigenvalues were restricted to values that refract in the deep ocean without bottom interaction.
+
+Three normal modes of the range averaged background field from 230 to 290 km are shown in Fig. \ref{fig:bg_modes}. These modes are centered around mixed layer mode 1 (MLM1), defined here as the mode with the most energy in the mixed layer within a few mode numbers of the first peak in mode loop length. The mode loop length is defined
 \begin{equation}
-    l_{mn} = \frac{2 \pi}{k_n - k_m}.
+    l_{mn} = \frac{2 \pi}{k_n - k_m},
     \label{eq:loop_length}
 \end{equation}
-The longest loop lengths were observed for mixed layer mode 1, shown in Fig. \ref{fig:bg_modes}.
+where the mode number $n=m+1$. The typical loop length values of the near MLM1 are esentially constant define the convergence length of approximatly 55 km. The mixed layer duct modes have anomalously high loop length values, which can also be used to identify mixed layer mode 2 and higher. The higher number mixed layer modes are separated by tens of mode numbers, indicating that mode coupling between mixed layer modes spans a range of non-ducted modes and is associated with loss of acoustic energy from the mixed layer.
 
-The multiple mixed layer modes with the same number of zero crossings in the mixed layer interfere and cause acoustic leakage out of the mixed layer.
+Significant properties of the observed mixed layer duct propagation in the dynamic fields can be predicted from the range independent MLM1 and surrounding modes. The mode shape of MLM1 is not orthogonal to the mode shape of the mode with one higher number over the vertical span of the mixed layer, but orthogonality instead requires integration over the water column to the mixed layer compensation depth around 3200 m. The conherent sum of these modes reenforce or deminish the amplitude of MLM1 with marginal changes to the vertical distribution of the mixed layer pressure field. The interaction between modes leads to a very long range cycling of energy, first out from and then back into the mixed layer, most significant for acoustic frequencies close to the mode 1 cutoff, Eq. \eqref{eq:f_cutoff}. This cycle of energy can act as significan loss of mixed layer energy with mode 1 shape for transmission ranges up to a convergence zone, even in the range independent case when MLM1 amplitude is constant.
+
 \begin{figure}
 \includegraphics{../figures/bg_eng_loss.png}
     \caption{Acoustic energy in the background mixed layer for a 400 Hz source at 40 m depth. Significantly more loss is observed at ranges less than 300 km, shown as yellow lines. The mean loss is shown as thick black line, and the mean plus or minus the RMS estimate are thin black lines. The 10th and 90th percentile estimates are dashed blue lines. The difference in agreement between the two percentiles and the RMS indicate a relativly small number of high loss events significantly impact the variance estimate.}
     \label{fig:bg_eng}
 \end{figure}
+
+with a focus on a single convergence zone length, Fig. \ref{fig:decomp_xmission}. A few kilometers from the source the acoustic energy in the mixed layer duct propagation is dominated by a few modes up to the first convergence zone. Outside of the source region acoustic energy in the mixed layer is monotonically decreasing.
+
+\subsection{Range dependent mixed layer propagation}
+
+\begin{figure}
+\includegraphics{../figures/decomp_xmission.png}
+    \caption{\label{fig:decomp_x}{Left panels is sound speed field, right panel is acoustic pressure. The rows are the (a) tilt, (b) spice and (c) total fields. The region up to about 7.5 km from the source has significant downgoing energy for all fields. The convergence zone is apparent as significant energy loops reflecting from the surface about 50 km from the source 50 km from the source. Acoustic loss from sound speed range dependence is apparent between these positions as downgoing energy below the duct around 125 m. The acoustic loss from range dependence is strongest around 250 and 260 km for the spice and total fields, and less loss is observed in the tilt and total fields around 240 km.}}
+\end{figure}
+
+A representative propagation simulation is shown in Fig \ref{fig:decomp_x} for the background, tilt, spice and observed fields. The background field is charactoristic of all simulated ranges. The mixed layer duct is obscured by high angle convergence zone propagation in the source region up to about 7 km, and in the first convergence zone starting around 47 km. A highly absorbant layer was introduced at the bottom of the PE domain to surpress bottom bounce interactions that would otherwise contribute unducted energy to the mixed layer at ranges between 7 and 47 km. with a MLM1 vertical distribution with a smooth loss of amplitude with range. Outside from the source and convergence zone regions, the ducted mixed layer energy shows a MLM1 distribution with amplitude that smoothly decreases with range. The dynamic fields show significantly range variation, in this case mostly in the spice and total fields, that causes both energy loss and changes in vertical pressure distribution.
+
+Three different measures of mixed layer energy are considered here: (1) a limited depth vertical integration of energy, (2) mixed layer mode 1 amplitude from the Dozier-Trappert approximation and (3) a limited depth projection of mixed layer mode 1. Method (1) is a simple computation from the result of the PE that assumes that the strong downward refraction below the mixed layer,
+\begin{equation}
+    \textrm{Loss}_{\textrm{ML}} = -10 \, \textrm{log}_{10} \left( \frac{1}{D} \int^{D}_0 p p^* \,  dz \right)
+\end{equation}
+This downward refraction means there is negligable energy directly below the mixed layer, and away from the source region and converegence zones the integral is insensitive to the choice of the lower bound, $D$. An fixed integration depth, $D=$150 m, is choosen to be significantly beneath the SLD for all observations.
+
+Mode estimates of mixed layer energy, methods (2) and (3), are used to describe the vertical distribution of energy. The modal distribution of energy is described by the mode shapes, for example the MLM1 shown in Fig. \ref{fig:bg_modes}.
+
+The two modes with similar mixed layer shapes lead to two phenominon that make the amplitude of MLM1 a complicated metric. First, mixed layer energy described by the shape of MLM1 does not stay constant in the range independent case of constant mode amplitudes. Second, significant variations in MLM1 are observed even in very slowly range dependent background enviornments, which suggests significant interaction between these modes.
+
+A hybrid mode projection method is proposed that treates projects the mixed layer energy onto MLM1,
+\begin{equation}
+    \frac{1}{D} \int^{D}_0 p \phi_{MLM1} \,  dz,
+\end{equation}
+where the integration depth $D$ is set equal to the depth of the first MLM1 zero crossing.
 
 \subsection{Mixed layer blocking features}
 \begin{figure}
