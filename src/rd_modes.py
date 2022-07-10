@@ -93,6 +93,7 @@ class RDModes:
         rho = self.rho_scale * integration
         return rho
 
+
     def run_kraken_bg(self):
         """Run kraken to compute modes"""
         dux = pyducts.modes.Kraken(self.run_file, 100., self.z_a,
@@ -186,6 +187,7 @@ class RDModes:
         a_cn /= np.sqrt(self.k_bg[None, :])
         a_cn *= 4 * pi
         return a_cn
+
 
     def synthesize_pressure(self, amps, z_rcr, r_synth=None):
         """synthesize pressure from modal amplitudes"""

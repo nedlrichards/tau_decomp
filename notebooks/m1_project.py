@@ -15,18 +15,23 @@ tl_files = list_tl_files(fc=fc)
 cf = Config(fc=fc)
 field_type = 'bg'
 
-tl_file = tl_files[9]
+tl_file = tl_files[14]
 ml_eng = MLEnergy(tl_file)
+
+eng_rd = ml_eng.ml_energy(field_type) * ml_eng.r_a
+eng_ri, _ = ml_eng.background_diffraction(field_type) * ml_eng.r_a
 
 ind = ml_eng.mode_set_1(field_type, m1_percent=99.9)
 eng_mode = np.sum(ml_eng.tl_data[field_type + '_mode_amps'][:, ind] ** 2, axis=-1) * 1e3
-
 proj_amp = ml_eng.proj_mode1(field_type)
 
 fig, ax = plt.subplots()
-ax.plot(ml_eng.r_a / 1e3, 10 * np.log10(ml_eng.ml_energy(field_type) * ml_eng.r_a))
+ax.plot(ml_eng.r_a / 1e3, 10 * np.log10(eng_ri), color='0.6', linestyle='--')
+ax.plot(ml_eng.r_a / 1e3, 10 * np.log10(eng_rd))
 ax.plot(ml_eng.r_a / 1e3, 10 * np.log10(eng_mode))
 ax.plot(ml_eng.r_a / 1e3, 20 * np.log10(np.abs(proj_amp)))
+ax.set_xlim(0, 55)
+ax.set_ylim(-23, -5)
 
 def diff_eng(tl_file):
     """difference between methods"""
@@ -39,6 +44,7 @@ def diff_eng(tl_file):
 
     return np.mean(diff_eng[r_i])
 
+"""
 de = np.array([diff_eng(tl) for tl in tl_files])
 
 de_m = np.mean(de)
@@ -53,5 +59,5 @@ ax.plot(np.full_like(de, de_m + de_rms), '--', color='k', linewidth=1)
 ax.plot(np.full_like(de, de_m - de_rms), '--', color='k', linewidth=1)
 ax.plot(np.full_like(de, de_10), color='C1', linewidth=1)
 ax.plot(np.full_like(de, de_90), color='C1', linewidth=1)
-
+"""
 

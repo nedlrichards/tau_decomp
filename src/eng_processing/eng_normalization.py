@@ -11,20 +11,22 @@ class EngProc:
 
         # load background field energy for a reference
         xs = []
+        mls = []
 
         for tl in list_tl_files(cf.fc, source_depth=cf.source_depth):
             ml = MLEnergy(tl, self.cf.source_depth)
+            mls.append(ml)
             xs.append(ml.xs)
 
         self.xs = np.array(xs)
         self.r_a = ml.r_a
+        self.mls = mls
 
 
     def diffraction_bg(self):
         """Energy in range independent background duct"""
         eng_bg = []
-        for tl in list_tl_files(self.cf.fc, source_depth=self.cf.source_depth):
-            ml = MLEnergy(tl, self.cf.source_depth)
+        for ml in self.mls:
             bg_eng, _ = ml.background_diffraction('bg')
             eng_bg.append(10 * np.log10(bg_eng * ml.r_a))
 
@@ -38,7 +40,9 @@ class EngProc:
 
         fields = {f:[] for f in field_types}
         for fld in field_types:
-            fields[fld].append(10 * np.log10(ml.ml_energy(fld) * ml.r_a))
+            for ml in self.mls:
+                fields[fld].append(10 * np.log10(ml.ml_energy(fld) * ml.r_a))
+            fields[fld] = np.array(fields[fld])
 
         return fields
 
@@ -66,21 +70,21 @@ class EngProc:
 
         f_mean = np.mean(field_eng[:, r_i], axis=0)
         f_rms = np.sqrt(np.var(field_eng[:, r_i], axis=0))
-        f_10 = np.percentile(field_eng[:, r_i], 10, axis=0,
+        f_15 = np.percentile(field_eng[:, r_i], 15, axis=0,
                              method='median_unbiased')
-        f_90 = np.percentile(field_eng[:, r_i], 90, axis=0,
+        f_85 = np.percentile(field_eng[:, r_i], 85, axis=0,
                              method='median_unbiased')
 
         r_a = self.r_a[r_i]
         f_mean_rgs = linregress(r_a, y=f_mean)
         f_rms_rgs = linregress(r_a, y=f_mean + f_rms)
-        f_10_rgs = linregress(r_a, y=f_10)
-        f_90_rgs = linregress(r_a, y=f_90)
+        f_15_rgs = linregress(r_a, y=f_15)
+        f_85_rgs = linregress(r_a, y=f_85)
 
         stats = {"r_a":self.r_a[r_i], 'mean':f_mean, 'rms':f_rms,
-                 '10th':f_10, '90th':f_90,
+                 '15th':f_15, '85th':f_85,
                  'mean_rgs':f_mean_rgs, 'rms_rgs':f_rms_rgs,
-                 '10th_rgs':f_10_rgs, '90th_rgs':f_90_rgs}
+                 '10th_rgs':f_15_rgs, '90th_rgs':f_85_rgs}
         return stats
 
 

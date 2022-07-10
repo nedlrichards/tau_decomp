@@ -1,4 +1,6 @@
 \documentclass[preprint,NumberedRefs]{JASA}
+\usepackage{multirow}
+\usepackage{booktabs}
 
 \begin{document}
 \title[Mixed layer tilt and spice]{North Pacific upper ocean spice and isopycnal tilt sound-speed structures and their effects on acoustic propagation}
@@ -31,14 +33,14 @@ This study is based on a 970 km SeaSoar conductivity, salinity and depth (CTD) t
     \caption{\label{fig:transcet}{Location of SeaSoar transcet in red. Isotherms in $^\circ$C are computed at 50 m depth from the World Ocean Atlas decadal spring temperature average.}}
 \end{figure}
 
-The SeaSoar observation used in this study (described in detail by Colosi and Rudnick \citep{colosi2020observations}) extended from the sea surface to 430 m depth, with an average cycle length of 1.28 km. The SeaSoar observations were gridded to a 1 km horizontal and 0.5 m vertical resolution for this study. Sound speed, $c$, computed from the CTD data using the Thermodynamic Equation of SeaWater 2010 (TEOS-10), is shown in Fig. \ref{fig:c_grid}. The mixed layer is apparent as relatively high sound speed over a strong negative sound speed gradient that extends into the deep ocean. Horizontal and vertical differences variability of sound speed is apparent throughout the mixed layer observations \citep{colosi2020observations}, caused by internal waves, fronts, eddies and ocean spice. Ocean spice, or density compensated salinity and temperature variation, can be separated in this observation from ocean processes like internal waves that cause displacement of denisty surfaces\citep{dzieciuch2004}. This study will first separate the sound speed variation associated with isopycnal tilt from density compensated variation, and then quanitify the independent effects of these components on acoustic propagation.
+The SeaSoar observation (described in detail by Colosi and Rudnick \citep{colosi2020observations}) extended from the sea surface to 430 m depth, with an average cycle length of 1.28 km. These observations were first gridded to a 1 km horizontal and 0.5 m vertical resolution. Sound speed, $c$, computed from the CTD data using the Thermodynamic Equation of SeaWater 2010 (TEOS-10), is shown in Fig. \ref{fig:c_grid}. The mixed layer is apparent as relatively high sound speed over a strong negative sound speed gradient that extends into the deep ocean. Horizontal and vertical variability in sound speed is apparent throughout the mixed layer observations, caused by internal waves, fronts, eddies and ocean spice\citep{colosi2020observations}. Ocean spice, or density compensated salinity and temperature variation, can be separated in this observation from ocean processes like internal waves that cause displacement of denisty surfaces\citep{dzieciuch2004}. This study will first separate the sound speed variation associated with isopycnal tilt from density compensated variation, and then quanitify the independent effects of these components on acoustic propagation.
 
 \begin{figure}
 \includegraphics{../figures/sound_speed_transcet_sld.png}
 \caption{\label{fig:c_grid}{Sound speed observation of the mixed layer, the black line is the sonic layer depth.}}
 \end{figure}
 
-The nominal model of the mixed layer is wind induced mixing at the air-sea interface homogenizes the vertical properties and leads to an unstratified layer. An example of a homogenized mixed layer profile was measured at 252 km, shown in Fig. \ref{fig:profiles}. Although marginal stratification is required for dynamic stability, the potential density, $\sigma$, of the mixed layer is essentially constant. The spice profile, $\gamma$, quantifies density compensated changes in ocean properties and is also essentially constant. The sound speed is dominated by the adiabatic pressure gradient, roughly 0.16 (m/s) / m. The downward sound speed gradient creates an upward diffracting duct bounded on the top by the free surface, modeled as a perfect reflector.
+The nominal model of the mixed layer is that wind induced mixing at the air-sea interface homogenizes the vertical properties and leads to an unstratified layer. An example of a largely homogonous mixed layer profile was measured at 252 km transcet range, Fig. \ref{fig:profiles}. Although marginal stratification is required for dynamic stability, the potential density, $\sigma$, of the mixed layer is essentially constant. The spice profile, $\gamma$, quantifies density compensated changes in ocean properties and is also essentially constant. The sound speed is dominated by the adiabatic pressure gradient, roughly 0.16 (m/s)/m. The downward sound speed gradient creates an upward diffracting duct bounded on the top by the free surface, modeled as a perfect reflector.
 
 \begin{figure}
 \includegraphics{../figures/sld_profile.png}
@@ -54,12 +56,12 @@ which has units of Hz. A constant value of $c_0 = 1500$ m/s is assumed. With an 
 
 Over the entire transcet, the SLD increases with range, a linear regression fit has a 78.5 m interscept and a slope of 2 m / 100 km. While the large scale trend of increasing SLD indicates the mixed layer duct is strengthening, significant variability is also observed in SLD depth over the entire transect. The SLD is also shown as horizontal grey lines in Fig. \ref{fig:profiles}. The rapid variation in 3 km between the profiles at 249 and 252 km is one such example that indicates fine scale range dependence of the mixed layer is acoustically significant.
 
-The transect and the 249 km profile in Fig. \ref{fig:profiles} show the mixed layer sometimes has significant vertical sound speed structure. This structure can arise from from ocean processes that tilt stratification contours in the upper mixed layer, like eddies and internal waves. Alternatively, vertical structure in sound speed can arise from density compensated salinity and temperature variation, or spice. The profile of local spice, $\gamma$, is used as a measure of the density compensated variation \citep{klymak2015spice},
+The transect in Fig. \ref{fig:c_grid} and the 249 km profile in Fig. \ref{fig:profiles} show the mixed layer can have significant vertical sound speed structure. This structure can arise from from ocean processes that tilt stratification contours in the upper mixed layer, like eddies and internal waves. Alternatively, vertical structure in sound speed can arise from density compensated salinity and temperature variation, or spice. The profile of local spice, $\gamma$, is used as a measure of the density compensated variation \citep{klymak2015spice},
 \begin{equation}
     \gamma=\textrm{sgn}(T-\bar{T}) \sqrt{\alpha_0^2(T-\bar{T})^2 +\beta_0^2(S-\bar{S})^2},
     \label{eq:gamma}
 \end{equation}
-where $\bar{T}$ and $\bar{S}$ are the means of temperature and salinity at constant density, and a representative ($\bar{T}$, $\bar{S}$) value defines $\alpha_0=\partial \sigma / \partial T$ and $\beta_0=\partial \sigma / \partial S$. The potential variable $\gamma$ represents linearized distance in density units along (T, S) isopycnals. Density compensation occurs when salinity and temperature increase or decrease change with angle $\alpha$ in the (T, S) diagram, these changes in both variables are reinforcing in sound speed. The effect of spice is a dominant factor above the thermocline in the sound speed profile at 249 km in Fig. \ref{fig:profiles}, while tilt processes are responsible for the approximatly 5 m change in thermocline depth between the two profiles.
+where $\bar{T}$ and $\bar{S}$ are the means of temperature and salinity at constant density, and a representative ($\bar{T}$, $\bar{S}$) value defines $\alpha_0=\partial \sigma / \partial T$ and $\beta_0=\partial \sigma / \partial S$. The potential variable $\gamma$ represents linearized distance in density units along (T, S) isopycnals. Density compensation occurs when salinity and temperature both increase or decrease change with relative angle $\theta$ in the (T, S) diagram. These changes in both variables are compensating in density but reinforcing in sound speed. The effect of spice is a dominant factor in sound speed variation above the thermocline in at 249 km, while tilt processes are responsible for the approximatly 5 m change in thermocline depth between the two profiles.
 
 The density at 40 m depth decreases with range, with a linear regression intercept at $\sigma=25.3$ kg/m$^3$ and a slope of -0.04 (kg/m$^3$) / 100 km. The decrease in density means that as range increases, mixed layer isopycnals transition to positions with stable stratification below the mixed layer.
 
@@ -68,38 +70,38 @@ A dynamic decomposition is used to separated the observed sound speed variations
 
 \begin{figure}
 \includegraphics{../figures/sig_tau_interp.png}
-    \caption{\label{fig:cntrs}{Contours of: (a) potential density (b) spice. The lowpass estimate of each stable isopycnal position is shown in (a) as red curve. The lowpass estimate of the $\sigma=25.31$ (kg/m$^3$) is shown in (b) as a red curve, indicative of common isopycnal processing. The full record shows isopycnals shoal and enter the mixed layer with decreasing range. The stable isopycnal estimate ends at the first location the isopycnal displayed significant decorrelation with the lower isopycnal. Intermittent outcropping of the isopycnal are apparent throughout the record, \emph{i.e.} the gaps in (a) of the $\sigma=25.21$ (kg/m$^3$) isopycnal. The spice record has been imputed at the isopycnal outcroppings to form a continuous series.}}
+    \caption{\label{fig:cntrs}{Contours of: (a) potential density (b) spice. The lowpass estimate of each stable isopycnal position is shown in (a) as red curve. The stable isopycnal estimate ends at the first location the isopycnal displayed significant decorrelation with the lower isopycnal. The full record shows isopycnals shoal and enter the mixed layer with decreasing range.  Intermittent outcropping of the isopycnal are apparent throughout the record, \emph{i.e.} the gaps in (a) of the $\sigma=25.21$ (kg/m$^3$) isopycnal. The lowpass estimate of spice for the $\sigma=25.31$ (kg/m$^3$) is shown in (b) as a red curve, indicative of processing for all isopycnals. The spice record has been imputed at the isopycnal outcroppings to form a continuous series before lowpass filtering.}}
 \end{figure}
 
 \subsection{Stratified ocean decomposition}
-The dynamic decomposition begins by defining a gridded quantity, $\sigma$ is used for demonstration, by interpolation of values along isopycnals. This definition allows for the generation of new fields that differs from the observed field only in isopycnal positions. The isopycnal positions are then flattened to approximate the removal of small scale isopycnal tilt. The isopycnal positions are defined $\sigma(x, z) = z^{-1}(x, \sigma)$, discretized as $z_i(x; \sigma_i)$. A two dimensional linear interpolation is defined for $\sigma$,
+The dynamic decomposition begins by defining a gridded quantity, $\sigma$ is used for demonstration, by interpolation of values between isopycnals. This definition allows for the generation of new fields that differ from the observed field only in isopycnal positions. The isopycnal positions are then flattened to approximate the removal of small scale isopycnal tilt. The isopycnal $z$ position is defined $\sigma(x, z) = z^{-1}(x, \sigma)$, discretized as $z_i(x; \sigma_i)$. A two dimensional linear interpolation is defined for $\sigma$,
 \begin{equation}
-    \sigma\approx\mathcal{L}(x, y; \sigma_i, z_i).
+    \sigma(x,y)\approx\mathcal{L}(x, y; \sigma_i, z_i).
     \label{eq:lin_intr}
 \end{equation}
-The positions $z_i(x, \sigma)$ modeled as the superposition of fine scale dynamics on a stable background position $\bar{z}(x, \sigma)$. The background density field, $\bar{\sigma}$, is defined by substituting $\bar{z}(x, \sigma)$ for $z(x, \sigma)$ in Eq. \eqref{eq:lin_intr}. The estimate of $\bar{\sigma}$ is then a vertically stretched version of the observed $\sigma$ field without fine scale tilt dynamics.
+The positions $z_i(x, \sigma)$ modeled as the superposition of fine scale dynamics on a stable background position $\bar{z}(x, \sigma)$. The background density field, $\bar{\sigma}$, is defined by substituting $\bar{z}(x, \sigma)$ for $z(x, \sigma)$ in Eq. \eqref{eq:lin_intr}. The estimate of $\bar{\sigma}(x,y)$ is then a vertically stretched version of the observed $\sigma(x,y)$ field without fine scale tilt dynamics.
 
-The background isopycnal position is estimated with a spatial lowpass filter. This study uses a cutoff of 50 km, an approximate distance of one convergence zone. The estimate of $\bar{z}(x, \sigma)$ is shown as red lines in Fig. \ref{fig:cntrs}(a). Isopycnals inside the mixed layer are observed have unstable positions, and no attempt is made to estimate a background isopycnal position. An estimate for the position where each isopycnal moves to stable stratification below the mixed layer is used to start the $\bar{z}(x, \sigma)$ estimate, around 250 km for $\sigma=25.25$ (kg/m$^3$). A conservative estimate is made for the start position of $\bar{z}(x, \sigma)$ where the position of the isopycnal becomes decorrelated with the next denser isopycnal.
+The background isopycnal position, $\bar{z}(x, \sigma)$, is estimated with a spatial lowpass filter. This study uses a cutoff of 50 km, the approximate distance of one convergence zone. This estimate of $\bar{z}(x, \sigma)$ is shown as red lines in Fig. \ref{fig:cntrs}(a). Isopycnals inside the mixed layer are observed have unstable positions, and no attempt is made to estimate a background isopycnal position. Unstable isopycnals move below the mixed layer and become stable with increasing range, consistant with the increasing temperature and decreasing mixed layer density predicted in Fig. \ref{fig:transcet}. A conservative estimate is made for the start position of $\bar{z}(x, \sigma)$ where the position of the isopycnal becomes decorrelated with the next denser isopycnal. Fig. \ref{fig:cntrs} shows this range for $\sigma=25.25$ (kg/m$^3$) is around 250 km. The stable density field, $\bar{\sigma}(x,z)$ is used for estimates of the background and spice sound speed fields, while the observed density field is used to estimate the tilt and observed sound speed fields.
 
-The same stable isopycnal positions can also define estimates of other field quantities without fine scale isopycnal tilt. While sound speed is ultimately the field quantity of interest, the variable of ocean spice is used here instead,
+The stable isopycnal position estimates can also define other field quantities without fine scale isopycnal tilt. While sound speed is ultimately the field quantity of interest, the variable of ocean spice is used here instead,
 \begin{equation}
-    \gamma\approx\mathcal{L}(x, z; \gamma_i(x), z_i),
+    \gamma(x, z)\approx\mathcal{L}(x, z; \gamma_i(x), z_i),
     \label{eq:lin_intr_gamma}
 \end{equation}
-where the range dependent $\gamma_i(x)$ is measured along the $\sigma_i$ isopycnal. The accuracy of Eq. \eqref{eq:lin_intr_gamma} depends on the changes in ocean stratification between the isopycnal positions, $z_i$, and has the smallest error in well stratified regions.
+where $\gamma_i(x)$ is measured along the $\sigma_i$ isopycnal. The accuracy of Eq. \eqref{eq:lin_intr_gamma} depends on isopycnal spacing, with the smallest error in highly stratified regions.
 
-The $\gamma$ field in Eq. \eqref{eq:lin_intr_gamma} allows for the additional definition of a stable background value along isopycnals, $\hat{\gamma}_i(x)$. This leads to four possible $\gamma$ fields with the combination of parameter pairs: the stable background field, ($\bar{\gamma}_i$, $\bar{z}_i$); the tilt field, ($\bar{gamma_i}$, $z_i$); the spice field, ($gamma_i$, $\bar{z}_i$); and the observed total field, ($gamma_i$, $z_i$).
+The value of $\gamma_i(x)$ in Eq. \eqref{eq:lin_intr_gamma} can be modelled as the superposition of finescale dynamic structure on a stable background, $\bar{\gamma}_i(x)$. Similar to the estimate of background isopycnal position, a lowpass filter with 50 km cuttoff length is used to estimate $\bar{\gamma}_i(x)$. The combinations of the lowpass and observed values of $\sigma_i$ and $\gamma_i(x)$ can be subsituted into Eqs. \eqref{eq:lin_intr} and \eqref{eq:lin_intr_gamma} to produce 4 $\gamma(x,z)$ fields. The stable background field is computed with ($\bar{\gamma}_i$, $\bar{z}_i$), the tilt field with ($\bar{\gamma_i}$, $z_i$), the spice field with ($\gamma_i$, $\bar{z}_i$), and the observed total field with ($\gamma_i$, $z_i$).
 
 The sound speed is then computed from ($\sigma$, $\gamma$) through an inverse of Eq. \eqref{eq:gamma} computed by iteration. The values of $\alpha_0$ and $\beta_0$ from Eq. \eqref{eq:gamma} define the angle $\phi_0$, a linearized estimate of the angle in ($\theta$, S) space of maximum $d\gamma$ and zero $d\sigma$. The value of ($\sigma$, $\gamma$) is first estimated from $\theta_0$. Then, the value of $\sigma$ is refined with the local value of $\theta$, and finally gamma is corrected with $\theta_0$. This process can be repeated to a desired precision of ($\theta$, S), which are combined with the isopycnal position to compute a value of sound speed.
 
 \subsection{Mixed layer decomposition}
-Estimation of the stable isopycnal position and spice with a lowpass filter is most effective outside of the mixed layer where the ocean is well stratified in regions of significant spice variation. Two challenges in the dynamic decomposition of \citep{dzieciuch2004} arise in the mixed layer: (1) significant variations of $\gamma$ occur in positions with small $\sigma$ gradients, and (2) isopycnal locations vary rapidly and may not have a stable position. Both challenges are related to the constraint of sampling the spice field at isopycnal positions imposed by the decomposition method. A linear superposition model for $\gamma$ is used in the mixed layer to avoid the requirement of sampling along isopycnals.
+Estimation of the stable isopycnal position and spice with a lowpass filter is most effective outside of the mixed layer where the ocean is well stratified in regions of significant spice variation. Two challenges in the dynamic decomposition of Dzieciuch \emph{et al.}\citep{dzieciuch2004} arise in the mixed layer: (1) significant variations of $\gamma$ occur in positions with small $\sigma$ gradients, and (2) isopycnal locations vary rapidly and may not have a stable position. Both challenges are related to the decomposition method sampling the spice field at isopycnals. A linear superposition model for $\gamma$ is used in the mixed layer to avoid the requirement of sampling along isopycnals.
 
-The linear superposition model for $\gamma$ attributes all observed $\gamma$ variability that is not explained by the tilt field to the spice field, without any vertical streching to account for the mean isopycnal levels. The linear superposition model is written
+The linear superposition model for $\gamma$ attributes all observed $\gamma$ variability not explained by the tilt field to the spice field, without any vertical streching to account for the mean isopycnal levels. The linear superposition model is written
 \begin{equation}
-    \tau_{observed} = \tau_{bg} + \Delta \tau_{tilt} + \Delta \tau_{spice},
+    \gamma_{observed} = \gamma_{bg} + \Delta \gamma_{tilt} + \Delta \gamma_{spice},
 \end{equation}
-with the spice field is defined as $\tau_{bg} + \Delta \tau_{spice}$, and similarly for tilt. The value of $\Delta \tau_{spice}$ is be estimated by subtracting $\tau_{tilt}$ from $\tau_{observed}$.
+with the spice field is defined as $\gamma_{bg} + \Delta \gamma_{spice}$, and similarly for tilt. The value of $\Delta \gamma_{spice}$ is be estimated by subtracting $\gamma_{tilt}$ from $\gamma_{observed}$.
 
 \begin{figure}
 \includegraphics{../figures/rms_profile.png}
@@ -109,72 +111,97 @@ with the spice field is defined as $\tau_{bg} + \Delta \tau_{spice}$, and simila
 Internal waves largely followed the Garret-Munk spectrum up to the mixed layer, while eddies and fronts were the largest contribution to tilt in the mixed layer.
 
 \section{\label{sec:propagation}Mixed layer acoustic propagation}
-Acoustic propagation in the mixed layer duct for the separated background, tilt and spice sound speed fields are computed with numerical models. The parabolic equation (PE) is used for transmission loss prediction and mixed layer energy calculations. Normal modes are used to describe the background mixed layer duct and analylize the vertical distribution of the acoustic energy in the mixed layer duct.
+The separate effects of tilt and spice are compared with the observed sound speed field and the smooth background over 60 km propagation sections. Each propagation section is separated by 10 km, a distance chosen as a heuristic compromise to sample the observed range variation with reasonable sample independence. A representative section is shown in Fig. \ref{fig:decomp_x}, for an 400 Hz acoustic source at 40 m depth. Acoustic propagation is modeled with the parabolic equation (PE) code RAM, and normal modes are used to analyze the vertical mode structure of mixed layer acoustic pressure, Sec. \ref{ssec:modes}. The PE results in the right column of Fig. \ref{fig:decomp_x} show some fields predict significant loss and changes in vertical distribution of mixed layer acoustic energy which will be quantified for the entire transect.
 
 \begin{figure}
 \includegraphics{../figures/decomp_xmission.png}
-    \caption{\label{fig:decomp_x}{Left panels is sound speed field, right panel is acoustic pressure. The rows are the (a) background (b) tilt, (c) spice and (d) total fields. The region up to about 7.5 km from the source has significant downgoing energy for all fields. The convergence zone is apparent as significant energy loops reflecting from the surface about 50 km from the source 50 km from the source. Acoustic loss from sound speed range dependence is apparent between these positions as downgoing energy below the approxiatly 120 m deep duct. The acoustic loss from range dependence is strongest around 250 and 260 km for the spice and total fields, while smaller loss is also observed in the tilt and total fields around 240 km.}}
+    \caption{\label{fig:decomp_x}{Left panels is sound speed field, right panel is acoustic pressure. Rows are the: (a) background (b) tilt, (c) spice and (d) observed fields. The region up to about 7.5 km from the source has significant downgoing energy for all fields. The convergence zone is apparent as significant high angle energy starting 50 from the source. Significant acoustic loss is apparent between the source and first convergence zone is apparent as downgoing energy below the approxiatly 120 m deep duct. The acoustic loss is strongest around 250 and 260 km for the spice and total fields, and smaller loss is also observed in the tilt and total fields around 240 km.}}
 \end{figure}
 
-Acoustic frequencies are 400 and 1000 Hz. The majority of the analysis focuses on an acoustic source at 40 m depth, over a single convergence zone length.
+The background, tilt, spice and observed sound speed fields are shown in the left column of Fig. \ref{fig:decomp_x}, panel a. The background sound speed field shows slow variation in range, with a small discontinuity in properties around 265 km where the dynamic decomposition stops tracking the potion of an isopycnal. The background acoustic field demonstrates essentially the same behavior as a range independent mixed layer. The mixed layer duct is obscured by high angle propagation up to about 7.5 km from the source, and in the first convergence zone starting around 47 km. A highly absorbent layer introduced at the bottom of the PE domain suppresses bottom bounce interactions that would otherwise contribute un-ducted energy to the mixed layer at source ranges between 7.5 and 47 km. After the removal of higher angle bottom bounce energy, the mixed layer between the source region and the first convergence zone has no external sources of acoustic energy. This simplifies the analysis the effect of dynamic sound speed structures on mixed layer energy through this region, Sec. \ref{ssec:energy}.
 
-A representative propagation simulation with a source at 230 km distance along the transcet and 40 m depth is shown in Fig \ref{fig:decomp_x}. The background, tilt, spice and observed sound speed fields are shown in the left column, and PE results on right. The background field is charactoristic of all simulated ranges. The mixed layer duct is obscured by high angle convergence zone propagation in the source region up to about 7.5 km, and in the first convergence zone starting around 47 km. A highly absorbant layer introduced at the bottom of the PE domain surpresses bottom bounce interactions that would otherwise contribute unducted energy to the mixed layer at ranges between 7.5 and 47 km. Without bottom bounce arrivals, the acoustic pressure in the mixed layer duct has a MLM1 vertical distribution with a smooth decrease in magnitude with range. The dynamic fields, in contrast, show significantly range variation. The most range dependence in observed in the spice and total fields, which causes both energy loss and changes in vertical pressure distribution.
+The decomposition of the observed sound speed field in the tilt and spice fields sound speed fields is shown in the left column of Fig. \ref{fig:decomp_x}, panels b and c. The observed mixed layer depth variation, left panel d, is almost exclusively partitioned into the tilt field, panel b. The most acoustically significant variation is a shoaling of the mixed layer between transect range 230 to 240 km that leads to mixed layer energy loss in the tilt field. A surface concentration of lower sound speed also appears in the tilt and observed fields between 270 and 280 km transect range. This tilt feature increases the mean sound speed gradient of the mixed layer, both strengthening the mixed layer duct and moving acoustic energy to shallower depths.
 
-The dynamic decomposition into the tilt and spice field emphasize different features in the observed transcet. The mixed layer depth variation is almost exclusivly patritioned into the tilt field. A shoaling of the mixed layer at transcet ranges up to 240 km leads to mixed layer energy loss in the tilt field, which is partially observed in the measured field around 240 km. Also, a surface concentration of lower sound speed appears in the tilt and measured field around 270 to 280 km transcet range. This increases the mean sound speed gradient of the mixed layer, and both strenthens the mixed layer duct and moves acoustic energy to shallower depths. Finally, a strong vertical salinity feature between 250 and 260 km transcet range is partitioned to the spice field. Loss of acoustic energy from the mixed layer duct is concentrated around the edges of this feature, which also significantly changes the vertical pressure sructure from a mode 1 shape.
+The spice sound speed field, left panel c, shows both vertical fronts and features with significant variation with depth. The most acoustically significant feature partitioned to the spice field is a strong vertical high sound speed feature between 250 and 260 km transect range. This feature causes significant loss of acoustic energy from the mixed layer duct, which is concentrated at the near and far edges of this feature. In addition creating energy loss, there is a significant change to the vertical pressure structure that indicate coupling between the mixed layer normal modes.
 
-Significant acoustic energy loss from the mixed layer duct over ranges less than 5 km, like the losses observed at 250 and 260 km transect range, can significantly reduce the viablity of the duct. The term "blocking feature" is used here to describe postions with significant mixed layer energy loss over short ranges. Transmission ranges that include these features will be treated separately, both to quantify the frequency at which these features appear in the dynamic fields, and to isolate these effects from the significantly smaller acoustic variations predicted for much of the transcet.
+The loss of mixed layer energy related to the spice feature between 250 and 260 km is far greater than the total loss of energy predicted by the tilt field, and any other ranges in the spice or observed field. Similar blocking features are also observed at other ranges, and can appear either in only one or multiple fields. A metric defining blocking features is defined through mixed layer energy in Sec. \ref{ssec:energy}. Statistics of the mixed layer energy are significantly effected by the high loss related to these sporadic events, and so are reported both including and excluding these blocking features in Sec. \ref{ssec:blocking}.
 
-The viabilty of the mixed layer duct is analyzed over the complete transcet with vertical integrations of acoustic energy.
-
-\subsection{Background field normal modes}
+\subsection{Background mixed layer}\label{ssec:modes}
 \begin{figure}
 \includegraphics{../figures/mode_shapes.png}
-    \caption{\label{fig:bg_modes}{(a) Mean sound speed profile of the background field, (b) Shapes of mixed layer mode 1 and sorounding modes at 400 Hz. A significant tail for all mode entend through the mixed layer to the compensation depth of the mixed layer for all modes, and multiple mode shapes exist with no zero crossings in the mixed layer.}}
+    \caption{\label{fig:bg_modes}{(a) Mean sound speed profile of the background field between 230 and 280 km, (b) Shapes of mixed layer mode 1 and surrounding modes at 400 Hz. A significant tail for all mode entends through the mixed layer to the compensation depth of the mixed layer for all modes, and multiple mode shapes exist with no zero crossings in the mixed layer.}}
 \end{figure}
+The mixed layer of the background field is used to define the expected behavior of acoustic propagation in the mixed layer, and create a reference energy loss for comparison of the dynamic sound speed fields.
 
-Three normal modes of the range averaged background field from 230 to 290 km are shown in Fig. \ref{fig:bg_modes}. These modes are centered around mixed layer mode 1 (MLM1), defined here as the mode with the most energy in the mixed layer within a few mode numbers of the first peak in mode loop length. The mode loop length is defined
+An example of three normal modes of the range averaged background field from 230 to 290 km are shown in Fig. \ref{fig:bg_modes}. These modes are centered around mixed layer mode 1 (MLM1), which for this profile has a mode number of 237. The MLM1 is defined here as the mode with the most energy in the mixed layer within a few mode numbers of the first peak in mode loop length\citep{jensen2011computational}. The mode loop length is
 \begin{equation}
-    l_{mn} = \frac{2 \pi}{k_n - k_m},
+    l_{m} = \frac{2 \pi}{k_{m+1} - k_m}.
     \label{eq:loop_length}
 \end{equation}
-where the mode number $n=m+1$. The typical loop length values of the modes near MLM1 are esentially constant define the convergence length of approximatly 55 km. The mixed layer duct modes have anomalously high loop length values, which can also be used to identify mixed layer mode 2 and higher. The MLM2 is separated from MLM1 by tens of mode numbers, indicating that mode coupling between mixed layer modes spans a range of non-ducted modes and is associated with loss of acoustic energy from the mixed layer.
+The loop length values of the modes near MLM1 are approximatly 50 km and define the convergence zone length. The mixed layer duct modes create high preaks in loop length values, which can also identify mixed layer mode 2 (MLM2) and higher. The MLM2 is separated from MLM1 by tens of mode numbers, indicating mode coupling between mixed layer modes spans a range of non-ducted modes and is associated with loss of acoustic energy from the mixed layer.
 
-The mode shape of MLM1 is not orthogonal to the mode shape of MLM1 + 1 over the vertical span of the mixed layer, but orthogonality instead requires integration over the water column to the mixed layer compensation depth around 3200 m. The coherent sum of these modes reenforce or deminish the amplitude of MLM1 with marginal changes to the vertical distribution of the mixed layer pressure field. The interaction between modes leads to a very long range cycling of energy first out from and then back into the mixed layer. This energy cycling is most significant for acoustic frequencies close to the mode 1 cutoff, Eq. \eqref{eq:f_cutoff}. This cycle of energy can act as significan loss of mixed layer energy with mode 1 shape for transmission ranges up to a convergence zone, even in the range independent case when MLM1 amplitude is constant.
+The mode shape of MLM1 is not orthogonal to the mode shapes with neighboring mode numbers over the vertical span of the mixed layer. The orthogonality constraint instead requires integration over the water column past the mixed layer compensation depth of approximatly 3200 m. Instead, the coherent sum of these similarly shaped modes reenforce or deminish the amplitude of MLM1 with marginal changes to the vertical distribution of the mixed layer pressure field. The interaction between modes leads to a very long range cycling of energy first out from and then back into the mixed layer, which cause loss of mixed layer energy for the propagation ranges considered here. This energy cycling is most significant for acoustic frequencies close to the mode 1 cutoff of Eq. \eqref{eq:f_cutoff}.
+
+\begin{figure}
+\includegraphics{../figures/m1_project_example.png}
+    \caption{\label{fig:energy_methods}{Comparision of mixed layer energy measures for a 400 Hz source at 40 m depth and 230 km transcet range. The solid black and dashed grey lines show the vertical integration of the PE pressure field in mixed layer energy for the range dependent and independendent (RD and RI) background field. The blue line shows the magnitude of mixed layer mode 1 (MLM1), and the orange line shows the projection of MLM1 on to the PE pressure field up to the first zero crossing.}}
+\end{figure}
+
+Three different quanitifications are considered to quantify the mixed layer energy for each transmission section: (1) vertical integration of the PE pressure result, (2) MLM1 ampltude, and (3) limited depth projection of MLM1 onto the PE pressure result. The vertical integration of (1) contains no information about the vertical distributution of energy, while the modal based quantifications of (2) and (3) describe the energy in the mixed layer that has the vertical distribution of MLM1. The hybrid mode and PE calculation of (3) is proposed as a way to approximate the orthogonal interpretation of MLM1, even at lower frequencies at which more than one mode have no zero crossings in the mixed layer.
+
+The vertical integraton of mixed layer energy is computed from the PE acoustic pressure result as
+\begin{equation}
+    \textrm{Loss}_{\textrm{ML}} = -10 \, \textrm{log}_{10} \left( \frac{1}{D} \int^{D}_0 p p^* \,  dz \right).
+    \label{eq:int_eng}
+\end{equation}
+Since acoustic pressure is strongly downward refracted below the mixed layer, this energy calculation is largly insensitive to the lower boundry of integration. A fixed integration depth, $D=$150 m, is choosen to be significantly beneath the SLD for all observations.
+
+The amplitude of MLM1 used in method (2) is computed using the Dozier-Trappert mode coupling equation. The mode projection method of (3) projects MLM1 onto the PE pressure field up to the first zero crossing. For a MLM1 with a first zero crossing at depth $z_0$, this projected energy is calculated
+\begin{equation}
+    \frac{1}{z_0} \int^{z_0}_0 p(x, z) \ \psi_{MLM1}(z) \,  dz.
+    \label{eq:proj_eng}
+\end{equation}
+
+A comparison of mixed layer energy metrics are shown in Fig. \ref{fig:energy_methods} for a 400 Hz source at 40 m depth and 230 km transcet range. The black line and grey dashed lines shows the integrated mixed layer energy, Eq. \eqref{eq:int_eng}, for the range dependent and range avereaged background fields. The grey dashed line is almost completely hidden by the black line, indicating that range dependence in the background field plays a negligible role in this energy budget. The amplitude of MLM1, the blue line, generally agrees with the projected amplitude of Eq. \eqref{eq:proj_eng}, the orange line. The Dozier-Trappert equation result does show significant variation compared to the projected amplitude, indicating significant coupling occurs even with the mild range dependence of the background field. This coupling is also interesting because, despite its variations, it agrees better with the projected energy than the constant mode amplitude predicted for a range independent enviornment. Finally, the projected energy follows the total mixed layer energy well with a constant offset of approximatly 2 dB.
 
 \begin{figure}
 \includegraphics{../figures/bg_eng_loss.png}
-    \caption{Acoustic energy in the background mixed layer for a 400 Hz source at 40 m depth. Significantly more loss is observed at ranges less than 300 km, shown as yellow lines. The mean loss is shown as thick black line, and the mean plus or minus the RMS estimate are thin black lines. The 10th and 90th percentile estimates are dashed blue lines. The difference in agreement between the two percentiles and the RMS indicate a relativly small number of high loss events significantly impact the variance estimate.}
+    \caption{Acoustic energy in the background mixed layer for a 400 Hz source at 40 m depth. Significantly more loss is observed at ranges less than 300 km, shown as yellow lines. The mean loss is shown as thick black line, and the mean plus or minus the RMS estimate are thin black lines. The 10th and 90th percentile estimates are dashed blue lines. The difference in agreement between the two percentiles and the RMS indicate a relativly small number of high loss events significantly impact the statistics.}
     \label{fig:bg_eng}
 \end{figure}
+Both the integrated energy and the projected energy predict significant energy loss from the mixed layer over the first 50 km. While this energy loss is essentially linear over the scale of 1 convergence zone, it is cyclic over the loop distance of MLM1. The magnitude of the energy loss is inversely related with frequency, and is less than 1 dB for 1000 Hz.
 
-The significant tail below the SLD for MLM1 and higher mixed layer modes make a vertical integration of the mixed layer pressure field the simplest measure of ducted energy. For a mixed layer depth, $D$, this energy is
-\begin{equation}
-    \textrm{Loss}_{\textrm{ML}} = -10 \, \textrm{log}_{10} \left( \frac{1}{D} \int^{D}_0 p p^* \,  dz \right).
-\end{equation}
-Since acoustic pressure is strongly downward refracted below the mixed layer, this energy calculation it not sensitive to the vertical boundries of integration integration. A fixed integration depth, $D=$150 m, is choosen to be significantly beneath the SLD for all observations.
+The mixed layer duct simulations show the mixed layer propagation some source local features and propagation that is effected similarly over the entire propagation range. The most significant local features observed cause significant loss in the mixed layer duct, and are called blocking features. These are defined as regions where the acoustic energy falls by 3 dB over less than 5 km, relative to the background field. Blocking features are much more significant at 400 Hz than 1 kHz.
 
-The energy loss from the mixed layer duct before one convergence zone is show in Fig. \ref{fig:bg_eng} for a 400 Hz source at 40 m depth. A few kilometers from the source the acoustic energy in the mixed layer duct propagation is dominated by a few modes up to the first convergence zone. Outside of the source region acoustic energy in the mixed layer is monotonically decreasing. There is significantly more energy loss at transcet ranges less than 300 km.
 
-Modal estimates of mixed layer energy are also used to describe the vertical distribution of energy. These methods are also capable of distinguishing between ducted and non-ducted energy, although the simulation enviornment used here makes this unnecassary. The modal distribution of energy is described by the mode shapes, for example the MLM1 shown in Fig. \ref{fig:bg_modes}. Both a naive analysis of MLM1 magnitude and a projection of the mixed layer energy onto MLM1 are considered here. The amplitude of MLM1 can be computed directly with coupled mode theory or from projection of the PE result. The Doizier-Trappert coupled mode approximation is used to avoid the projection calculation from the PE result for the approximatly 3200 m long MLM1 shape.
-
-A mode projection method is also considered that only projects MLM1 onto the pressure field up to the first zero crossing. While obscuring some of the essential mixed layer propagation physics, this projection method can produce results closer to the intuative modal description of energy. For a MLM1 with a first zero crossing at depth $D$, this projected energy is calculated
-\begin{equation}
-    \frac{1}{D} \int^{D}_0 p \phi_{MLM1} \,  dz.
-\end{equation}
-
-\subsection{Mixed layer blocking features}\label{sec:blocking}
+\subsection{Mixed layer charactorization}
+The transmissions for each source position are charactorized in two ways: (1) containing a blocking feature and (2) creating significant coupling to higher mixed layer modes.
 \begin{figure}
 \includegraphics{../figures/integrated_loss.png}
-    \caption{Maximum loss of mixed layer duct energy over 5 km, normalized by background loss. The acoustic energy is simulated for a 400 Hz and 40 m deep source every 10 km. Only the roughly 50 km away from the source and first convergence zone is considered in this calculation. Position independent blocking features have similar maximum loss over this entire span.}
-    \label{fig:bg_eng}
+    \caption{Maximum mixed layer energy loss over 5 km. The mixed layer energy integrated with Eq. \eqref{eq:int_eng} and referenced to the background energy level. Source ranges with a loss greater than 3 dB over 5 km are considered to contain a "blocking feature". A blocking feature is typically detected in all of the consecutative source positions that transmitt through the ranges containing the feature.}
+    \label{fig:shal_400_b}
 \end{figure}
 
-The mixed layer duct simulations show the mixed layer propagation some source  local features and propagation that is effected similarly over the entire propagation range. The most significant local features observed cause significant loss in the mixed layer duct, and are called blocking features. These are defined as regions where the acoustic energy falls by 3 dB over less than 5 km, relative to the background field. Blocking features are much more significant at 400 Hz than 1 kHz.
 
-\subsection{Propagation without blocking features}
-For regions without blocking features, the range dependence of the sound speed field can slowly change the acoustic energy significantly, sometimes accumulating the total effect of a blocking feature. The range dependence can also act to delay diffraction loss from the channel.
+
+\subsection{Mixed layer energy}
+\begin{figure}
+\includegraphics{../figures/shallow_400_blocking.png}
+    \caption{Compensated mixed layer energy for decomposed sound speed fields at 400 Hz.}
+    \label{fig:shal_400_b}
+\end{figure}
+
+
+For regions without blocking features, the range dependence of the sound speed field can slowly change the acoustic energy significantly, sometimes accumulating the total effect of a blocking feature. The range dependence can also act to reduce diffraction loss from the channel.
 
 The acoustic energy in the mixed layer at low frequencies is significantly affected by diffraction, which is apparent in range independent simulations. In this study, the background field is used to compute the diffraction effect in a slowly range dependent environment.
+
+\begin{figure}
+\includegraphics{../figures/shallow_400_no_blocking.png}
+    \caption{Compensated mixed layer energy for decomposed sound speed fields at 400 Hz with blocking features removed.}
+    \label{fig:shal_400_b}
+\end{figure}
+
 
 \bibliographystyle{jasanum2}
 \bibliography{eRichards_master}

@@ -10,10 +10,10 @@ from src import SectionLvls, RDModes, Config, section_cfield
 import pyducts
 
 sec4 = SectionLvls()
-fc = 400
-#fc = 1e3
-#source_depth = "deep"
-source_depth = "shallow"
+#fc = 400
+fc = 1e3
+source_depth = "deep"
+#source_depth = "shallow"
 
 save_dir = f'data/processed/field_{int(fc)}_'+ source_depth
 if False:
@@ -126,10 +126,24 @@ def save_tl(xs, z_save, save_couple=True):
         tmp_dict['psi_total'] = out[2]
         tmp_dict['k_total'] = out[3]
         print('total')
+    else:
+        x_sec, c_bg_sec = section_cfield(xs, x_a, c_bg, rmax=cf.rmax)
+        rd_modes = RDModes(c_bg_sec, x_a, z_a, cf)
+
+        ll = -2 * pi / (np.diff(rd_modes.k_bg))
+        p_i = np.argmax(ll)
+        m_range = (-50, 170)
+
+        cm_i = np.arange(p_i + m_range[0], p_i + m_range[1])
+        cm_i = cm_i[cm_i >= 0]
+
+        tmp_dict['psi_bg'] = rd_modes.psi_bg[cm_i, :]
+        tmp_dict['k_bg'] = rd_modes.k_bg[cm_i]
+
 
     np.savez(join(save_dir, f'tl_section_{int(xs/1e3):03d}'), **tmp_dict)
     print(f'saved tl_section_{int(xs/1e3)}')
 
-run_func = lambda xs: save_tl(xs, z_save, save_couple=True)
+run_func = lambda xs: save_tl(xs, z_save, save_couple=False)
 
 list(map(run_func, x_start))

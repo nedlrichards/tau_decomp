@@ -39,8 +39,11 @@ class MLEnergy:
         x_a = decomp['x_a']
 
         x_sec, c_sec = section_cfield(self.xs, x_a, c_total)
-        psi_k = (self.tl_data["psi_" + field_type],
-                 self.tl_data["k_" + field_type])
+        if "psi_" + field_type in self.tl_data:
+            psi_k = (self.tl_data["psi_" + field_type],
+                    self.tl_data["k_" + field_type])
+        else:
+            psi_k = None
 
         modes = RDModes(c_sec, x_sec, self.tl_data['z_a'], self.cf,
                          psi_k_bg=psi_k)
