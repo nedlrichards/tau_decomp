@@ -5,7 +5,7 @@ from src import MLEnergy, Config, list_tl_files
 
 class EngProc:
     """common processing for mixed layer energy processing"""
-    def __init__(self, cf):
+    def __init__(self, cf, fields=None):
         """parameters of investigation grid"""
         self.cf = cf
 
@@ -14,7 +14,7 @@ class EngProc:
         mls = []
 
         for tl in list_tl_files(cf.fc, source_depth=cf.source_depth):
-            ml = MLEnergy(tl, self.cf.source_depth)
+            ml = MLEnergy(tl, self.cf.source_depth, fields=fields)
             mls.append(ml)
             xs.append(ml.xs)
 

@@ -8,7 +8,7 @@ from src import RDModes, Config, section_cfield
 class MLEnergy:
     """Different methods to calculate or estimate mixed layer energy"""
 
-    def __init__(self, run_file, source_depth="shallow"):
+    def __init__(self, run_file, source_depth="shallow", fields=None):
         """Calculate range independent modes"""
         self.tl_data = np.load(run_file)
         self.cf = Config(source_depth=source_depth,
@@ -26,10 +26,13 @@ class MLEnergy:
         self.llen = {}
         self.set_1 = {}
 
-        self._start_field_type('bg')
-        self._start_field_type('tilt')
-        self._start_field_type('spice')
-        self._start_field_type('total')
+        if fields is None:
+            self._start_field_type('bg')
+            self._start_field_type('tilt')
+            self._start_field_type('spice')
+            self._start_field_type('total')
+        else:
+            [self._start_field_type(fld) for fld in fields]
 
 
     def _start_field_type(self, field_type):
