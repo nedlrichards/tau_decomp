@@ -24,7 +24,6 @@ class MLEnergy:
 
         self.field_modes = {}
         self.llen = {}
-        self.set_1 = {}
 
         if fields is None:
             self._start_field_type('bg')
@@ -55,9 +54,6 @@ class MLEnergy:
         llen = -2 * pi / (np.diff(np.real(modes.k_bg)))
         self.llen[field_type] = llen
 
-        set_1 = self.mode_set_1(field_type)
-        self.set_1[field_type] = set_1
-
 
     def ml_energy(self, field_type):
         """Energy from mixed layer computed by PE"""
@@ -67,21 +63,25 @@ class MLEnergy:
         return en_pe
 
 
-    def proj_mode1(self, field_type):
+    def proj_mode(self, field_type, mode_num=1):
         """Project pressure field onto mode 1 up to 1st zero crossing"""
-        m1_ind = self.mode_set_1(field_type, m1_percent=99.9)
+        m1_ind = self.mode_set(field_type, m1_percent=99.9, mode_num=mode_num)
         psi_1 = self.field_modes[field_type].psi_bg[m1_ind]
 
         psi_ier = interp1d(self.tl_data['z_a'], np.squeeze(psi_1))
         psi_proj = psi_ier(self.z_a)
-        z0_ind = np.argmax(np.abs(np.diff(np.sign(psi_proj))) > 1.5)
+
+        zero_cross = np.where(np.abs(np.diff(np.sign(psi_proj))) > 1.5)[0]
+        z0_ind = zero_cross[mode_num - 1]
 
         p_ml = self.tl_data['p_' + field_type][:, :z0_ind]
 
         proj_amp = np.sum(p_ml * psi_proj[None, :z0_ind], axis=-1) * self.dz
-        proj_amp *= np.sqrt(self.r_a / 1e3)
+        proj_amp *= np.sqrt(self.r_a) / 1e3
 
-        return proj_amp
+        psi_scale = np.sum(np.abs(psi_proj[:z0_ind]) ** 2) * self.dz
+
+        return proj_amp, psi_scale
 
 
     def mode_energy(self, field_type, indicies=None):
@@ -128,13 +128,14 @@ class MLEnergy:
         return en_ri, en_ri_0
 
 
-    def mode_set_1(self, field_type, m1_percent=10.):
+    def mode_set(self, field_type, m1_percent=99., mode_num=1):
         """Common calculation of mode set 1 from loop length"""
         llen = self.llen[field_type]
-        hgt_bnd = np.mean([np.median(llen), np.max(llen)])
+        hgt_bnd = 1.2 * np.median(llen)
+        #hgt_bnd = np.mean([np.median(llen), np.max(llen)])
         pks = find_peaks(llen, height=hgt_bnd)[0]
 
-        m1_ind = pks[0]
+        m1_ind = pks[mode_num - 1]
         sld_z = self.field_modes[field_type].bg_sld
 
         z_i = self.tl_data['z_a'] < sld_z
@@ -143,9 +144,9 @@ class MLEnergy:
         psi_bg = self.field_modes[field_type].psi_bg
 
         # test for no zero crossings in ML
-
         x_test = np.diff(np.sign(psi_bg[search_i, :][:, z_i]))
-        is_m1 = ~np.any(np.abs(x_test) > 1.5, axis=-1)
+        #is_m1 = ~np.any(np.abs(x_test) > 1.5, axis=-1)
+        is_m1 = np.ones_like(search_i, dtype=np.bool_)
 
         mode_eng = np.sum(psi_bg[search_i, :][:, z_i] ** 2, axis=-1)
         mode_eng /= np.max(mode_eng)

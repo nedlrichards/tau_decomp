@@ -15,6 +15,7 @@ class Config:
 
         if source_depth=="shallow":
             self.z_src = 40.
+
         elif source_depth == "deep":
             self.z_src = 200.
         else:

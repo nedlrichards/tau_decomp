@@ -4,17 +4,87 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 import os
 
-from src import MLEnergy, MLEnergyPE, list_tl_files, Config
+from src import MLEnergy, list_tl_files, Config
 from src import RDModes, section_cfield
 
 plt.ion()
 plt.style.use('elr')
 
-fc = 400
+fc = 1000
 tl_files = list_tl_files(fc=fc)
 cf = Config(fc=fc)
 
 percent_max = 99.99
+
+tl_file = tl_files[11]
+
+eng_mode = MLEnergy(tl_file)
+
+total_eng = 10 * np.log10(eng_mode.ml_energy('bg'))
+
+proj_eng, proj_bg = eng_mode.proj_mode1('bg')
+proj_eng = 10 * np.log10(np.abs(proj_eng))
+
+"""
+fig, ax = plt.subplots()
+proj_bg = 10 * np.log10(np.abs(proj_bg))
+ax.plot(eng_mode.r_a / 1e3, total_eng + 10 * np.log10(eng_mode.r_a))
+ax.plot(eng_mode.r_a / 1e3, proj_eng)
+"""
+
+mode_num = 2
+fig, ax = plt.subplots()
+
+ref_eng = 10 * np.log10(eng_mode.background_diffraction('bg')[0])
+
+proj = eng_mode.proj_mode1('bg')
+proj_ref = 20 * np.log10(np.abs(proj[1]))
+
+field_type = 'tilt'
+total_eng = 10 * np.log10(eng_mode.ml_energy(field_type))
+proj = eng_mode.proj_mode1(field_type, mode_num=mode_num)
+proj_eng = 20 * np.log10(np.abs(proj[0]))
+
+#amps = eng_mode.tl_data[field_type + '_mode_amps']
+#val = 20 * np.log10(np.abs(amps[:, eng_mode.set_1[field_type][0]]))
+
+#ax.plot(eng_mode.r_a / 1e3, total_eng - ref_eng, color='C0')
+#ax.plot(eng_mode.r_a / 1e3, proj_eng - proj_ref, '--', color='C0')
+ax.plot(eng_mode.r_a / 1e3, proj_eng, '--', color='C0')
+
+field_type = 'spice'
+total_eng = 10 * np.log10(eng_mode.ml_energy(field_type))
+proj = eng_mode.proj_mode1(field_type, mode_num=mode_num)
+proj_eng = 20 * np.log10(np.abs(proj[0]))
+
+#amps = eng_mode.tl_data[field_type + '_mode_amps']
+#val = 20 * np.log10(np.abs(amps[:, eng_mode.set_1[field_type][0]]))
+
+#ax.plot(eng_mode.r_a / 1e3, total_eng - ref_eng, color='C1')
+#ax.plot(eng_mode.r_a / 1e3, proj_eng - proj_ref, '--', color='C1')
+ax.plot(eng_mode.r_a / 1e3, proj_eng, '--', color='C1')
+
+field_type = 'total'
+total_eng = 10 * np.log10(eng_mode.ml_energy(field_type))
+proj = eng_mode.proj_mode1(field_type, mode_num=mode_num)
+proj_eng = 20 * np.log10(np.abs(proj[0]))
+
+#ax.plot(eng_mode.r_a / 1e3, total_eng - ref_eng, color='C2')
+#ax.plot(eng_mode.r_a / 1e3, proj_eng - proj_ref, '--', color='C2')
+ax.plot(eng_mode.r_a / 1e3, proj_eng, '--', color='C2')
+
+ax.set_xlim(7.5, 47.5)
+#ax.set_ylim(-10, 5)
+
+#ax.plot(eng_mode.r_a / 1e3, proj_eng)
+#ax.plot(eng_mode.r_a / 1e3, proj_bg)
+
+fig, ax = plt.subplots()
+for ft in ['tilt', 'spice', 'total']:
+    mn = eng_mode.mode_set_1(ft, m1_percent=99., mode_num=mode_num)
+    ax.plot(eng_mode.field_modes[ft].psi_bg[mn, :].T, eng_mode.tl_data['z_a'])
+
+"""
 
 def eng_diff(tl_file, field_type):
     tl_data = np.load(tl_file)
@@ -22,7 +92,6 @@ def eng_diff(tl_file, field_type):
     z_a = tl_data['zplot']
     r_a = tl_data['rplot']
 
-    eng_mode = MLEnergy(tl_file, m1_percent=percent_max)
     ind = eng_mode.set_1[field_type]
     psi_1 = eng_mode.field_modes[field_type].psi_bg[ind]
 
@@ -96,3 +165,5 @@ ax.set_position(pos)
 
 savedir = 'reports/jasa/figures'
 fig.savefig(os.path.join(savedir, 'energy_variance.png'), dpi=300)
+
+"""

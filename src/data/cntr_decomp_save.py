@@ -12,8 +12,8 @@ import pyducts
 sec4 = SectionLvls()
 #fc = 400
 fc = 1e3
-source_depth = "deep"
-#source_depth = "shallow"
+#source_depth = "deep"
+source_depth = "shallow"
 
 save_dir = f'data/processed/field_{int(fc)}_'+ source_depth
 if False:
@@ -74,7 +74,7 @@ def save_tl(xs, z_save, save_couple=True):
     rf = pyducts.ram.RamIn(cf.fc, cf.z_src, cf.rmax, D,
                            bottom_HS=cf.bottom_HS, dr=100., zmax_plot=D)
 
-    tmp_dict = {"z_a":z_a, "xs":xs, "fc":cf.fc}
+    tmp_dict = {"z_a":z_a, "xs":xs, "fc":cf.fc, "z_src":cf.z_src}
 
     x_sec, c_bg_sec = section_cfield(xs, x_a, c_bg, rmax=cf.rmax)
     zplot, rplot, p_bg = run_ram(rf, x_sec, z_a, c_bg_sec)
@@ -144,6 +144,6 @@ def save_tl(xs, z_save, save_couple=True):
     np.savez(join(save_dir, f'tl_section_{int(xs/1e3):03d}'), **tmp_dict)
     print(f'saved tl_section_{int(xs/1e3)}')
 
-run_func = lambda xs: save_tl(xs, z_save, save_couple=False)
+run_func = lambda xs: save_tl(xs, z_save, save_couple=True)
 
 list(map(run_func, x_start))

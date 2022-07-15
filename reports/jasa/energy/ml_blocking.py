@@ -105,4 +105,4 @@ pos.y0 += 0.07
 pos.y1 += 0.07
 axes[1].set_position(pos)
 
-#fig.savefig('reports/jasa/figures/integrated_loss.png', dpi=300)
+fig.savefig('reports/jasa/figures/integrated_loss.png', dpi=300)

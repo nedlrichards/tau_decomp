@@ -34,7 +34,7 @@ last_z = stable_lvls[0, last_cntr_i, np.arange(stable_lvls.shape[-1])]
 last_z_i = np.argmin(np.abs(last_z - z_a[:, None]), axis=0)
 
 
-fig, ax = plt.subplots(figsize=(cf.jasa_1clm, 2.5))
+fig, ax = plt.subplots(figsize=(cf.jasa_1clm, 2.25))
 cm = ax.pcolormesh(x_a / 1e3, z_a[z_i], c_diff, cmap=plt.cm.BrBG,
                       vmin=-2.5, vmax=2.5)
 ax.plot(x_a / 1e3, last_z, 'k')
@@ -42,25 +42,26 @@ ax.plot(x_a / 1e3, last_z_hp, '0.4', linewidth=0.5)
 #cm = ax.pcolormesh(x_a / 1e3, z_a[z_i], c_rud)
 
 cb = fig.colorbar(cm)
-cb.set_label('$\Delta /, c$ (m/s)')
+cb.set_label('$\Delta \, c$ (m/s)')
 
-ax.set_xlim(175, 300)
-ax.set_ylim(150, 0)
+#ax.set_xlim(175, 275)
+ax.set_xlim(230, 280)
+ax.set_ylim(125, 0)
 ax.set_ylabel('Depth (m)')
 ax.set_xlabel('Position, $x$ (km)')
 
 pos = ax.get_position()
 pos.x0 += 0.06
 pos.x1 += 0.03
-pos.y0 += 0.08
+pos.y0 += 0.10
 pos.y1 += 0.09
 ax.set_position(pos)
 
 pos = cb.ax.get_position()
 pos.x0 += 0.03
 pos.x1 += 0.03
-pos.y0 += 0.08
+pos.y0 += 0.10
 pos.y1 += 0.09
 cb.ax.set_position(pos)
 
-#fig.savefig('reports/jasa/figures/sound_speed_comp.png', dpi=300)
+fig.savefig('reports/jasa/figures/sound_speed_comp.png', dpi=300)
