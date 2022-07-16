@@ -27,7 +27,7 @@ class EngProc:
         """Energy in range independent background duct"""
         eng_bg = []
         for ml in self.mls:
-            bg_eng, _ = ml.background_diffraction('bg')
+            bg_eng = ml.background_diffraction('bg')
             eng_bg.append(10 * np.log10(bg_eng * ml.r_a))
 
         return np.array(eng_bg)

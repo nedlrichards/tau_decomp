@@ -77,7 +77,8 @@ class MLEnergy:
         p_ml = self.tl_data['p_' + field_type][:, :z0_ind]
 
         proj_amp = np.sum(p_ml * psi_proj[None, :z0_ind], axis=-1) * self.dz
-        proj_amp *= np.sqrt(self.r_a) / 1e3
+        proj_amp *= np.sqrt(self.r_a)
+        #proj_amp *= np.sqrt(self.r_a) / 1e3
 
         psi_scale = np.sum(np.abs(psi_proj[:z0_ind]) ** 2) * self.dz
 
@@ -117,15 +118,7 @@ class MLEnergy:
                                          r_synth=self.r_a)
         en_ri = np.sum(np.abs(p_ri) ** 2, axis=1) * self.dz
 
-        # resticted mode calculation
-        psi_m0 = np.zeros_like(psi_s)
-        psi_m0[self.set_1[field_type]] = psi_s[self.set_1[field_type]]
-        p_m0 = modes.synthesize_pressure(psi_m0,
-                                         self.z_a[self.z_i],
-                                         r_synth=self.r_a)
-        en_ri_0 = np.sum(np.abs(p_m0) ** 2, axis=1) * self.dz
-
-        return en_ri, en_ri_0
+        return en_ri
 
 
     def mode_set(self, field_type, m1_percent=99., mode_num=1):

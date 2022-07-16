@@ -19,17 +19,22 @@ tl_file = tl_files[14]
 ml_eng = MLEnergy(tl_file)
 
 eng_rd = ml_eng.ml_energy(field_type) * ml_eng.r_a
-eng_ri, _ = ml_eng.background_diffraction(field_type) * ml_eng.r_a
+eng_ri = ml_eng.background_diffraction(field_type) * ml_eng.r_a
 
-ind = ml_eng.mode_set_1(field_type, m1_percent=99.9)
-eng_mode = np.sum(ml_eng.tl_data[field_type + '_mode_amps'][:, ind] ** 2, axis=-1) * 1e3
-proj_amp = ml_eng.proj_mode1(field_type)
+ind = ml_eng.mode_set(field_type, m1_percent=99.9, mode_num=1)
+eng_mode = np.sum(np.abs(ml_eng.tl_data[field_type + '_mode_amps'][:, ind]) ** 2, axis=-1) * 1e3
+proj_amp, proj_scale = ml_eng.proj_mode(field_type, mode_num=1)
+
+# projection scale gives the correct result
+#proj_eng = np.abs(proj_amp) ** 2 / proj_scale
+
+proj_eng = np.abs(proj_amp) ** 2 / 1e3
 
 fig, ax = plt.subplots(figsize=(cf.jasa_1clm, 2.0))
 ax.plot(ml_eng.r_a / 1e3, 10 * np.log10(eng_ri), color='0.6', linestyle='--', label='RI BG')
 ax.plot(ml_eng.r_a / 1e3, 10 * np.log10(eng_rd), label='RD BG')
 ax.plot(ml_eng.r_a / 1e3, 10 * np.log10(eng_mode), label='MLM1')
-ax.plot(ml_eng.r_a / 1e3, 20 * np.log10(np.abs(proj_amp)), label='proj. MLM1')
+ax.plot(ml_eng.r_a / 1e3, 10 * np.log10(proj_eng), label='proj. MLM1')
 ax.set_xlim(0, 55)
 ax.set_ylim(-23, 0)
 
@@ -44,5 +49,5 @@ pos.y0 += 0.12
 pos.y1 += 0.07
 ax.set_position(pos)
 
-fig.savefig('reports/jasa/figures/m1_project_example.png', dpi=300)
+#fig.savefig('reports/jasa/figures/m1_project_example.png', dpi=300)
 
