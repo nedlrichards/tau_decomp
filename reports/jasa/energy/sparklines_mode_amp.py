@@ -84,7 +84,7 @@ def sparkline(ax, lines, stats, dy, title, ylim=(-20, 5), dx=0):
     ax.plot(r_a / 1e3, lines.T, linewidth=0.5, color='0.7')
 
     # mark lines crossing past ylim
-    cross_i = np.argmax(lines < -10, axis=-1)
+    cross_i = np.argmax(lines < ylim[0], axis=-1)
     cross_r = r_a[cross_i[cross_i > 0]]
     ax.plot(cross_r / 1e3, np.full_like(cross_r, ylim[0]), color='0.7',
             marker='.', linestyle='None', markeredgecolor='0.5')
