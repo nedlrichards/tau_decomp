@@ -151,22 +151,18 @@ def sparkline(ax, lines, stats, dy, title, ylim=(-10, 5), dx=0):
     ax.set_ylim(ylim[0], ylim[1])
 
 
-def plot_sparks(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
+def plot_w_blocking(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
     """Four by 2 plot that does not correct for blocking"""
     stats_400 = {i:energy_400.field_stats(v, range_bounds=range_bounds) for i, v in lines_400.items()}
     stats_1000 = {i:energy_1000.field_stats(v, range_bounds=range_bounds) for i, v in lines_1000.items()}
 
-    fig, axes = plt.subplots(7, 2, figsize=(cf.jasa_2clm, 3.75))
+    fig, axes = plt.subplots(4, 2, figsize=(cf.jasa_2clm, 2.25))
     r_i = stats_400['bg']['r_i']
-
     ax = axes[0, 0]
     sparkline(ax, lines_400['bg'][:, r_i], stats_400['bg'], -0.04, 'BG', ylim=ylim)
     col_str = 'Type \hspace{3.4em} 400 Hz, dB re RI BG  \hspace{1.7em} 7.5 km  \hspace{2.0em} 47.5 km'
-    ax.text(-0.48, 2.3, col_str, transform=ax.transAxes)
+    ax.text(-0.48, 1.4, col_str, transform=ax.transAxes)
     ax.set_yticklabels(ax.get_yticks(), fontdict={'fontsize':8})
-    ax.text(-0.45, 1.5, 'Complete', transform=ax.transAxes, clip_on=False, bbox=cf.bbox, fontsize=8)
-
-    ax.plot([-0.46, 4.17], [1.65, 1.65], transform=ax.transAxes, clip_on=False, linewidth=0.75, color='0.8')
 
     ax = axes[1, 0]
     sparkline(ax, lines_400['tilt'][:, r_i], stats_400['tilt'], -0.04, 'Tilt', ylim=ylim)
@@ -177,14 +173,14 @@ def plot_sparks(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
     ax = axes[3, 0]
     sparkline(ax, lines_400['total'][:, r_i], stats_400['total'], -0.04, 'Obs.', ylim=ylim)
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
-    #ax.set_xticklabels(ax.get_xticks(), fontdict={'fontsize':8})
-    #ax.text(0.30, -0.65, 'Range (km)', transform=ax.transAxes, fontsize=8)
-    #ax.tick_params(bottom=True)
+    ax.set_xticklabels(ax.get_xticks(), fontdict={'fontsize':8})
+    ax.text(0.30, -0.65, 'Range (km)', transform=ax.transAxes, fontsize=8)
+    ax.tick_params(bottom=True)
 
     ax = axes[0, 1]
     sparkline(ax, lines_1000['bg'][:, r_i], stats_1000['bg'], -0.04, '', dx=0.04, ylim=ylim)
     col_str = '1 kHz, dB re RI BG  \hspace{2.0em} 7.5 km  \hspace{2.0em} 47.5 km'
-    ax.text(0.10, 2.3, col_str, transform=ax.transAxes)
+    ax.text(0.10, 1.4, col_str, transform=ax.transAxes)
 
     ax = axes[1, 1]
     sparkline(ax, lines_1000['tilt'][:, r_i], stats_1000['tilt'], -0.04, '', dx=0.04, ylim=ylim)
@@ -196,28 +192,34 @@ def plot_sparks(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
     sparkline(ax, lines_1000['total'][:, r_i], stats_1000['total'], -0.04, '', dx=0.04, ylim=ylim)
 
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
-    #ax.set_xticklabels(ax.get_xticks(), fontdict={'fontsize':8})
-    #ax.text(0.30, -0.65, 'Range (km)', transform=ax.transAxes, fontsize=8)
-    #ax.tick_params(bottom=True)
+    ax.set_xticklabels(ax.get_xticks(), fontdict={'fontsize':8})
+    ax.text(0.30, -0.65, 'Range (km)', transform=ax.transAxes, fontsize=8)
+    ax.tick_params(bottom=True)
+    return fig, axes
+
+
+def plot_w_o_blocking(energy_400, lines_400, energy_1000, lines_1000, blocking_inds, ylim=(-10, 5)):
+    """three by 2 plot that does correct for blocking"""
+    stats_400 = {i:energy_400.field_stats(v, range_bounds=range_bounds) for i, v in lines_400.items()}
+    stats_1000 = {i:energy_1000.field_stats(v, range_bounds=range_bounds) for i, v in lines_1000.items()}
 
     inds = stats_400['bg']['r_i']
+    fig, axes = plt.subplots(3, 2, figsize=(cf.jasa_2clm, 2.00))
 
-    ax = axes[4, 0]
+    ax = axes[0, 0]
     flt_eng = lines_400['tilt'][block_i[cf.field_types.index('tilt')], :].copy()
     # remove 3 dB down series
     lossy = flt_eng[:, inds][:, 0] < -3
     flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_tilt_stats = energy_400.field_stats(flt_eng, range_bounds=range_bounds)
 
-    sparkline(ax, flt_eng[:, inds], flt_tilt_stats, -0.10, 'Tilt', ylim=ylim)
+    sparkline(ax, flt_eng[:, inds], flt_tilt_stats, -0.04, 'Tilt', ylim=ylim)
 
-    ax.plot([-0.46, 4.17], [1.5, 1.5], transform=ax.transAxes, clip_on=False, linewidth=0.75, color='0.8')
-    ax.text(-0.45, 1.5, 'W/O Blocking', transform=ax.transAxes, clip_on=False, bbox=cf.bbox, fontsize=8)
-    #ax.text(-0.48, 1.3, 'Type \hspace{3.4em} 400 Hz, dB re RI BG  \hspace{1.7em} 7.5 km  \hspace{2.0em} 47.5 km',
-            #transform=ax.transAxes)
+    ax.text(-0.48, 1.3, 'Type \hspace{3.4em} 400 Hz, dB re RI BG  \hspace{1.7em} 7.5 km  \hspace{2.0em} 47.5 km',
+            transform=ax.transAxes)
     ax.set_yticklabels(ax.get_yticks(), fontdict={'fontsize':8})
 
-    ax = axes[5, 0]
+    ax = axes[1, 0]
 
     flt_eng = lines_400['spice'][block_i[cf.field_types.index('spice')], :].copy()
     # remove 3 dB down series
@@ -225,9 +227,9 @@ def plot_sparks(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
     flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_spice_stats = energy_400.field_stats(flt_eng, range_bounds=range_bounds)
 
-    sparkline(ax, flt_eng[:, inds], flt_spice_stats, -0.10, 'Spice', ylim=ylim)
+    sparkline(ax, flt_eng[:, inds], flt_spice_stats, -0.02, 'Spice', ylim=ylim)
 
-    ax = axes[6, 0]
+    ax = axes[2, 0]
 
     flt_eng = lines_400['total'][block_i[cf.field_types.index('total')], :].copy()
     # remove 3 dB down series
@@ -235,7 +237,7 @@ def plot_sparks(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
     flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_total_stats = energy_400.field_stats(flt_eng, range_bounds=range_bounds)
 
-    sparkline(ax, flt_eng[:, inds], flt_total_stats, -0.10, 'Obs.', ylim=ylim)
+    sparkline(ax, flt_eng[:, inds], flt_total_stats, -0.00, 'Obs.', ylim=ylim)
 
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
     ax.set_xticklabels(ax.get_xticks(), fontdict={'fontsize':8})
@@ -243,18 +245,18 @@ def plot_sparks(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
     ax.tick_params(bottom=True)
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
 
-    ax = axes[4, 1]
+    ax = axes[0, 1]
     flt_eng = lines_1000['tilt'][block_i[cf.field_types.index('tilt')], :].copy()
     # remove 3 dB down series
     lossy = flt_eng[:, inds][:, 0] < -3
     flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_tilt_stats = energy_1000.field_stats(flt_eng, range_bounds=range_bounds)
 
-    sparkline(ax, flt_eng[:, inds], flt_tilt_stats, -0.10, '', dx=0.04, ylim=ylim)
-    #ax.text(0.10, 1.3, '1 kHz, dB re RI BG  \hspace{2.0em} 7.5 km  \hspace{2.0em} 47.5 km',
-            #transform=ax.transAxes)
+    sparkline(ax, flt_eng[:, inds], flt_tilt_stats, -0.04, '', dx=0.04, ylim=ylim)
+    ax.text(0.10, 1.3, '1 kHz, dB re RI BG  \hspace{2.0em} 7.5 km  \hspace{2.0em} 47.5 km',
+            transform=ax.transAxes)
 
-    ax = axes[5, 1]
+    ax = axes[1, 1]
 
     flt_eng = lines_1000['spice'][block_i[cf.field_types.index('spice')], :].copy()
     # remove 3 dB down series
@@ -262,9 +264,9 @@ def plot_sparks(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
     flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_spice_stats = energy_1000.field_stats(flt_eng, range_bounds=range_bounds)
 
-    sparkline(ax, flt_eng[:, inds], flt_spice_stats, -0.10, '', dx=0.04, ylim=ylim)
+    sparkline(ax, flt_eng[:, inds], flt_spice_stats, -0.02, '', dx=0.04, ylim=ylim)
 
-    ax = axes[6, 1]
+    ax = axes[2, 1]
 
     flt_eng = lines_1000['total'][block_i[cf.field_types.index('total')], :].copy()
     # remove 3 dB down series
@@ -272,7 +274,7 @@ def plot_sparks(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
     flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_total_stats = energy_1000.field_stats(flt_eng, range_bounds=range_bounds)
 
-    sparkline(ax, flt_eng[:, inds], flt_total_stats, -0.10, '', dx=0.04, ylim=ylim)
+    sparkline(ax, flt_eng[:, inds], flt_total_stats, -0.00, '', dx=0.04, ylim=ylim)
 
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
     ax.set_xticklabels(ax.get_xticks(), fontdict={'fontsize':8})
@@ -283,16 +285,16 @@ def plot_sparks(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
     return fig, axes
 
 
-fig, axes = plot_sparks(eng_4, lines_eng_4, eng_1, lines_eng_1)
-fig.savefig(join(savedir, f'shallow_eng_blocking.png'), dpi=300)
-fig, axes = plot_sparks(eng_4, lines_proj_4, eng_1, lines_proj_1, ylim=(-20, 5))
-fig.savefig(join(savedir, f'shallow_eng_proj.png'), dpi=300)
+fig, axes = plot_w_blocking(eng_4, lines_eng_4, eng_1, lines_eng_1)
+fig.savefig(join(savedir, f'shallow_blocking.png'), dpi=300)
+fig, axes = plot_w_blocking(eng_4, lines_proj_4, eng_1, lines_proj_1, ylim=(-20, 5))
+fig.savefig(join(savedir, f'shallow_proj_blocking.png'), dpi=300)
 
 
-#fig, axes = plot_w_o_blocking(eng_4, lines_eng_4, eng_1, lines_eng_1, block_i)
-#fig.savefig(join(savedir, f'shallow_no_blocking.png'), dpi=300)
-#fig, axes = plot_w_o_blocking(eng_4, lines_proj_4, eng_1, lines_proj_1, block_i, ylim=(-20, 5))
-#fig.savefig(join(savedir, f'shallow_proj_no_blocking.png'), dpi=300)
+fig, axes = plot_w_o_blocking(eng_4, lines_eng_4, eng_1, lines_eng_1, block_i)
+fig.savefig(join(savedir, f'shallow_no_blocking.png'), dpi=300)
+fig, axes = plot_w_o_blocking(eng_4, lines_proj_4, eng_1, lines_proj_1, block_i, ylim=(-20, 5))
+fig.savefig(join(savedir, f'shallow_proj_no_blocking.png'), dpi=300)
 
 
 
