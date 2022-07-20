@@ -284,7 +284,7 @@ def plot_sparks(energy_400, lines_400, energy_1000, lines_1000, ylim=(-10, 5)):
 
 
 fig, axes = plot_sparks(eng_4, lines_eng_4, eng_1, lines_eng_1)
-fig.savefig(join(savedir, f'shallow_eng_blocking.png'), dpi=300)
+fig.savefig(join(savedir, f'shallow_eng.png'), dpi=300)
 fig, axes = plot_sparks(eng_4, lines_proj_4, eng_1, lines_proj_1, ylim=(-20, 5))
 fig.savefig(join(savedir, f'shallow_eng_proj.png'), dpi=300)
 

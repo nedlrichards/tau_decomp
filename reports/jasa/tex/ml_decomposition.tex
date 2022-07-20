@@ -125,7 +125,7 @@ The tilt RMS then increases to a smaller maximum at the surface. Internal waves 
 \section{\label{sec:propagation}Mixed layer acoustic propagation}
 The separate effects of tilt and spice are compared with the observed sound speed field and the smooth background over 60 km propagation sections. Each propagation section is separated by 10 km, a distance chosen as a heuristic compromise that samples the observed range variation with reasonable independence. Two source frequencies, 400 and 1000 Hz, are used for comparison of low and mid frequcy propagation.
 
-A representative section is shown in Fig. \ref{fig:decomp_x} for a 400 Hz acoustic source at 40 m depth. Acoustic propagation is modeled with the parabolic equation (PE) code RAM, and normal modes are used to analyze the vertical structure of mixed layer acoustic energy, Sec. \ref{ssec:modes}. The PE results in the right column of Fig. \ref{fig:decomp_x} show some fields predict significant loss and changes in vertical distribution of mixed layer acoustic energy.
+A representative section is shown in Fig. \ref{fig:decomp_x} for a 400 Hz acoustic source at 40 m depth. Acoustic propagation is modeled with the parabolic equation (PE) code RAM, and normal modes are used to analyze the vertical structure of mixed layer acoustic energy, Sec. \ref{ssec:bg}. The PE results in the right column of Fig. \ref{fig:decomp_x} show some fields predict significant loss and changes in vertical distribution of mixed layer acoustic energy.
 
 \begin{figure}
 \includegraphics{../figures/decomp_xmission.png}
@@ -140,7 +140,7 @@ The spice sound speed field, left panel (c), shows both vertical fronts and feat
 
 Similar blocking features are also observed at other ranges, and can appear either in only one or multiple dynamic fields. A metric defining blocking features is defined through mixed layer energy in Sec. \ref{ssec:energy}. Statistics of the mixed layer energy are significantly influenced by these sporadic high loss, and so are reported both including and excluding these blocking features in Sec. \ref{ssec:blocking}.
 
-\subsection{Background mixed layer}\label{ssec:modes}
+\subsection{Background mixed layer}\label{ssec:bg}
 \begin{figure}
 \includegraphics{../figures/mode_shapes.png}
     \caption{\label{fig:bg_modes}{(a) Mean sound speed profile of the background field between 230 and 280 km, (b) Shapes of mixed layer mode 1 (mode \#237) and surrounding modes at 400 Hz. Multiple mode exist with similar shapes in the mixed layer, and all have a significant tail that entends to the compensation depth of the mixed layer around 3200 m depth.}}
@@ -156,11 +156,6 @@ The loop length values of the modes around MLM1 are approximatly 50 km and defin
 
 The mode shape of MLM1 is not orthogonal to neighboring modes in Fig \ref{fig:bg_modes} over the vertical span of the mixed layer. Instead, the coherent sum of these similarly shaped modes reenforce or deminish the amplitude of MLM1 with marginal changes to the vertical distribution of the mixed layer pressure field. The interaction between modes leads to a very long range cycling of energy first out from and then back into the mixed layer \citep{porter93}, which cause loss of mixed layer energy for the propagation ranges considered here. This energy cycling is most significant for acoustic frequencies close to the mode 1 cutoff of Eq. \eqref{eq:f_cutoff}.
 
-%\begin{figure}
-    %\includegraphics{../figures/m1_project_example.png}
-    %\caption{\label{fig:energy_methods}{Comparision of mixed layer energy measures for a 400 Hz source at 40 m depth and 230 km transcet range. The solid black and dashed grey lines show the vertical integration of the PE pressure field in mixed layer energy for the range dependent and independendent (RD and RI) background field. The blue line shows the magnitude of mixed layer mode 1 (MLM1), and the orange line shows the projection of MLM1 on to the PE pressure field up to the first zero crossing.}}
-%\end{figure}
-
 Two quanitifications of mixed layer energy are considered, the vertical integration of the PE pressure result, and a limited depth projection of MLM1 onto the PE pressure result. The vertical integration of the PE pressure contains no information about the vertical distributution of energy, while the modal quantification describes the energy in the mixed layer that has the vertical distribution of a mixed layer mode. The limited depth mode projection is proposed as an alternative to coupled mode solutions of mode amplitude that approximates the orthogonal interpretation of mixed layer modes even when more than one mode have the same number of mixed layer zero crossings.
 
 The vertical integraton of mixed layer energy is computed from the PE acoustic pressure result as
@@ -174,8 +169,6 @@ Since acoustic pressure is strongly downward refracted below the mixed layer, th
     \label{eq:proj_eng}
 \end{equation}
 The normalization term acounts for the partial mode energy in the limited depth integration of Eq. \eqref{eq:proj_eng}, which is equal to the water density for modes with no energy outside the mixed layer\citep{jensen2011computational}.
-
-%A comparison of mixed layer energy metrics are shown in Fig. \ref{fig:energy_methods} for a 400 Hz source at 40 m depth and 230 km transcet range. The black line and grey dashed lines shows the integrated mixed layer energy, Eq. \eqref{eq:int_eng}, for the range dependent and range avereaged background fields. The grey dashed line is almost completely hidden by the black line, indicating that range dependence in the background field plays a negligible role in this energy budget. The amplitude of MLM1, the blue line, generally agrees with the projected amplitude of Eq. \eqref{eq:proj_eng}, the orange line. The Dozier-Trappert equation result does show significant variation compared to the projected amplitude, indicating significant coupling occurs even with the mild range dependence of the background field. This coupling is also interesting because, despite its variations, it agrees better with the projected energy than the constant mode amplitude predicted for a range independent enviornment. Finally, the projected energy follows the total mixed layer energy well with a constant offset of approximatly 2 dB.
 
 \begin{figure}
 \includegraphics{../figures/bg_eng_loss.png}
@@ -193,25 +186,37 @@ Acoustic simulations with a 400 Hz source at 40 m show some localized features i
     \label{fig:blocking}
 \end{figure}
 
-The definition of blocking features used here are regions where the acoustic energy falls by more than 3 dB over less than 5 km between 7.5 and 47 km, shown in Fig \ref{fig:blocking}. The energy of the mixed layer is normalized to the RI background loss of Sec. \ref{ssec:modes} to remove the effects of mixed layer duct leakage. This blocking metric is shown in Fig. \ref{fig:blocking} for 400 and 1000 Hz. At 400 Hz there are a few regions of high loss for the total, tilt and spice fields. These regions are typically flat topped, indicating the same feature dominates mixed layer propagation for all source positions that include the feature. Only some of the blocking features appear at 1 kHz, indicating the mixed layer is more viable at higher frequencies. The blocking features at 1 kHz are rarely apparent for consecutive source positions, indicating mixed layer blocking is more dependent on the mode phases at the blocking feature. The comparison of the two frequencies show that many soundspeed features only block mixed layer propagation at low frequencies, although these positions are still expected to cause significant mode coupling in higher frequency acoustics.
+The definition of blocking features used here are regions where the acoustic energy falls by more than 3 dB over less than 5 km between 7.5 and 47 km, shown in Fig \ref{fig:blocking}. The energy of the mixed layer is normalized to the RI background loss of Sec. \ref{ssec:bg} to remove the effects of mixed layer duct leakage. This blocking metric is shown in Fig. \ref{fig:blocking} for 400 and 1000 Hz. At 400 Hz there are a few regions of high loss for the total, tilt and spice fields. These regions are typically flat topped, indicating the same feature dominates mixed layer propagation for all source positions that include the feature. Only some of the blocking features appear at 1 kHz, indicating the mixed layer is more viable at higher frequencies. The blocking features at 1 kHz are rarely apparent for consecutive source positions, indicating mixed layer blocking is more dependent on the mode phases at the blocking feature. The comparison of the two frequencies show that many soundspeed features only block mixed layer propagation at low frequencies, although these positions are still expected to cause significant mode coupling in higher frequency acoustics.
 
 The dynamic decomposition shows different types of partitioning of blocking features between fields, which typically appear in the observed field and either the tilt or spice field. However, blocking features appear in only the spice field for a much of the range between 600 and 850 km, indicating the tilt field stabalized the observed field at these positions. This interpretation is consitant with the low loss in the tilt field at these locations. This stabalization effect is observed at positions with concentrations of low soundspeed at the surface in the tilt field, an example which was observed in Fig. \ref{fig:decomp_x} around 270 km.
 
-While the 8 blocking features in the observed field are relativly evenly spaced accross the transcet range, these features appear in the tilt field before 450 km and in the spice field afterwards. The deepening of the mixed layer, observed with the SLD in Fig. \ref{fig:c_grid}, can explain the decrease in sensitivity to changes in mixed layer depth from internal waves. The increase in spice induced loss after 450 km indicates that spice is regionally variable even in the Pacific basin.
+While the 8 blocking features in the observed field are relativly evenly spaced accross the transcet range, these features appear in the tilt field before 450 km and in the spice field afterwards. The deepening of the mixed layer, observed with the SLD in Fig. \ref{fig:c_grid}, can explain the decrease in sensitivity to changes in mixed layer depth from internal waves. The increase in spice induced loss after 450 km indicates that spice is regionally variable even far from the boundries of the Pacific basin.
 
 \subsection{Mixed layer acoustic energy}
+The effectivness of mixed layer ducting is compared here between the decomposed soundspeed fields with the integrated energy and mode projected energy metrics described in Sec. \ref{ssec:modes}. Two distinct sets of energy statistics are shown, one includes the transmission ranges with blocking features and one that does not. These comparisons show the relative importance of spice and tilt on mixed layer propgation, as well as the relative importance between intermittant high loss events and diffuse scatter.
+
 \begin{figure}
-\includegraphics{../figures/shallow_blocking.png}
-    \caption{Compensated mixed layer energy for decomposed sound speed fields.}
-    \label{fig:shal_block}
+\includegraphics{../figures/shallow_eng.png}
+    \caption{Background compensated mixed layer energy for decomposed sound speed fields. Left column is propgation at 400 Hz, right column is at 1 kHz. The first 4 rows show statistics for the complete set of simulated source positions. The last 3 rows show the statistics for source positions without blocking events (W/O Blocking). The integrated energy for all transmissions in the set are shown as light grey lines, half circles at -10 dB indicate a line moves beyond the plotted scale. A linear regression of the mean (bold) and variance ($\pm$) at 7.5 km and 47 km are shown in the two columns after the line plots.}
+    \label{fig:shal_eng}
 \end{figure}
+
+The comparision of integrated mixed layer energy, Eq. \eqref{eq:int_eng}, is shown in Fig. \ref{fig:shal_eng}. The left column shows results for 400 Hz, and the right shows 1 kHz. The complete set of source positions is shown in the top section, while the set of source positions without blocking features are shown on the bottom. The total set of source positions shows the most loss and variance, and both are reduced by removing the blocking feature source positions. The background field indicates margnial range dependent effects, apparent in variances less that 0.6 dB at all ranges, which are more important at 400 Hz. This expected result allows the discussion of range dependence to focus on the dynamic decompostion fields.
+
+The complete set of source positions predicts small mean loss over the source region of 7.5 km for 400 Hz, and small mean gains over this region for 1 kHz. This indicates increased coupling at higher frequency into the mixed layer in regions with a wide range of high angle modes like the source and convergence zones. After mixed layer propgation over one converange zone, the statistics at 47 km predict a mean loss for all fields and frequencies.
+
+The tilt field has the smallest mixed layer loss, and while the total loss is more for 400 Hz the difference between 7.5 and 47 km is the same for both frequencies. The variance at 400 Hz is significantly higher than that at 1 kHz, and this statistic is expected to be dominated by high loss events at both frequencies. However, the position of the upper variance bound compared to the cluster of propgation results indicates that an energy gain of 1.5 dB at 1 kHz is is possible, although the upper bound of 3 dB gain at 400 Hz is a significant overprediction. The tilt field observed over the total range of the transcet is relativly favorable to propgation, and often causes maginal loss or even small gains in mixed layer energy over the length of a single convergence zone.
+
+The most significant mean energy loss over the mixed layer is predicted for the spice field at both frequencies, and almost 1.5 dB more is predicted at 400 Hz. No mean gain of energy is seen for the source field, although the variance of energy at 7.5 km is comprable to that of the tilt field. The variance at 47 km is higher for 400 Hz, and while this statistic is loss dominated some fields show margnial gains of energy. This shows that spice dominates the dynamic mixed layer energy loss, and this effect is less pronounced at higher frequencies.
+
+The observed field has similar statistics to the spice field, although there is generally slightly less mean loss. Slightly more loss is predicted for the source region at 400 Hz, which also has the highest variance by about 1 dB. The position of the variance prediction amoung the propagation results does indicate that while this statistic may be influenced by high loss events, some instances of significant coupling into the source region are observed. The increased variance in the observed field is consitstant across frequency and range observations, which indicates the two fields often have a compounding effect on each other. In the mean, however, the combination of the tilt and spice field has less loss than the prediction of the spice alone, indicating the tilt field stabalilizes the total field overall.
 
 For regions without blocking features, the range dependence of the sound speed field can slowly change the acoustic energy significantly, sometimes accumulating the total effect of a blocking feature. The range dependence can also act to reduce diffraction loss from the channel.
 
 The acoustic energy in the mixed layer at low frequencies is significantly affected by diffraction, which is apparent in range independent simulations. In this study, the background field is used to compute the diffraction effect in a slowly range dependent environment.
 
 \begin{figure}
-\includegraphics{../figures/shallow_no_blocking.png}
+\includegraphics{../figures/shallow_eng_proj.png}
     \caption{Compensated mixed layer energy for decomposed sound speed fields with blocking features removed.}
     \label{fig:shal_no_block}
 \end{figure}
