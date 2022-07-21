@@ -22,10 +22,20 @@
 \maketitle
 
 \section{\label{sec:intro} Introduction}
+Elevated vertical mixing in the winter caused by wave breaking at the air-sea interface homogonizes the upper ocean and forms a mixed layer. A vertically homogonous mixed layer has a positive adiabatic soundspeed gradient of roughly 0.016 m/s, and creates an acoustic duct bounded on the top by the acoustically reflecting sea surface. The acoustic charactoristics of the mixed layer duct are distinct from a shallow water duct with the same soundspeed structure because it interacts with the deep ocean soundspeed channel\citep{porter93}. The connonical mixed layer duct is stable at higher acoustic frequencies, however, and range independent models predict long range acoustic propagation is possible within the duct.
 
-The paper is organized as follows: Section~\ref{sec:decompostion} discusses the dynamic decompostion of the observed sound speed field into spice and tilt structures.
 
-\section{North Pacific transcet}
+While vertical mixing is expected to largly stabalize the vertical mixed layer propertied, range dependence is expected in the sound speed of the mixed layer over long distances as the bulk properties of the surface ocean changes. Temperature and salinity in the upper ocean variations tend to be highly correlated, on large scales temperature varies at twice the rate of density compensated salinity. At shorter scales, however, the temperature and salinity variations are largely complenated in the horizontal mixed layer. These two scales are rectified at ocean fronts where density changes abruptly. Similarly, the density compensated spice variation tends to be front like, and abrupt changes in ocean properties are the norm in the mixed layer. Importantly for the acoustic problem, density compensated temperature and salinity variations are reenforcing in soundspeed.
+
+Ocean spice measurements are complicated by the need for salinity as well as tempurature measurements. The development of pumped salinity measurement systems for moored surveys of the spice enviornment of acoustic experiments. While it is to be expected that spice variation is highest near locations of high oceanagraphic variablity, it is often difficult to predict the importancce of spice in a given location \emph{a priori}.
+
+Transect measurements of spice with high vertical and horizontal resolution allow the acoustic simulation of the mixed layer with the proper spatial scales of spice and tilt sound speed variation. The transcet observation considered here was previously analyzed by Colosi and Rudnick (2020)\citep{colosi2020observations}. This paper extends this analysis by decomposing the observed soundspeed variation into spice and tilt contributions.
+
+The mixed layer is in someways a fragile transmission enviornment, and significant range dependent changes can essentially make mixed layer propagation impossible in the duct. These positions are often highly localized, and were observed rarely over the 1000 km length observation. Blocking features are an important feature to understanding mixed layer propagation, and present a very different loss mechanism than small scale stocastic scatter. The mixed layer duct propagations are analyzed both including and removing blocking features, which show significantly different statistics.
+
+The paper is organized as follows: Section~\ref{sec:transcet} describes the oceanagraphic mixed layer observations that moticate this study. Section~\ref{sec:decompostion} then discusses the dynamic decompostion that separated the observed sound speed field into spice and tilt fields. The acoustic effect of the separated sound speed fields are compared with the observed field in Sec. \ref{sec:propagation}. The statistics of mixed layer energy loss are used to compare a range of source positions over the complete transcet length. Finally, the study results are discussed in Sec. \ref{sec:conclusion}.
+
+\section{North Pacific transcet}\label{sec:transcet}
 This study is based on a 970 km SeaSoar conductivity, salinity and depth (CTD) transect taken over 4 days in the northeast Pacific ocean\citep{cole2010seasonal}, Fig. \ref{fig:transcet}. The 970 km long transcet is largely parrellel to the $16 \ ^\circ$C isotherm at a mixed layer depth of 50 m according to the World Ocean Atlas spring decadal average. Small differences in slope between the track and the isotherm predict a slight warming of the mixed layer over the transcet. Strong and coherent salinity fronts are expected to be a perminant feature in the region.
 
 \begin{figure}
@@ -231,6 +241,8 @@ The interpretation of the projected energy at different frequency is influenced 
 
 The acoustic energy in the mixed layer at low frequencies is significantly affected by diffraction, which is apparent in range independent simulations. In this study, the background field is used to compute the diffraction effect in a slowly range dependent environment.
 
+\section{Conclusion}\label{sec:conclusion}
+The dynamic decomposition of Dzieciuch \emph{et al.} was modified slightly to preserve more of the observed vertical structure in the mixed layer. Acoustic propgation simulated using the decomposed fields showed significant effects due to range dependence in both the tilt and spice fields. The largest effects of range depences in the mixed layer were blocking features, which made the mixed layer disappear for the 400 Hz frequency transmission scenario. The location of the blocking features depended on the decomposed field type, with tilt blocking apparent in the first half of the observations and spice blocking becoming dominant in the second half. Comparison with the observed field showed these two fields sometimes reenforced blocking features, and other times increased the stablity of the duct and removed blocking features predicted in one field.
 
 
 \bibliographystyle{jasanum2}
