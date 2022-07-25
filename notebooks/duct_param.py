@@ -39,7 +39,7 @@ rgs = {'bg':fit_cslope(c_bg.T, sld['bg'][1]),
        'spice':fit_cslope(c_spice.T, sld['spice'][1]),
        'total':fit_cslope(c_total.T, sld['total'][1])}
 
-fig, axes = plt.subplots(3, 1, sharex=True)
+fig, axes = plt.subplots(2, 1, sharex=True)
 
 ax = axes[0]
 ax.plot(x_a / 1e3, rgs['total'][0])
@@ -55,12 +55,12 @@ ax.plot(x_a / 1e3, sld['spice'][0])
 ax.plot(x_a / 1e3, sld['bg'][0])
 ax.set_ylim(125, 25)
 
-ax = axes[2]
-ax.plot(x_a / 1e3, rgs['total'][2])
-ax.plot(x_a / 1e3, rgs['tilt'][2])
-ax.plot(x_a / 1e3, rgs['spice'][2])
-ax.plot(x_a / 1e3, rgs['bg'][2])
-ax.set_ylim(0., 0.002)
+#ax = axes[2]
+#ax.plot(x_a / 1e3, rgs['total'][2])
+#ax.plot(x_a / 1e3, rgs['tilt'][2])
+#ax.plot(x_a / 1e3, rgs['spice'][2])
+#ax.plot(x_a / 1e3, rgs['bg'][2])
+#ax.set_ylim(0., 0.002)
 
 ax.set_xlim(230, 290)
 

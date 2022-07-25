@@ -45,7 +45,7 @@ cb = fig.colorbar(cm)
 cb.set_label('$\Delta \, c$ (m/s)')
 
 #ax.set_xlim(175, 275)
-ax.set_xlim(230, 280)
+ax.set_xlim(230, 290)
 ax.set_ylim(125, 0)
 ax.set_ylabel('Depth (m)')
 ax.set_xlabel('Position, $x$ (km)')

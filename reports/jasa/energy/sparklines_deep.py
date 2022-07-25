@@ -33,12 +33,12 @@ eng_400 = EngProc(Config(fc=400, source_depth='shallow'), fields=['bg'])
 e_ri_400 = eng_400.diffraction_bg()
 
 eng_1 = EngProc(Config(fc=1000, source_depth='deep'), fields=['bg'])
+e_ri_1_ref = eng_1.diffraction_bg()
 dyn_1 = eng_1.dynamic_energy()
 
 eng_400 = EngProc(Config(fc=400, source_depth='deep'), fields=['bg'])
+e_ri_400_ref = eng_400.diffraction_bg()
 dyn_400 = eng_400.dynamic_energy()
-
-
 
 lines_400 = {'bg':dyn_400['bg'] - e_ri_400,
              'tilt':dyn_400['tilt'] - e_ri_400,
@@ -137,6 +137,7 @@ ax.set_yticklabels(ax.get_yticks(), fontdict={'fontsize':8})
 
 ax = axes[1, 0]
 sparkline(ax, lines_400['tilt'][:, inds], stats_400['tilt'], -0.04, 'Tilt')
+#ax.plot(r_a / 1e3, np.mean(e_ri_400_ref[:, inds] - e_ri_400[:, inds], axis=0), color='C1', linewidth=0.5)
 
 ax = axes[2, 0]
 sparkline(ax, lines_400['spice'][:, inds], stats_400['spice'], -0.04, 'Spice')
