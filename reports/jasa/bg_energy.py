@@ -44,13 +44,14 @@ ax.plot(r_a_plt, mean_rgs, 'k', linewidth=2)
 
 _ , rms_rgs = eng.rgs('rms', bg_stats, range_bounds=range_bounds,
                          scale_r=True)
-ax.plot(r_a_plt, rms_rgs, 'k', linewidth=2)
-ax.plot(r_a_plt, 2 * mean_rgs - rms_rgs, 'k', linewidth=1)
+ax.plot(r_a_plt, mean_rgs + rms_rgs, 'C1', linewidth=1.5, linestyle='--')
+ax.plot(r_a_plt, mean_rgs - rms_rgs, 'C1', linewidth=1.5, linestyle='--')
 
-ax.plot(*eng.rgs('10th', bg_stats, range_bounds=range_bounds, scale_r=True),
-        'C1', linewidth=1.5, linestyle='--')
-ax.plot(*eng.rgs('90th', bg_stats, range_bounds=range_bounds, scale_r=True),
-        'C1', linewidth=1.5, linestyle='--')
+
+#ax.plot(*eng.rgs('10th', bg_stats, range_bounds=range_bounds, scale_r=True),
+        #'C1', linewidth=1.5, linestyle='--')
+#ax.plot(*eng.rgs('90th', bg_stats, range_bounds=range_bounds, scale_r=True),
+        #'C1', linewidth=1.5, linestyle='--')
 
 cax = fig.add_axes([0.25, 0.3, .02, .1])
 lcmap = ListedColormap([clrs[0], clrs[-1]])
