@@ -20,7 +20,6 @@ mpl.rcParams.update(custom_preamble)
 plt.style.use('elr')
 plt.ion()
 
-source_depth="shallow"
 range_bounds = (7.5e3, 40.0e3)
 fc = 1000
 savedir = 'reports/jasa/figures'
@@ -40,21 +39,21 @@ eng_400 = EngProc(Config(fc=400, source_depth='deep'), fields=['bg'])
 e_ri_400_ref = eng_400.diffraction_bg()
 dyn_400 = eng_400.dynamic_energy()
 
-lines_400 = {'bg':dyn_400['bg'] - e_ri_400,
-             'tilt':dyn_400['tilt'] - e_ri_400,
-             'spice':dyn_400['spice'] - e_ri_400,
-             'total':dyn_400['total'] - e_ri_400}
-lines_1 = {'bg':dyn_1['bg'] - e_ri_1,
-           'tilt':dyn_1['tilt'] - e_ri_1,
-           'spice':dyn_1['spice'] - e_ri_1,
-           'total':dyn_1['total'] - e_ri_1}
+lines_400 = {'bg':dyn_400['bg'] - e_ri_400_ref,
+             'tilt':dyn_400['tilt'] - e_ri_400_ref,
+             'spice':dyn_400['spice'] - e_ri_400_ref,
+             'total':dyn_400['total'] - e_ri_400_ref}
+lines_1 = {'bg':dyn_1['bg'] - e_ri_1_ref,
+           'tilt':dyn_1['tilt'] - e_ri_1_ref,
+           'spice':dyn_1['spice'] - e_ri_1_ref,
+           'total':dyn_1['total'] - e_ri_1_ref}
 
 stats_400 = {i:eng_400.field_stats(v, range_bounds=range_bounds) for i, v in lines_400.items()}
 stats_1 = {i:eng_1.field_stats(v, range_bounds=range_bounds) for i, v in lines_1.items()}
 
 tick_off = 1
 
-def sparkline(ax, lines, stats, dy, title, ylim=(-35, -5), dx=0):
+def sparkline(ax, lines, stats, dy, title, ylim=(-15, 15), dx=0):
     inds = (stats['r_a'] > range_bounds[0]) & (stats['r_a'] < range_bounds[1])
     r_a = stats['r_a'][inds]
 
@@ -118,7 +117,7 @@ def sparkline(ax, lines, stats, dy, title, ylim=(-35, -5), dx=0):
     ax.spines.top.set_visible(False)
     ax.spines.bottom.set_visible(False)
     ax.tick_params(bottom=False, right=True)
-    ax.set(yticks=[-35, -20, -5])
+    ax.set(yticks=[-15, 15])
     ax.set(yticklabels=[])
     ax.set(xticklabels=[])
     ax.set_xlim(range_bounds[0] / 1e3 - tick_off, range_bounds[1] / 1e3 + tick_off)
@@ -169,5 +168,5 @@ ax.set_xticklabels(ax.get_xticks(), fontdict={'fontsize':8})
 ax.text(0.30, -0.65, 'Range (km)', transform=ax.transAxes, fontsize=8)
 ax.tick_params(bottom=True)
 
-#fig.savefig(join(savedir, f'deep_blocking.png'), dpi=300)
+fig.savefig(join(savedir, f'deep_source_energy.png'), dpi=300)
 

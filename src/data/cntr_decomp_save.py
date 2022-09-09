@@ -5,15 +5,26 @@ from math import pi
 from os.path import join
 from scipy.interpolate import UnivariateSpline
 
+import argparse
+
 from src import SectionLvls, RDModes, Config, section_cfield
 
 import pyducts
 
+parser = argparse.ArgumentParser(description='Transmission simulations')
+parser.add_argument('fc', metavar='F', type=float,
+                    help='Frequency of simulations')
+parser.add_argument('source_depth', metavar='S', type=str,
+                    help='deep or shallow')
+parser.add_argument('-d_section', dest='d_section', type=int,
+                    default=10, help='distance between sections')
+
+args = parser.parse_args()
+
 sec4 = SectionLvls()
-#fc = 400
-fc = 1e3
-#source_depth = "deep"
-source_depth = "shallow"
+fc = args.fc
+source_depth = args.source_depth
+d_section = args.d_section * 1e3
 
 save_dir = f'data/processed/field_{int(fc)}_'+ source_depth
 if False:
@@ -44,7 +55,6 @@ def run_ram(rf, x_a, z_a, cfield):
     return zplot, xs + rplot, p_ram
 
 # split transect into small sections
-d_section = 10e3
 x_start = np.arange(int((sec4.x_a[-1] - cf.rmax) / d_section) + 1) * d_section
 D = z_a[-1]
 z_save = 150.  # restrict size of PE result
@@ -144,6 +154,6 @@ def save_tl(xs, z_save, save_couple=True):
     np.savez(join(save_dir, f'tl_section_{int(xs/1e3):03d}'), **tmp_dict)
     print(f'saved tl_section_{int(xs/1e3)}')
 
-run_func = lambda xs: save_tl(xs, z_save, save_couple=True)
+run_func = lambda xs: save_tl(xs, z_save, save_couple=False)
 
 list(map(run_func, x_start))

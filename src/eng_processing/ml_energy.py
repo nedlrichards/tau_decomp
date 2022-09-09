@@ -72,15 +72,21 @@ class MLEnergy:
         psi_proj = psi_ier(self.z_a)
 
         zero_cross = np.where(np.abs(np.diff(np.sign(psi_proj))) > 1.5)[0]
-        z0_ind = zero_cross[mode_num - 1]
+        if zero_cross.size == 0:
+            print(self.xs)
+            print(field_type)
+            p_ml = self.tl_data['p_' + field_type]
+            psi = psi_proj
+            psi_scale = np.sum(np.abs(psi_proj) ** 2) * self.dz
+        else:
+            z0_ind = zero_cross[mode_num - 1]
+            p_ml = self.tl_data['p_' + field_type][:, :z0_ind]
+            psi = psi_proj[None, :z0_ind]
+            psi_scale = np.sum(np.abs(psi_proj[:z0_ind]) ** 2) * self.dz
 
-        p_ml = self.tl_data['p_' + field_type][:, :z0_ind]
-
-        proj_amp = np.sum(p_ml * psi_proj[None, :z0_ind], axis=-1) * self.dz
+        proj_amp = np.sum(p_ml * psi, axis=-1) * self.dz
         proj_amp *= np.sqrt(self.r_a)
         #proj_amp *= np.sqrt(self.r_a) / 1e3
-
-        psi_scale = np.sum(np.abs(psi_proj[:z0_ind]) ** 2) * self.dz
 
         return proj_amp, psi_scale
 
