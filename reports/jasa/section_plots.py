@@ -33,6 +33,10 @@ c_sld = np.ma.array(c_total, mask=sld_m)
 mean_c = np.mean(c_sld, axis=0).data
 sec_mean_c = mean_c.mean()
 
+# mixed layer density def
+sig_100 = c_fields['sig_total']
+ml_depth_100 = z_a[np.argmax((sig_100 - sig_100[0, :] > 0.05), axis=0)]
+
 fig, ax = plt.subplots(figsize=(cf.jasa_2clm,  3))
 cm = ax.pcolormesh(x_a / 1e3, z_a[plt_i], c_field - 1500,
                    cmap=plt.cm.coolwarm,
@@ -64,11 +68,12 @@ cb.ax.set_position(pos)
 
 fig.savefig(join(savedir, 'sound_speed_transcet.png'), dpi=300)
 
-ax.plot(x_a / 1e3, sld_z, '0.2', linewidth=1)
+ax.plot(x_a / 1e3, ml_depth_100, '#eb44e6', linewidth=2)
+ax.plot(x_a / 1e3, sld_z, '0.2', linewidth=2)
 
 fig.savefig(join(savedir, 'sound_speed_transcet_sld.png'), dpi=300)
 
-reg = linregress(x_a, sld_z)
-ax.plot(x_a / 1e3, x_a * reg.slope + reg.intercept, '0.4')
+#reg = linregress(x_a, sld_z)
+#ax.plot(x_a / 1e3, x_a * reg.slope + reg.intercept, '0.4')
 
-fig.savefig(join(savedir, 'sound_speed_transcet_rgs.png'), dpi=300)
+#fig.savefig(join(savedir, 'sound_speed_transcet_rgs.png'), dpi=300)

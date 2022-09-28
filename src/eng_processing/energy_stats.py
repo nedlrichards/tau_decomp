@@ -18,7 +18,7 @@ def field_stats(r_a, field_eng, range_bounds=(5e3, 47e3)):
     f_15_rgs = linregress(r_a, y=f_15)
     f_85_rgs = linregress(r_a, y=f_85)
 
-    stats = {"r_a":r_a[r_i], "r_i":r_i, 'mean':f_mean, 'rms':f_rms,
+    stats = {"r_a":r_a, "r_i":r_i, 'mean':f_mean, 'rms':f_rms,
                 '15th':f_15, '85th':f_85,
                 'mean_rgs':f_mean_rgs, 'rms_rgs':f_rms_rgs,
                 '10th_rgs':f_15_rgs, '90th_rgs':f_85_rgs}

@@ -3,9 +3,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
+from scipy.io import loadmat
 from os.path import join
 
-from src import sonic_layer_depth
+from src import sonic_layer_depth, lvl_profiles, Config
+import gsw
 
 plt.ion()
 bbox = dict(boxstyle='round', fc='w')
@@ -30,10 +32,29 @@ prop_i = z_a <= 150.
 
 sld_z, _ = sonic_layer_depth(z_a[plt_i], c_field)
 
+# because I used sigma referenced to 100 m, 25.4 contour is not in same place
+grid_data = loadmat('data/processed/stablized_field.mat')
+cf = Config()
+x_a = np.squeeze(grid_data['x_a']).astype(np.float64) * 1e3
+z_a = np.squeeze(grid_data['z_a']).astype(np.float64)
+press = gsw.p_from_z(-z_a, cf.lat)
+# load stabalized properties
+xy_sa = (grid_data['SA_stable'].T).astype(np.float64)
+xy_ct = (grid_data['CT_stable'].T).astype(np.float64)
+xy_sig = gsw.sigma0(xy_sa, xy_ct)
+
+sig_lvl = lvl_profiles(z_a, xy_sig, np.zeros_like(xy_sig), [25.4])
+
+# mixed layer density def
+ml_depth = z_a[np.argmax((xy_sig - xy_sig[0, :] > 0.05), axis=0)]
+
+
 fig, ax = plt.subplots(figsize=(6.5, 3))
 ax.plot(x_a / 1e3, sld_z, 'k')
+ax.plot(x_a / 1e3, sig_lvl[0, 0, :], 'C3')
+ax.plot(x_a / 1e3, ml_depth, 'C4')
 reg = linregress(x_a, sld_z)
-ax.plot(x_a / 1e3, x_a * reg.slope + reg.intercept, 'C0')
+#ax.plot(x_a / 1e3, x_a * reg.slope + reg.intercept, 'C0')
 #ax[0].text(120, 20, f'm={reg.slope * 1e3:0.3f} m'+'  km$^{-1}$',
         #bbox=bbox)
 
@@ -41,7 +62,7 @@ ax.set_xlabel('Range (km)')
 ax.set_ylabel('Sonic layer depth (m)')
 
 ax.grid()
-ax.set_ylim(150, 0)
+ax.set_ylim(200, 0)
 ax.set_xlim(0, 970)
 
 pos = ax.get_position()
@@ -51,7 +72,7 @@ pos.y0 += 0.04
 pos.y1 += 0.08
 ax.set_position(pos)
 
-fig.savefig(join(savedir, 'sld_linregress.png'), dpi=300)
+#fig.savefig(join(savedir, 'sld_linregress.png'), dpi=300)
 """
 fig, ax = plt.subplots(3, 1, sharex=True, figsize=(6.5, 6))
 ax[0].plot(sec4.x_a / 1e3, sld_z, 'k')
