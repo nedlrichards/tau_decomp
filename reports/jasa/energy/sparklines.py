@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FixedLocator
 
 from src import EngProc, Config, list_tl_files, MLEnergy
-from src.eng_processing import field_stats, rgs
+from src.eng_processing import field_stats
 
 import matplotlib as mpl
 custom_preamble = {
@@ -21,6 +21,7 @@ plt.ion()
 #source_depth="shallow"
 source_depth="deep"
 range_bounds = (7.5e3, 47.5e3)
+deep_stat_range = 40.0e3
 fc = 1000
 savedir = 'reports/jasa/figures'
 cf = Config()
@@ -62,6 +63,7 @@ def compute_statistics(fc):
     bg_i = eng.blocking_feature(d, e_ri, range_bounds=range_bounds)
     block_i = bg_i < 3
     r_a = eng.r_a.copy()
+
     return lines_eng, block_i, r_a
 
 lines_eng_4, block_i, r_a = compute_statistics(400)
@@ -92,8 +94,17 @@ def sparkline(ax, lines, stats, dy, title, ylim=(-10, 5), dx=0):
     ax.plot(r_a / 1e3, (stats['mean'] + stats['rms']), linewidth=0.75, linestyle='--', color='k')
     ax.plot(r_a / 1e3, (stats['mean'] - stats['rms']), linewidth=0.75, linestyle='--', color='k')
 
-    m_ra, mean = rgs(r_a, 'mean', stats, range_bounds=range_bounds)
-    _, rms = rgs(r_a, 'rms', stats, range_bounds=range_bounds)
+    if source_depth == 'deep':
+        rb = np.array((range_bounds[0], deep_stat_range))
+    else:
+        rb = np.array(range_bounds)
+    #m_ra, mean = rgs(r_a, 'mean', stats, range_bounds=rb)
+    #_, rms = rgs(r_a, 'rms', stats, range_bounds=rb)
+
+    lin_rgs = stats["mean_rgs"]
+    mean = lin_rgs.intercept + rb * lin_rgs.slope
+    lin_rgs = stats['rms_rgs']
+    rms = lin_rgs.intercept + rb * lin_rgs.slope
 
     #ax.plot(m_ra / 1e3, mean, linewidth=1.5, color='k')
     #ax.plot(m_ra / 1e3, mean + rms, linewidth=0.75, linestyle='--', color='k')
@@ -158,13 +169,16 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5)):
     """Four by 2 plot that does not correct for blocking"""
     stats_400 = {i:field_stats(r_a, v, range_bounds=range_bounds) for i, v in lines_400.items()}
     stats_1000 = {i:field_stats(r_a, v, range_bounds=range_bounds) for i, v in lines_1000.items()}
+    space_str = "\hspace{2.0em}"
+    space_str_1 = "\hspace{3.4em}"
+
 
     fig, axes = plt.subplots(7, 2, figsize=(cf.jasa_2clm, 3.75))
     r_i = stats_400['bg']['r_i']
 
     ax = axes[0, 0]
     sparkline(ax, lines_400['bg'][:, r_i], stats_400['bg'], -0.04, 'BG', ylim=ylim)
-    col_str = 'Type \hspace{3.4em} 400 Hz, dB re RI BG  \hspace{1.7em} 7.5 km  \hspace{2.0em} 47.5 km'
+    col_str = f'Type {space_str_1} 400 Hz, dB re RI BG  {space_str} {range_bounds[0]/1e3:.1f} km  {space_str} {range_bounds[1]/1e3} km'
     ax.text(-0.48, 2.3, col_str, transform=ax.transAxes)
     #ax.set_yticklabels(ax.get_yticks(), fontdict={'fontsize':8})
     ax.set_yticklabels(ylim, fontdict={'fontsize':8})
@@ -187,7 +201,7 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5)):
 
     ax = axes[0, 1]
     sparkline(ax, lines_1000['bg'][:, r_i], stats_1000['bg'], -0.04, '', dx=0.04, ylim=ylim)
-    col_str = '1 kHz, dB re RI BG  \hspace{2.0em} 7.5 km  \hspace{2.0em} 47.5 km'
+    col_str = f'1 kHz, dB re RI BG  {space_str} {range_bounds[0]/1e3:.1f} km  {space_str} {range_bounds[1]/1e3} km'
     ax.text(0.10, 2.3, col_str, transform=ax.transAxes)
 
     ax = axes[1, 1]
