@@ -6,7 +6,6 @@ import gsw
 from scipy.signal import iirfilter, filtfilt
 from scipy.stats import linregress
 
-from src import SA_CT_from_sigma0_spiciness0
 from src import lvl_profiles, grid_field
 from src import append_climatolgy
 from src import Config
