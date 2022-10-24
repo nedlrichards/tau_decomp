@@ -37,41 +37,44 @@ _, c_tilt = section_cfield(tl_data['xs'], fields['x_a'], fields['c_tilt'])
 _, c_spice = section_cfield(tl_data['xs'], fields['x_a'], fields['c_spice'])
 _, c_total = section_cfield(tl_data['xs'], fields['x_a'], fields['c_total'])
 
+c_tilt -= c_bg
+c_spice -= c_bg
+c_total -= c_bg
 
 
-z_i = z_a < 160.
+z_i = z_a < 360.
 
-sld_z, _ = sonic_layer_depth(z_a[z_i], c_total[z_i, :])
+sld_z, _ = sonic_layer_depth(z_a[z_i], c_bg[z_i, :])
 sld_m = z_a[z_i, None] > sld_z
-c_sld = np.ma.array(c_total[z_i, :], mask=sld_m)
+c_sld = np.ma.array(c_bg[z_i, :], mask=sld_m)
 
 c_plot_ref = np.mean(c_sld)
 
-fig, axes = plt.subplots(4, 2, figsize=(cf.jasa_2clm, 4.00))
+fig, axes = plt.subplots(4, 2, figsize=(cf.jasa_2clm, 5.50))
 vmax = np.ma.max(c_sld)
 vmin = np.ma.min(c_sld)
-x_t = x_a[0] / 1e3 + 2
+x_t = x_a[0] / 1e3 - 2
 
-cm = axes[0, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_bg[z_i, :],
+cm0 = axes[0, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_bg[z_i, :],
                             cmap=plt.cm.coolwarm,
-                            vmax=vmax, vmin=vmin,
+                            vmax=1507, vmin=1510,
                             rasterized=True)
-axes[0,0].text(x_t, 25, '(a)', bbox=cf.bbox, zorder=50, ha='center')
-cm = axes[1, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_tilt[z_i, :],
-                            cmap=plt.cm.coolwarm,
-                            vmax=vmax, vmin=vmin,
+axes[0,0].text(x_t, 30, '(a)', bbox=cf.bbox, zorder=50, ha='center')
+cm1 = axes[1, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_tilt[z_i, :],
+                            cmap=plt.cm.BrBG,
+                            vmin=-3, vmax=3,
                             rasterized=True)
-axes[1,0].text(x_t, 25, '(b)', bbox=cf.bbox, zorder=50, ha='center')
+axes[1,0].text(x_t, 30, '(b)', bbox=cf.bbox, zorder=50, ha='center')
 cm = axes[2, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_spice[z_i, :],
-                            cmap=plt.cm.coolwarm,
-                            vmax=vmax, vmin=vmin,
+                            cmap=plt.cm.BrBG,
+                            vmin=-3, vmax=3,
                             rasterized=True)
-axes[2,0].text(x_t, 25, '(c)', bbox=cf.bbox, zorder=50, ha='center')
+axes[2,0].text(x_t, 30, '(c)', bbox=cf.bbox, zorder=50, ha='center')
 cm = axes[3, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_total[z_i, :],
-                            cmap=plt.cm.coolwarm,
-                            vmax=vmax, vmin=vmin,
+                            cmap=plt.cm.BrBG,
+                            vmin=-3, vmax=3,
                             rasterized=True)
-axes[3,0].text(x_t, 25, '(d)', bbox=cf.bbox, zorder=50, ha='center')
+axes[3,0].text(x_t, 30, '(d)', bbox=cf.bbox, zorder=50, ha='center')
 
 
 yt = axes[0, 0].get_yticks()[1:]
@@ -80,15 +83,34 @@ yt = axes[0, 0].get_yticks()[1:]
 #axes[1, 0].set_yticklabels(axes[1, 0].get_yticklabels()[0:])
 #axes[2, 0].set_yticklabels(axes[2, 0].get_yticklabels()[0:])
 
-cax = fig.add_axes([0.125, 0.91, 0.40, 0.03])
-cbar = fig.colorbar(cm, cax=cax, orientation='horizontal')
-cbar.set_label('Sound speed (m/s)')
+cax = fig.add_axes([0.200, 0.93, 0.25, 0.015])
+cbar = fig.colorbar(cm0, cax=cax, orientation='horizontal')
+cax.text(-0.30, 0, '$c$ (m/s)', transform=cax.transAxes)
 cbar.ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
-loc = plticker.MaxNLocator(nbins=4, integer=True)
-cbar.ax.xaxis.set_major_locator(loc)
+cbar.set_ticks([1507, 1508.5, 1510])
+cbar.set_ticklabels(['1507', '1508.5', '1510'])
 offset = matplotlib.transforms.ScaledTranslation(0, -0.05, fig.dpi_scale_trans)
-for label in cbar.ax.xaxis.get_majorticklabels():
-    label.set_transform(label.get_transform() + offset)
+for i, label in enumerate(cbar.ax.xaxis.get_majorticklabels()):
+    if i == 0:
+        label.set_transform(label.get_transform() +
+            matplotlib.transforms.ScaledTranslation(0.15, -0.05, fig.dpi_scale_trans))
+    else:
+        label.set_transform(label.get_transform() + offset)
+
+
+cax = fig.add_axes([0.200, 0.70, 0.25, 0.015])
+cbar = fig.colorbar(cm1, cax=cax, orientation='horizontal')
+cax.text(-0.35, 0, '$\delta c$ (m/s)', transform=cax.transAxes)
+cbar.ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
+cbar.set_ticks([-3, 0, 3])
+
+offset = matplotlib.transforms.ScaledTranslation(0, -0.05, fig.dpi_scale_trans)
+for i, label in enumerate(cbar.ax.xaxis.get_majorticklabels()):
+    if i == 0:
+        label.set_transform(label.get_transform() +
+            matplotlib.transforms.ScaledTranslation(0.10, -0.05, fig.dpi_scale_trans))
+    else:
+        label.set_transform(label.get_transform() + offset)
 
 cm = axes[0, 1].pcolormesh(rplot / 1e3, zplot,
                         20 * np.log10(np.abs(p_bg)).T,
@@ -103,9 +125,12 @@ cm = axes[3, 1].pcolormesh(rplot / 1e3, zplot,
                         20 * np.log10(np.abs(p_total)).T,
                         cmap=cf.cmap, vmax=-50, vmin=-90, rasterized=True)
 
-cax = fig.add_axes([0.565, 0.91, 0.40, 0.03])
+cax = fig.add_axes([0.680, 0.93, 0.25, 0.015])
 cbar = fig.colorbar(cm, cax=cax, orientation='horizontal')
-cbar.set_label('Acoustic pressure (dB re 1 m)')
+#cbar.set_label('$p$ (dB re 1 m)', loc='left')
+#cax.text(-4.8, -2.2, '$p$ (dB re 1 m)')
+cax.text(-0.56, 0, '$p$ (dB re 1 m)', transform=cax.transAxes)
+
 cbar.ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
 cbar.set_ticks(cbar.get_ticks()[1:])
 offset = matplotlib.transforms.ScaledTranslation(0, -0.05, fig.dpi_scale_trans)
@@ -114,7 +139,7 @@ for label in cbar.ax.xaxis.get_majorticklabels():
 
 for ax in axes:
     for a in ax:
-        a.set_ylim(150, 0.01)
+        a.set_ylim(350, 0.01)
         a.set_xlim(x_a[0] / 1e3, x_a[-1] / 1e3 - 1)
 
 axes[0,0].set_xticks([])
@@ -131,64 +156,66 @@ axes[3,1].set_yticks([])
 fig.supxlabel('Range (km)')
 fig.supylabel('Depth (m)')
 
+dy0 = -0.03
+yoff = 0.05
 pos = axes[0, 0].get_position()
-pos.x0 -= 0.02
+pos.x0 += -0.02
 pos.x1 += 0.06
-pos.y0 -= 0.03
-pos.y1 -= 0.02
+pos.y0 += yoff
+pos.y1 += yoff + dy0
 axes[0, 0].set_position(pos)
 
 pos = axes[0, 1].get_position()
-pos.x0 -= 0.00
+pos.x0 += 0.00
 pos.x1 += 0.08
-pos.y0 -= 0.03
-pos.y1 -= 0.02
+pos.y0 += yoff
+pos.y1 += yoff + dy0
 axes[0, 1].set_position(pos)
 
+dy1 = 0.01
+yoff = -0.02
 pos = axes[1, 0].get_position()
 pos.x0 -= 0.02
 pos.x1 += 0.06
-pos.y0 -= 0.005 - 0.013
-pos.y1 += 0.005 - 0.013
+pos.y0 += yoff
+pos.y1 += yoff + dy1
 axes[1, 0].set_position(pos)
 
 pos = axes[1, 1].get_position()
 pos.x0 -= 0.00
 pos.x1 += 0.08
-pos.y0 -= 0.005 - 0.013
-pos.y1 += 0.005 - 0.013
+pos.y0 += yoff
+pos.y1 += yoff + dy1
 axes[1, 1].set_position(pos)
 
+yoff = -0.02
 pos = axes[2, 0].get_position()
 pos.x0 -= 0.02
 pos.x1 += 0.06
-#pos.y0 += 0.07
-pos.y0 += 0.023 - 0.005
-pos.y1 += 0.033 - 0.005
+pos.y0 += yoff
+pos.y1 += yoff + dy1
 axes[2, 0].set_position(pos)
 
 pos = axes[2, 1].get_position()
 pos.x0 -= 0.00
 pos.x1 += 0.08
-#pos.y0 += 0.07
-pos.y0 += 0.023 - 0.005
-pos.y1 += 0.033 - 0.005
+pos.y0 += yoff
+pos.y1 += yoff + dy1
 axes[2, 1].set_position(pos)
 
+yoff = -0.02
 pos = axes[3, 0].get_position()
 pos.x0 -= 0.02
 pos.x1 += 0.06
-#pos.y0 += 0.07
-pos.y0 += 0.05 - 0.02
-pos.y1 += 0.06 - 0.02
+pos.y0 += yoff
+pos.y1 += yoff + dy1
 axes[3, 0].set_position(pos)
 
 pos = axes[3, 1].get_position()
 pos.x0 -= 0.00
 pos.x1 += 0.08
-#pos.y0 += 0.07
-pos.y0 += 0.05 - 0.02
-pos.y1 += 0.06 - 0.02
+pos.y0 += yoff
+pos.y1 += yoff + dy1
 axes[3, 1].set_position(pos)
 
 

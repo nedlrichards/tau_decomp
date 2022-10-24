@@ -6,7 +6,8 @@ from matplotlib.colors import ListedColormap
 from matplotlib.cm import ScalarMappable
 from scipy.stats import linregress
 
-from src import EngProc, Config
+from src import Config
+from src.eng_processing import field_stats, rgs
 
 plt.style.use('elr')
 plt.ion()
@@ -16,13 +17,21 @@ fc = 400
 source_depth="shallow"
 
 cf = Config(fc=fc, source_depth=source_depth)
-eng = EngProc(cf)
-r_a = eng.r_a
+
+load_dir = 'data/processed/'
+
+int_400 = np.load(join(load_dir, 'int_eng_' + source_depth + '_400.npz'))
+
+r_a = int_400['r_a']
 
 range_bounds = (7.5e3, 47e3)
-eng_bg = eng.diffraction_bg()
+eng_bg = int_400['ml_ml'][0]
 
-bg_stats = eng.field_stats(eng_bg, range_bounds=range_bounds)
+bg_stats = field_stats(r_a, eng_bg, range_bounds=range_bounds)
+
+r_a_plt , mean_rgs = rgs(r_a, 'mean', bg_stats, range_bounds=range_bounds, scale_r=True)
+_ , rms_rgs = rgs(r_a, 'rms', bg_stats, range_bounds=range_bounds, scale_r=True)
+
 
 cmap = plt.cm.cividis
 i_co = 30
@@ -37,13 +46,9 @@ fig, ax = plt.subplots(figsize=(cf.jasa_1clm, 2.5))
 for i, (e, c, a) in enumerate(zip(eng_bg, clrs, alpha)):
     ax.plot(r_a / 1e3, e, color=c, alpha=a, linewidth=0.5)
 
-r_a_plt , mean_rgs = eng.rgs('mean', bg_stats, range_bounds=range_bounds,
-                             scale_r=True)
-
 ax.plot(r_a_plt, mean_rgs, 'k', linewidth=2)
 
-_ , rms_rgs = eng.rgs('rms', bg_stats, range_bounds=range_bounds,
-                         scale_r=True)
+
 ax.plot(r_a_plt, mean_rgs + rms_rgs, 'C1', linewidth=1.5, linestyle='--')
 ax.plot(r_a_plt, mean_rgs - rms_rgs, 'C1', linewidth=1.5, linestyle='--')
 
@@ -71,10 +76,4 @@ pos.y1 += 0.07
 ax.set_position(pos)
 
 fig.savefig('reports/jasa/figures/bg_eng_loss.png', dpi=300)
-
-print(f"Mean slope: {bg_stats['mean_rgs'].slope * 1e3:.3f}" +
-      f" $\pm$ {(bg_stats['rms_rgs'].slope - bg_stats['mean_rgs'].slope) * 1e3:.3f} (dB / km)")
-
-print(f"90th percentile slope: {bg_stats['90th_rgs'].slope * 1e3:.3f}")
-print(f"10th percentile slope: {bg_stats['10th_rgs'].slope * 1e3:.3f}")
 

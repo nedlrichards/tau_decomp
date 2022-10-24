@@ -68,8 +68,8 @@ cb.ax.set_position(pos)
 
 fig.savefig(join(savedir, 'sound_speed_transcet.png'), dpi=300)
 
-ax.plot(x_a / 1e3, ml_depth_100, '#eb44e6', linewidth=2)
-ax.plot(x_a / 1e3, sld_z, '0.2', linewidth=2)
+ax.plot(x_a / 1e3, ml_depth_100, '#eb44e6', linewidth=1)
+ax.plot(x_a / 1e3, sld_z, '0.2', linewidth=1)
 
 fig.savefig(join(savedir, 'sound_speed_transcet_sld.png'), dpi=300)
 

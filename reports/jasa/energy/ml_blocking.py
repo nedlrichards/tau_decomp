@@ -13,6 +13,26 @@ fc = 400
 #fc = 1e3
 source_depth = "shallow"
 
+load_dir = 'data/processed/'
+int_400 = np.load(join(load_dir, 'int_eng_shallow_400.npz'))
+int_1000 = np.load(join(load_dir, 'int_eng_shallow_1000.npz'))
+
+def blocking_feature(r_a, dynamic_eng, bg_eng, range_bounds=(5e3, 50e3),
+                        comp_len=5e3):
+    """Compute integrated loss indices blocking features"""
+    dr = (r_a[-1] - r_a[0]) / (r_a.size - 1)
+    num_int = int(np.ceil(comp_len / dr))
+
+    diff_eng = dynamic_eng - bg_eng
+    r_i = (self.r_a > range_bounds[0]) & (self.r_a < range_bounds[1])
+    diff_eng = diff_eng[:, :, r_i]
+
+    # cumulative loss
+    loss = diff_eng[:, :, num_int:] - diff_eng[:, :, :-num_int]
+    max_int = np.max(-loss, axis=-1)
+
+    return max_int
+
 def plt_loss(fc):
     cf = Config(fc=fc, source_depth=source_depth)
     eng = EngProc(cf, fields=['bg'])
@@ -24,10 +44,8 @@ def plt_loss(fc):
     range_bounds = (7.5e3, 47.5e3)
     dyn_eng = np.array([int_eng[fld] for fld in eng.cf.field_types])
 
-    max_int_loss = eng.blocking_feature(dyn_eng,
-                                        eng_bg,
-                                        range_bounds=range_bounds,
-                                        comp_len=5e3)
+    max_int_loss = blocking_feature(dyn_eng, eng_bg, range_bounds=range_bounds,
+                                    comp_len=5e3)
     r_a = eng.xs / 1e3
     return r_a, max_int_loss
 

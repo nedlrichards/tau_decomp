@@ -3,7 +3,7 @@ from math import pi
 from scipy.signal import find_peaks
 from scipy.interpolate import interp1d
 
-from src import RDModes, Config, section_cfield
+from src import RDModes, Config, section_cfield, sonic_layer_depth
 
 class MLEnergy:
     """Different methods to calculate or estimate mixed layer energy"""
@@ -19,11 +19,14 @@ class MLEnergy:
         self.xs = self.tl_data['xs']
         self.r_a = self.tl_data['rplot'] - self.xs
         self.z_a = self.tl_data['zplot']
-        self.z_i = self.z_a < self.cf.z_int
+        self.c_sec_z_a = self.tl_data['z_a']
+        self.z_ml_i = self.z_a < self.cf.z_ml
+        self.z_tl_i = (self.z_a < self.cf.z_tl) & (self.z_a > self.cf.z_ml)
         self.dz = (self.z_a[-1] - self.z_a[0]) / (self.z_a.size - 1)
 
         self.field_modes = {}
         self.llen = {}
+        self.mean_sld = {}
 
         if fields is None:
             self._start_field_type('bg')
@@ -54,12 +57,22 @@ class MLEnergy:
         llen = -2 * pi / (np.diff(np.real(modes.k_bg)))
         self.llen[field_type] = llen
 
+        sld_z, _ = sonic_layer_depth(self.c_sec_z_a,
+                                     np.mean(c_sec, axis=-1)[:, None],
+                                     z_max=300.)
+        self.mean_sld[field_type] = sld_z[0]
 
-    def ml_energy(self, field_type):
+
+    def ml_energy(self, field_type, int_layer='ml'):
         """Energy from mixed layer computed by PE"""
-        p_ml = self.tl_data['p_' + field_type][:, self.z_i]
+        int_i = self.z_tl_i if int_layer == 'tl' else self.z_ml_i
+        p_ml = self.tl_data['p_' + field_type][:, int_i]
         en_pe = np.sum(np.abs(p_ml ** 2), axis=1)
         en_pe *= self.dz
+        # normalization
+        d_tl = self.cf.z_tl - self.cf.z_ml
+        norm = self.mean_sld[field_type] if int_layer == 'ml' else d_tl
+        en_pe /= norm
         return en_pe
 
 
@@ -91,11 +104,13 @@ class MLEnergy:
         return proj_amp, psi_scale
 
 
-    def mode_energy(self, field_type, indicies=None):
+    def mode_energy(self, field_type, indicies=None, int_layer='ml'):
         """Compute pressure from one field type"""
         # reduced mode set estimate of energy
         psi_rd = self.tl_data[field_type + '_mode_amps'].copy()
         rd_modes = self.field_modes[field_type]
+
+        int_i = self.z_tl_i if int_layer == 'tl' else self.z_ml_i
 
         if indicies is not None:
             psi_0 = np.zeros_like(psi_rd)
@@ -103,26 +118,36 @@ class MLEnergy:
             psi_rd = psi_0
 
         p_rd = rd_modes.synthesize_pressure(psi_rd,
-                                            self.z_a[self.z_i],
+                                            self.z_a[int_i],
                                             r_synth=self.r_a)
         en_rd = np.sum(np.abs(p_rd) ** 2, axis=1) * self.dz
 
         return en_rd
 
 
-    def background_diffraction(self, field_type):
+    def background_diffraction(self, field_type, indicies=None, int_layer='ml'):
         """Background energy loss computed with range independent modes"""
+        int_i = self.z_tl_i if int_layer == 'tl' else self.z_ml_i
         modes = self.field_modes[field_type]
         psi_s = np.exp(1j * pi / 4) / (modes.rho0 * np.sqrt(8 * pi)) \
                 * modes.psi_ier(modes.cf.z_src)
         psi_s /= np.sqrt(modes.k_bg)
         psi_s *= 4 * pi
 
+        if indicies is not None:
+            tmp = np.zeros_like(psi_s)
+            tmp[indicies] = psi_s[indicies]
+            psi_s = tmp
+
         # reference ml energy
         p_ri = modes.synthesize_pressure(psi_s,
-                                         self.z_a[self.z_i],
+                                         self.z_a[int_i],
                                          r_synth=self.r_a)
         en_ri = np.sum(np.abs(p_ri) ** 2, axis=1) * self.dz
+
+        d_tl = self.cf.z_tl - self.cf.z_ml
+        norm = self.mean_sld[field_type] if int_layer == 'ml' else d_tl
+        en_ri /= norm
 
         return en_ri
 

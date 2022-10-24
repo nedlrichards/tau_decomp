@@ -57,7 +57,7 @@ def run_ram(rf, x_a, z_a, cfield):
 # split transect into small sections
 x_start = np.arange(int((sec4.x_a[-1] - cf.rmax) / d_section) + 1) * d_section
 D = z_a[-1]
-z_save = 150.  # restrict size of PE result
+z_save = 350.  # restrict size of PE result
 
 def compute_rd_modes(c_field, x_a, z_a, cf, psi_k=None):
         rd_modes = RDModes(c_field, x_a, z_a, cf, psi_k_bg=psi_k)

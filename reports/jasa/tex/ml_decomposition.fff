@@ -1,0 +1,93 @@
+\begin{figure}
+\includegraphics{../figures/transcet.png}
+    \caption{\label{fig:transcet}{Location of the east to west SeaSoar transect in red. Isotherms in $^\circ$C are computed at 50 m depth from the World Ocean Atlas decadal spring temperature average\citep{WOA}.}}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/sound_speed_transcet_sld.png}
+\caption{\label{fig:c_grid}{Sound speed observation of the mixed layer. The black line is the sonic layer depth, and the pink line is the mixed layer depth.}}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/sld_profile_grad.png}
+    \caption{\label{fig:profiles}{(a) Potential density, $\sigma$ (b) spice, $\gamma$ and (c) sound speed, $c$, measured at 249 km (blue curves) and 252 km (orange curves). The mixed layer depth is shown as horizontal pink lines in (a), and the sonic layer depth is shown as horizontal black lines in (c).}}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/sig_tau_interp.png}
+    \caption{\label{fig:cntrs}{Contours of: (a) potential density, $\sigma$ (b) spice, $\gamma$. The low pass estimate of each stable isopycnal position is shown in (a) as red curve. The isopycnals shoal and enter the mixed layer with decreasing range, where the isopycnal depth becomes highly variable with range. The stable isopycnal estimate ends at the first location the isopycnal shows significant decorrelation with lower isopycnals, \emph{e.g.} 270 km for $\sigma=25.69$ kg/m$^3$. The low-pass estimate of spice for the $\sigma=25.75$ kg/m$^3$ is shown in (b) as a red curve, indicative of processing for all isopycnals.}}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/sound_speed_comp.png}
+    \caption{\label{fig:c_diff}{Difference in spice field sound speed between stratified decomposition and linear superposition methods. The two decompositions are equal at the stable position of the lightest tracked isopycnal. The discontinuity in stable isopycnal position at 270 km is the last tracked position of isopycnal $\sigma=25.69$ kg/m $^3$. Significant vertical variation of sound speed is apparent in the mixed layer above the last tracked position of the isopycnal.}}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/diff_fields.png}
+        \caption{\label{fig:c_fields}{Total and decomposed fiels. Background field is shown in (a). The dynamic fields are shown with the background field subtracted: panel (b) is tilt, (c) is spice and (d) is the total field. The black line in each panel is the SLD.}}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/rms_profile.png}
+    \caption{\label{fig:c_rms}{The transect mean sound speed profile and the RMS measured, tilt and spice field deviations from the background.}}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/diff_spectra.png}
+        \caption{\label{fig:spectra}{Power spectral density of the total, tilt, spice and background fields in the (a) mixed layer, (b) transition layer and (c) thermocline.}}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/decomp_xmission.png}
+    \caption{\label{fig:decomp_x}{Left panels is sound speed field; right panel is acoustic pressure. Rows are the: (a) background (b) tilt, (c) spice, and (d) observed fields. The region up to 7.5 km from the source has significant down going energy for all fields, and up going energy of the first convergence zone is apparent starting 47.5 km from the source. Significant mixed layer loss between the source and first convergence zone appears as down going energy below the approximately 120 m deep mixed layer. The mixed layer loss is strongest around 250 and 260 km for the spice and total fields, and smaller loss is also observed in the tilt and total fields around 240 km.}}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/bg_eng_loss.png}
+    \caption{Spreading compensated acoustic energy in the RI background mixed layer, Eq.~\eqref{eq:int_eng}, for a 400 Hz source at 40 m depth. Significantly more loss is observed at transect ranges less than 300 km, shown as light (yellow) lines. The mean loss is shown as thick black line, and the mean plus or minus the RMS estimate are dashed (blue) lines.}
+    \label{fig:bg_eng}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/mode_shapes.png}
+    \caption{\label{fig:bg_modes}{(a) Mean sound speed profile of the background field between 230 and 280 km, (b) Shapes of mixed layer mode 1 (mode \#237) and surrounding modes at 400 Hz. The sound speed profile has a SLD of 99.5 m and is fit to a slope of 0.017 1/s. Modes 237 and 238 have similar shapes in the mixed layer, and all modes have a significant tail that extends to the compensation depth of the mixed layer around 3200 m depth.}}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/integrated_loss.png}
+    \caption{Maximum mixed layer energy loss over 5 km. Source ranges with a loss greater than 3 dB (gray dotted line) over 5 km are considered to contain a blocking feature. At 400 Hz, blocking features are typically detected at all source positions that contain the same feature. At 1 kHz, blocking features have mostly smaller magnitudes and are more sporadic.}
+    \label{fig:blocking}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/shallow_eng.png}
+    \caption{Mixed layer energy relative to the RI background for decomposed sound speed fields with a source at 40 m depth. Left column is propagation at 400 Hz, right column is at 1 kHz. The top 4 rows are statistics for the complete set of simulated source positions. The bottom 3 rows are statistics for source positions without blocking events (W/O Blocking). The integrated energy for all transmissions in the set are shown as light grey lines, half circles at -10 dB indicate a line moves beyond the plotted scale. Linear regression fits of the mean (bold) and RMS ($\pm$) at 7.5 km and 47.5 km are shown in the two columns right of the line plots.}
+    \label{fig:shal_eng}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/shallow_eng_proj.png}
+    \caption{Projected mixed layer energy relative to the RI background for decomposed sound speed fields and a source at 40 m depth. Presentation of the result follows Fig. \ref{fig:shal_eng}, but the y-axis lower bound is -20 dB. The mode used in the energy projection of Eq. \eqref{eq:proj_eng} is MLM1 at 400 Hz and MLM2 at 1 kHz.}
+    \label{fig:shal_proj}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\includegraphics{../figures/deep_eng.png}
+    \caption{Mixed layer energy relative to the RI background for a source at 200 m depth. Presentation of the result follows Fig. \ref{fig:shal_eng}, with y-axis bounds of $\pm$15 dB.}
+    \label{fig:deep_proj}
+\end{figure}

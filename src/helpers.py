@@ -6,7 +6,7 @@ from os.path import join
 
 def list_tl_files(fc, source_depth='shallow'):
     """List all files at a partiular frequency"""
-    tl_dir = f'data/processed/field_{int(fc)}_' + source_depth + '_10'
+    tl_dir = f'data/processed/field_{int(fc)}_' + source_depth
     #tl_dir = f'data/processed/field_{int(fc)}_' + source_depth
     run_list = listdir(tl_dir)
     tl_list = [r for r in run_list if r.split('_')[0] == 'tl']
@@ -33,7 +33,7 @@ def sonic_layer_depth(z_c, c_field, z_max=None, x_intrp=None):
     return z_sld, i_sld
 
 
-def section_cfield(xs, x_a, c_field, rmax = 60e3):
+def section_cfield(xs, x_a, c_field, rmax=60e3):
     """
     extract a section of a sound speed transcet for use in xmission calculation
     """
