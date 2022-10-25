@@ -67,9 +67,9 @@ pos.y1 += 0.06
 pos.y0 += 0.04
 ax[1].set_position(pos)
 
-ax[1].set_ylabel(r'$\gamma$ (kg/m$^3$)', labelpad=-0.05)
+ax[1].set_ylabel(r'$\tau$ (kg/m$^3$)', labelpad=-0.05)
 
-z_off = [-0.03, -0.05, 0.04]
+z_off = [-0.02, 0.03, 0.00]
 for zo, c0, lbl_i in zip(z_off, cc0, call_lvls):
     ax[1].plot(x_a / 1e3, lvls[1, lbl_i, :].T, color=c0)
     ax[1].text(max_x + 3., lvls[1, lbl_i, x_i][-1] + zo,
@@ -79,7 +79,7 @@ ax[1].plot(x_a / 1e3, stable_lvls[1, call_lvls[-1], :],color='#be0119', alpha=0.
 
 ax[1].set_xlabel('Range (km)')
 
-ax[1].set_ylim(-0.25, 0.3)
+ax[1].set_ylim(1.5, 2.2)
 
 ax[0].text(min_x - 25., 5, '(a)', bbox=cf.bbox)
 ax[1].text(min_x - 25., 0.30, '(b)', bbox=cf.bbox)
@@ -96,4 +96,3 @@ ax[1].spines["top"].set_visible(False)
 #ax[1].yaxis.set_ticks_position('left')
 
 fig.savefig(join(savedir, 'sig_tau_interp.png'), dpi=300)
-
