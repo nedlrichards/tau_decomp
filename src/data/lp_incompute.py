@@ -44,7 +44,6 @@ def patch_spice(patch_index, filled_spice):
     return patched_lvl
 
 cf = Config()
-
 sec4 = SectionLvls()
 
 # compute total c without any changes
@@ -80,6 +79,7 @@ tau_spice_diff = tau_bg + delta_spice
 # sound speed field computed from differencing tau fields
 sa_spice_diff, ct_spice_diff = sec4.field.sa_ct_from_sig_gamma(sig_bg,
                                                                tau_spice_diff)
+
 _, _, _, c_spice_diff = append_climatolgy(sec4.z_a, ct_spice_diff, sa_spice_diff,
                                      sec4.z_clim, sec4.temp_clim, sec4.sal_clim)
 

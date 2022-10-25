@@ -141,8 +141,7 @@ pos.y0 += y0
 pos.y1 += y0 + dy2
 axes[3].set_position(pos)
 
-fig.savefig(os.path.join(savedir, 'diff_fields.png'), dpi=300)
-
+#fig.savefig(os.path.join(savedir, 'diff_fields.png'), dpi=300)
 
 fig, ax = plt.subplots()
 ax.plot(c_total[z_i, 670:680], z_a[z_i])

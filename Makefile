@@ -8,7 +8,7 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = tau_decomp
-PYTHON_INTERPRETER = ipython
+PYTHON_INTERPRETER = python
 
 ifeq (,$(shell which conda))
 HAS_CONDA=False
@@ -26,14 +26,17 @@ requirements: test_environment
 	#micromamba activate tau_decomp
 
 ## Make Dataset
-data: requirements data/processed/inputed_spice.npz data/processed/decomposed_fields.npz
-	#$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+data: requirements data/processed/inputed_decomp.npz propagation
+	$(PYTHON_INTERPRETER) -m src.eng_processing.save_energy
 
-data/processed/inputed_spice.npz: requirements
-	$(PYTHON_INTERPRETER) src/data/lp_incompute.py
+data/processed/inputed_decomp.npz: requirements
+	$(PYTHON_INTERPRETER) -m src.data.lp_incompute
 
-data/processed/decomposed_fields.npz: requirements data/processed/inputed_spice.npz
-	$(PYTHON_INTERPRETER) src/data/field_compute.py
+propagation: requirements data/processed/inputed_decomp.npz
+	$(PYTHON_INTERPRETER) -m src.data.acoustic_prop 400 'shallow'
+	$(PYTHON_INTERPRETER) -m src.data.acoustic_prop 1000 'shallow'
+	$(PYTHON_INTERPRETER) -m src.data.acoustic_prop 400 'deep'
+	$(PYTHON_INTERPRETER) -m src.data.acoustic_prop 1000 'deep'
 
 ## Delete all compiled Python files
 clean:

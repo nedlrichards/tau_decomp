@@ -11,8 +11,6 @@ from src import append_climatolgy
 from src import Config
 from src import Field
 
-transect_file = 'data/raw/section4_fields.mat'
-stable_transcet_file = 'data/raw/stable_prof.mat'
 climatology_file = 'data/raw/NPAL05prosGDEM.mat'
 
 class SectionLvls:
@@ -23,9 +21,6 @@ class SectionLvls:
 
         self.cf = Config()
         self.field = Field()
-
-        transect = loadmat(transect_file)
-        stab_data = loadmat(stable_transcet_file)
 
         self.x_a = self.field.x_a
         self.dx = (self.x_a[-1] - self.x_a[0]) / (self.x_a.size - 1)

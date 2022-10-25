@@ -31,5 +31,5 @@ class Field:
 
         self.xy_gamma = gsw.spiciness0(self.xy_sa, self.xy_ct)
 
-    def sa_ct_from_sig_gamma(self, sig, gamma, sig_err=1e-4):
+    def sa_ct_from_sig_gamma(self, sig, gamma):
         return SA_CT_from_sigma0_spiciness0(sig, gamma)
