@@ -63,7 +63,7 @@ class MLEnergy:
         self.mean_sld[field_type] = sld_z[0]
 
 
-    def ml_energy(self, field_type, int_layer='ml'):
+    def ml_energy(self, field_type, int_layer='ml', normalize=True):
         """Energy from mixed layer computed by PE"""
         int_i = self.z_tl_i if int_layer == 'tl' else self.z_ml_i
         p_ml = self.tl_data['p_' + field_type][:, int_i]
@@ -71,7 +71,10 @@ class MLEnergy:
         en_pe *= self.dz
         # normalization
         d_tl = self.cf.z_tl - self.cf.z_ml
-        norm = self.mean_sld[field_type] if int_layer == 'ml' else d_tl
+        if normalize:
+            norm = self.mean_sld[field_type] if int_layer == 'ml' else d_tl
+        else:
+            norm = 0
         en_pe /= norm
         return en_pe
 
@@ -125,7 +128,8 @@ class MLEnergy:
         return en_rd
 
 
-    def background_diffraction(self, field_type, indicies=None, int_layer='ml'):
+    def background_diffraction(self, field_type, indicies=None, int_layer='ml',
+                               normalize=True):
         """Background energy loss computed with range independent modes"""
         int_i = self.z_tl_i if int_layer == 'tl' else self.z_ml_i
         modes = self.field_modes[field_type]
@@ -146,7 +150,10 @@ class MLEnergy:
         en_ri = np.sum(np.abs(p_ri) ** 2, axis=1) * self.dz
 
         d_tl = self.cf.z_tl - self.cf.z_ml
-        norm = self.mean_sld[field_type] if int_layer == 'ml' else d_tl
+        if normalize:
+            norm = self.mean_sld[field_type] if int_layer == 'ml' else d_tl
+        else:
+            norm = 1
         en_ri /= norm
 
         return en_ri

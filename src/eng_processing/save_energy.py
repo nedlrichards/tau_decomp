@@ -34,7 +34,7 @@ def compute_statistics(fc, source_depth, mode_num=None):
 
     # project pressure field onto modes
     if mode_num is not None:
-
+        e_ri = eng.diffraction_bg(normalize=False)
         dyn = eng.dynamic_energy(mode_num=mode_num)
         ml_proj = np.array([e_ri] + [np.array(dyn[f]) for f in cf.field_types])
     else:

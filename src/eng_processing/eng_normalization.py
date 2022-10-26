@@ -23,11 +23,11 @@ class EngProc:
         self.mls = mls
 
 
-    def diffraction_bg(self, int_layer='ml'):
+    def diffraction_bg(self, int_layer='ml', normalize=True):
         """Energy in range independent background duct"""
         eng_bg = []
         for ml in self.mls:
-            bg_eng = ml.background_diffraction('bg', int_layer=int_layer)
+            bg_eng = ml.background_diffraction('bg', int_layer=int_layer, normalize=normalize)
             eng_bg.append(10 * np.log10(bg_eng * ml.r_a))
 
         return np.array(eng_bg)
