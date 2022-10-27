@@ -5,7 +5,8 @@ from copy import copy
 class Config:
     """Common enviornment configuration"""
 
-    def __init__(self, source_depth="shallow", fc=400., c_bounds=[1503., 1545.]):
+    def __init__(self, source_depth="shallow", fc=400., c_bounds=[1503., 1545.],
+                 is_spiceness=True):
         """define config"""
         self.fc = fc
         self.bottom_HS = [1600., 1000., 0.1]
@@ -40,8 +41,10 @@ class Config:
 
         # isopycnal spacings for sigma re 100 m
         d_iso = 0.01  # fine isopycnals spacing
-        sig_start = 24.83
-        sig_end = 26.55
+        if is_spiceness:
+            sig_start = 24.83
+            sig_end = 26.55
+        else:
         self.sig_lvl = arange(sig_start, sig_end, d_iso)
 
         # stable contours

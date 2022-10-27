@@ -41,6 +41,8 @@ def ray_lag(i_field, i_xmission, cf):
     x_sec, c_field = section_cfield(xs[i_xmission], x_field_a,
                                     fields['c_' + cf.field_types[i_field]],
                                     rmax=cf.rmax)
+    # mean of c_field
+    c_field = np.mean(c_field, axis=1)[:, None] * np.ones((1, c_field.shape[1]))
 
     sld_z, sld_i = sonic_layer_depth(z_a, c_field, z_max=200)
     c_sld = c_field[sld_i, range(c_field.shape[1])]
