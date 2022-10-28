@@ -18,25 +18,24 @@ mpl.rcParams.update(custom_preamble)
 plt.style.use('elr')
 plt.ion()
 
-source_depth="shallow"
-#source_depth="deep"
+#source_depth="shallow"
+source_depth="deep"
 range_bounds = np.array((7.5e3, 47.5e3))
-ml_tl_rb= (7.5e3, 37.0e3)
-deep_rb= (7.5e3, 40.0e3)
+ml_tl_rb = (7.5e3, 37.0e3)
+deep_rb = (7.5e3, 40.0e3)
 savedir = 'reports/jasa/figures'
 cf = Config()
 
 load_dir = 'data/processed/'
 
-int_400 = np.load(join(load_dir, 'int_eng_shallow_400.npz'))
-int_1000 = np.load(join(load_dir, 'int_eng_shallow_1000.npz'))
+shallow_int_400 = np.load(join(load_dir, 'int_eng_shallow_400.npz'))
+shallow_int_1000 = np.load(join(load_dir, 'int_eng_shallow_1000.npz'))
 
-r_a = int_400['r_a']
-block_i = int_400['block_i'] & int_1000['block_i']
+r_a = shallow_int_400['r_a']
+block_i = shallow_int_400['block_i'] & shallow_int_1000['block_i']
 
-if source_depth == 'deep':
-    int_400 = np.load(join(load_dir, 'int_eng_deep_400.npz'))
-    int_1000 = np.load(join(load_dir, 'int_eng_deep_1000.npz'))
+deep_int_400 = np.load(join(load_dir, 'int_eng_deep_400.npz'))
+deep_int_1000 = np.load(join(load_dir, 'int_eng_deep_1000.npz'))
 
 def z_nn(v):
     """Format negative number close to zero as 0.0"""
@@ -52,7 +51,7 @@ def sparkline(ax, r_line_a, lines, stats, dy, title, ylim=(-10, 5), dx=0):
 
     # mark lines crossing past ylim
     cross_i = np.argmax(lines < ylim[0], axis=-1)
-    cross_r = r_a[cross_i[cross_i > 0]]
+    cross_r = r_line_a[cross_i[cross_i > 0]]
     ax.plot(cross_r / 1e3, np.full_like(cross_r, ylim[0]), color='0.7',
             marker='.', linestyle='None', markeredgecolor='0.5')
 
@@ -113,7 +112,7 @@ def sparkline(ax, r_line_a, lines, stats, dy, title, ylim=(-10, 5), dx=0):
     ax.set_ylim(ylim[0], ylim[1])
 
 
-def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e3), filt_start=True):
+def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e3)):
     """Four by 2 plot that does not correct for blocking"""
     stat_range = np.array(stat_range)
     demean_400 = lines_400[1:] - lines_400[0]
@@ -136,7 +135,6 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e
     r_line_a = r_a[r_i]
 
     ax = axes[0, 0]
-    sparkline(ax, r_line_a, demean_400[bg_i][:, r_i], stats_400[bg_i], -0.04, 'BG', ylim=ylim)
     col_str = f'Type {space_str_1} 400 Hz, dB re RI BG  {space_str} {range_bounds[0]/1e3:.1f} km  {space_str} {range_bounds[1]/1e3} km'
     ax.text(-0.48, 2.3, col_str, transform=ax.transAxes)
     #ax.set_yticklabels(ax.get_yticks(), fontdict={'fontsize':8})
@@ -144,6 +142,8 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e
     ax.text(-0.45, 1.5, 'Complete', transform=ax.transAxes, clip_on=False, bbox=cf.bbox, fontsize=8)
 
     ax.plot([-0.46, 4.17], [1.65, 1.65], transform=ax.transAxes, clip_on=False, linewidth=0.75, color='0.8')
+
+    sparkline(ax, r_line_a, demean_400[bg_i][:, r_i], stats_400[bg_i], -0.04, 'BG', ylim=ylim)
 
     ax = axes[1, 0]
     sparkline(ax, r_line_a, demean_400[tilt_i][:, r_i], stats_400[tilt_i], -0.04, 'Tilt', ylim=ylim)
@@ -156,9 +156,10 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
 
     ax = axes[0, 1]
-    sparkline(ax, r_line_a, demean_1000[bg_i][:, r_i], stats_1000[bg_i], -0.04, '', dx=0.04, ylim=ylim)
     col_str = f'1 kHz, dB re RI BG  {space_str} {range_bounds[0]/1e3:.1f} km  {space_str} {range_bounds[1]/1e3} km'
     ax.text(0.10, 2.3, col_str, transform=ax.transAxes)
+
+    sparkline(ax, r_line_a, demean_1000[bg_i][:, r_i], stats_1000[bg_i], -0.04, '', dx=0.04, ylim=ylim)
 
     ax = axes[1, 1]
     sparkline(ax, r_line_a, demean_1000[tilt_i][:, r_i], stats_1000[tilt_i], -0.04, '', dx=0.04, ylim=ylim)
@@ -172,38 +173,25 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
 
     ax = axes[4, 0]
-    flt_eng = demean_400[tilt_i][block_i[tilt_i], :].copy()
-
-    # remove 3 dB down series
-    lossy = flt_eng[:, r_i][:, 0] < -3
-    if filt_start: flt_eng = np.delete(flt_eng, lossy, axis=0)
-    flt_tilt_stats = field_stats(r_a, flt_eng, range_bounds=stat_range)
-
-    sparkline(ax, r_line_a, flt_eng[:, r_i], flt_tilt_stats, -0.10, 'Tilt', ylim=ylim)
-
     ax.plot([-0.46, 4.17], [1.5, 1.5], transform=ax.transAxes, clip_on=False, linewidth=0.75, color='0.8')
     ax.text(-0.45, 1.5, 'W/O Blocking', transform=ax.transAxes, clip_on=False, bbox=cf.bbox, fontsize=8)
     ax.set_yticklabels(ylim, fontdict={'fontsize':8})
 
+
+    flt_eng = demean_400[tilt_i][block_i[tilt_i], :].copy()
+    flt_tilt_stats = field_stats(r_a, flt_eng, range_bounds=stat_range)
+    sparkline(ax, r_line_a, flt_eng[:, r_i], flt_tilt_stats, -0.10, 'Tilt', ylim=ylim)
+
     ax = axes[5, 0]
 
     flt_eng = demean_400[spice_i][block_i[spice_i], :].copy()
-    # remove 3 dB down series
-    lossy = flt_eng[:, r_i][:, 0] < -3
-    if filt_start: flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_spice_stats = field_stats(r_a, flt_eng, range_bounds=stat_range)
-
     sparkline(ax, r_line_a, flt_eng[:, r_i], flt_spice_stats, -0.10, 'Spice', ylim=ylim)
 
     ax = axes[6, 0]
 
     flt_eng = demean_400[total_i][block_i[total_i], :].copy()
-
-    # remove 3 dB down series
-    lossy = flt_eng[:, r_i][:, 0] < -3
-    if filt_start: flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_total_stats = field_stats(r_a, flt_eng, range_bounds=stat_range)
-
     sparkline(ax, r_line_a, flt_eng[:, r_i], flt_total_stats, -0.10, 'Obs.', ylim=ylim)
 
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
@@ -214,34 +202,19 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e
 
     ax = axes[4, 1]
     flt_eng = demean_1000[tilt_i][block_i[tilt_i], :].copy()
-
-    # remove 3 dB down series
-    lossy = flt_eng[:, r_i][:, 0] < -3
-    if filt_start: flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_tilt_stats = field_stats(r_a, flt_eng, range_bounds=stat_range)
-
     sparkline(ax, r_line_a, flt_eng[:, r_i], flt_tilt_stats, -0.10, '', dx=0.04, ylim=ylim)
 
     ax = axes[5, 1]
 
     flt_eng = demean_1000[spice_i][block_i[spice_i], :].copy()
-
-    # remove 3 dB down series
-    lossy = flt_eng[:, r_i][:, 0] < -3
-    if filt_start: flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_spice_stats = field_stats(r_a, flt_eng, range_bounds=stat_range)
-
     sparkline(ax, r_line_a, flt_eng[:, r_i], flt_spice_stats, -0.10, '', dx=0.04, ylim=ylim)
 
     ax = axes[6, 1]
 
     flt_eng = demean_1000[total_i][block_i[total_i], :].copy()
-
-    # remove 3 dB down series
-    lossy = flt_eng[:, r_i][:, 0] < -3
-    if filt_start: flt_eng = np.delete(flt_eng, lossy, axis=0)
     flt_total_stats = field_stats(r_a, flt_eng, range_bounds=stat_range)
-
     sparkline(ax, r_line_a, flt_eng[:, r_i], flt_total_stats, -0.10, '', dx=0.04, ylim=ylim)
 
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
@@ -252,31 +225,24 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e
 
     return fig, axes
 
-if source_depth == 'deep':
-    fig, axes = plot_sparks(r_a, int_400['ml_ml'], int_1000['ml_ml'],
-                            ylim=(-15, 15),
-                            stat_range=deep_rb)
-else:
-    fig, axes = plot_sparks(r_a, int_400['ml_ml'], int_1000['ml_ml'],
-                            ylim=(-10, 5),
-                            stat_range=range_bounds)
+fig, axes = plot_sparks(r_a, shallow_int_400['ml_ml'], shallow_int_1000['ml_ml'],
+                        ylim=(-10, 5), stat_range=range_bounds)
+fig.savefig(join(savedir, 'eng_shallow.png'), dpi=300)
 
-fig.savefig(join(savedir, source_depth + f'_eng.png'), dpi=300)
+fig, axes = plot_sparks(r_a, shallow_int_400['ml_proj'], shallow_int_1000['ml_proj'],
+                        ylim=(-20, 5), stat_range=range_bounds)
+fig.savefig(join(savedir, f'eng_shallow_proj.png'), dpi=300)
 
-if source_depth == 'deep':
-    import sys
-    sys.exit()
+fig, axes = plot_sparks(r_a, deep_int_400['ml_ml'], deep_int_1000['ml_ml'],
+                        ylim=(-20, 20), stat_range=deep_rb)
+fig.savefig(join(savedir, 'eng_deep.png'), dpi=300)
 
-
-fig, axes = plot_sparks(r_a, int_400['ml_proj'], int_1000['ml_proj'],
-                        ylim=(-20, 5), stat_range=range_bounds, filt_start=True)
-fig.savefig(join(savedir, f'shallow_eng_proj.png'), dpi=300)
 
 # transition layer
 # use a 2nd order fit of the mean for fit
 rb_i = (r_a >= ml_tl_rb[0]) & (r_a <= ml_tl_rb[1])
 
-test_400 = int_400['ml_tl'].copy()
+test_400 = shallow_int_400['ml_tl'].copy()
 bg = test_400[0]
 bg_fit_400 = []
 for line in bg:
@@ -285,7 +251,7 @@ for line in bg:
 bg_fit_400 = np.array(bg_fit_400)
 test_400[0] = bg_fit_400
 
-test_1000 = int_1000['ml_tl'].copy()
+test_1000 = shallow_int_1000['ml_tl'].copy()
 bg = test_1000[0]
 bg_fit_1000 = []
 for line in bg:
@@ -294,4 +260,5 @@ for line in bg:
 bg_fit_1000 = np.array(bg_fit_1000)
 test_1000[0] = bg_fit_1000
 
-fig, axes = plot_sparks(r_a, test_400, test_1000, ylim=(-20, 20), stat_range=ml_tl_rb, filt_start=False)
+fig, axes = plot_sparks(r_a, test_400, test_1000, ylim=(-20, 25), stat_range=ml_tl_rb)
+fig.savefig(join(savedir, f'eng_shallow_tl.png'), dpi=300)

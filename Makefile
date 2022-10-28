@@ -30,7 +30,7 @@ data: requirements data/processed/inputed_decomp.npz propagation
 	$(PYTHON_INTERPRETER) -m src.eng_processing.save_energy
 
 data/processed/inputed_decomp.npz: requirements
-	$(PYTHON_INTERPRETER) -m src.data.lp_incompute
+	$(PYTHON_INTERPRETER) -m src.data.lp_incompute 0
 
 propagation: requirements data/processed/inputed_decomp.npz
 	$(PYTHON_INTERPRETER) -m src.data.acoustic_prop 400 'shallow'

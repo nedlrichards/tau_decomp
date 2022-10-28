@@ -23,12 +23,17 @@ def compute_statistics(fc, source_depth, mode_num=None):
     ml_ml = np.array([e_ri] + [dyn[f] for f in cf.field_types])
 
     r_a = eng.r_a.copy()
+    r_i = (r_a >= range_bounds[0]) & (r_a <= range_bounds[1])
 
     # Blocking features
     if source_depth == 'shallow':
         d = np.array([dyn[fld] for fld in cf.field_types])
         bg_i = eng.blocking_feature(d, e_ri, range_bounds=range_bounds)
-        block_i = bg_i < 3
+        downrange_block_i = bg_i < 3
+        # filter ranges that start below 3 dB down
+        demean = d[:, :, r_i] - e_ri[None, :, r_i]
+        start_i = demean[:, :, 0] >= -3
+        block_i = downrange_block_i & start_i
     else:
         block_i = None
 

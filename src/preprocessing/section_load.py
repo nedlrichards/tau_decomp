@@ -16,11 +16,12 @@ climatology_file = 'data/raw/NPAL05prosGDEM.mat'
 class SectionLvls:
     """Common data used in section processing"""
 
-    def __init__(self):
+    def __init__(self, is_spiceness=True):
         """Load data and compute commonly used quanitities"""
 
         self.cf = Config()
-        self.field = Field()
+        self.is_spiceness = is_spiceness
+        self.field = Field(is_spiceness=is_spiceness)
 
         self.x_a = self.field.x_a
         self.dx = (self.x_a[-1] - self.x_a[0]) / (self.x_a.size - 1)
@@ -42,10 +43,8 @@ class SectionLvls:
         self.b_lp, self.a_lp = iirfilter(7, 1 / self.lp_cutoff,
                                          **filter_keywords)
 
-
         self.sigma = self.field.xy_sig
         self.spice = self.field.xy_gamma
-        #self.spice = gsw.spiciness0(self.salinity, self.theta)
         self.c = self.field.xy_c
 
         self.lvls = lvl_profiles(self.z_a,

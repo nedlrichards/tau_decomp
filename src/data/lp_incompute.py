@@ -2,6 +2,12 @@
 
 import numpy as np
 from src import Config, SectionLvls, grid_field, append_climatolgy
+import argparse
+
+parser = argparse.ArgumentParser(description='Transect decomposition')
+parser.add_argument('is_spiceness', metavar='s', type=int, default=1,
+                    nargs='?', help='Use gsw spiceness or local spice')
+args = parser.parse_args()
 
 def patch_spice(patch_index, filled_spice):
     """patch up spice series from denser isopycnals"""
@@ -44,7 +50,7 @@ def patch_spice(patch_index, filled_spice):
     return patched_lvl
 
 cf = Config()
-sec4 = SectionLvls()
+sec4 = SectionLvls(is_spiceness=bool(args.is_spiceness))
 
 # compute total c without any changes
 _, _, _, c_total = append_climatolgy(sec4.z_a, sec4.theta, sec4.salinity,
