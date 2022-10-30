@@ -17,32 +17,22 @@ cf = Config()
 
 fc = 400
 savedir = 'reports/animations/stills'
-
-tl_files = list_tl_files(fc, source_depth='shallow')
+load_dir = 'reports/animations/processed/field_400_shallow'
 
 fields = np.load('data/processed/inputed_decomp.npz')
+tl_files = os.listdir(load_dir)
+tl_files.sort(key=lambda tl: int(tl.split('_')[-1].split('.')[0]))
 
 for tf in tl_files:
-    tl_data = np.load(tf)
+    tl_data = np.load(os.path.join(load_dir, tf))
     zplot = tl_data['zplot']
     z_a = tl_data['z_a']
     x_a = tl_data['x_a']
     xs = tl_data['xs']
     rplot = tl_data['rplot']
-    p_bg = tl_data['p_bg']
-    p_tilt = tl_data['p_tilt']
-    p_spice = tl_data['p_spice']
-    p_total = tl_data['p_total']
+    p_total = tl_data['p_bg']
 
-    _, c_bg = section_cfield(tl_data['xs'], fields['x_a'], fields['c_bg'])
-    _, c_tilt = section_cfield(tl_data['xs'], fields['x_a'], fields['c_tilt'])
-    _, c_spice = section_cfield(tl_data['xs'], fields['x_a'], fields['c_spice'])
     _, c_total = section_cfield(tl_data['xs'], fields['x_a'], fields['c_total'])
-
-
-    c_tilt -= c_bg
-    c_spice -= c_bg
-    c_total -= c_bg
 
 
     z_i = zplot < 200.
