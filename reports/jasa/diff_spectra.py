@@ -49,8 +49,6 @@ def plot_spectra(z_avg, field, axis, *args, **kwargs):
     NFFT = 128
     window = general_cosine(NFFT, [0.4243801, 0.4973406, 0.0782793])
     f, spec_fft = welch(spec_values, window=window, noverlap=int(NFFT * 0.705), axis=1)
-    #f, spec_fft = periodogram(spec_values, window=window, axis=1)
-    #f, spec_fft = periodogram(spec_values, detrend=False, window='hamming', axis=1)
     spec_mean = np.mean(spec_fft, axis=0)
 
     axis.loglog(f, spec_mean, *args, **kwargs)

@@ -63,13 +63,13 @@ lcmap = ListedColormap([clrs[0], clrs[-1]])
 sm = ScalarMappable(cmap=lcmap)
 cb = fig.colorbar(sm, cax=cax, ticks=[0.25, 0.75])
 cb.set_ticklabels([r'$x_{src}\leq$300 km', '$x_{src}$ >300km'])
-ax.set_ylim(-18, -10)
+ax.set_ylim(-40, -25)
 
 ax.set_xlabel('Position, $x$ (km)')
 ax.set_ylabel('Compensated ML energy (dB)')
 
 pos = ax.get_position()
-pos.x0 += 0.06
+pos.x0 += 0.10
 pos.x1 += 0.05
 pos.y0 += 0.08
 pos.y1 += 0.07

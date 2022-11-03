@@ -37,12 +37,16 @@ _, c_tilt = section_cfield(tl_data['xs'], fields['x_a'], fields['c_tilt'])
 _, c_spice = section_cfield(tl_data['xs'], fields['x_a'], fields['c_spice'])
 _, c_total = section_cfield(tl_data['xs'], fields['x_a'], fields['c_total'])
 
+z_i = z_a < 360.
+
+sld_z_tilt, _ = sonic_layer_depth(z_a[z_i], c_tilt[z_i, :])
+sld_z_spice, _ = sonic_layer_depth(z_a[z_i], c_spice[z_i, :])
+sld_z_total, _ = sonic_layer_depth(z_a[z_i], c_total[z_i, :])
+
 c_tilt -= c_bg
 c_spice -= c_bg
 c_total -= c_bg
 
-
-z_i = z_a < 360.
 
 sld_z, _ = sonic_layer_depth(z_a[z_i], c_bg[z_i, :])
 sld_m = z_a[z_i, None] > sld_z
@@ -76,6 +80,9 @@ cm = axes[3, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_total[z_i, :],
                             rasterized=True)
 axes[3,0].text(x_t, 30, '(d)', bbox=cf.bbox, zorder=50, ha='center')
 
+axes[1, 0].plot(x_a / 1e3, sld_z_tilt, linewidth=2, color='k')
+axes[2, 0].plot(x_a / 1e3, sld_z_spice, linewidth=2, color='k')
+axes[3, 0].plot(x_a / 1e3, sld_z_total, linewidth=2, color='k')
 
 yt = axes[0, 0].get_yticks()[1:]
 #axes[0, 0].set_yticks(yt[yt > 0])

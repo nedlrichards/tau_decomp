@@ -51,25 +51,25 @@ ax[0].set_xlim(min_x, max_x)
 
 pos = ax[0].get_position()
 pos.x1 -= 0.07
-pos.x0 += 0.08
+pos.x0 += 0.10
 pos.y1 += 0.08
 pos.y0 += 0.06
 ax[0].set_position(pos)
 
 ax[0].set_ylabel('Depth (m)')
-ax[0].text(max_x + 3., 10, '$\sigma$', va='center')
-ax[0].text(max_x + 3., 30, '(kg/m$^3$)', va='center')
+ax[0].text(max_x - 3., 10, '$\sigma$', va='center')
+ax[0].text(max_x - 3., 30, '(kg/m$^3$)', va='center')
 
 pos = ax[1].get_position()
 pos.x1 -= 0.07
-pos.x0 += 0.08
+pos.x0 += 0.10
 pos.y1 += 0.06
 pos.y0 += 0.04
 ax[1].set_position(pos)
 
-ax[1].set_ylabel(r'$\tau$ (kg/m$^3$)', labelpad=-0.05)
+ax[1].set_ylabel(r'$\gamma$ (kg/m$^3$)', labelpad=-0.05)
 
-z_off = [-0.02, 0.03, 0.00]
+z_off = [-0.02, 0.05, 0.00]
 for zo, c0, lbl_i in zip(z_off, cc0, call_lvls):
     ax[1].plot(x_a / 1e3, lvls[1, lbl_i, :].T, color=c0)
     ax[1].text(max_x + 3., lvls[1, lbl_i, x_i][-1] + zo,
@@ -79,10 +79,10 @@ ax[1].plot(x_a / 1e3, stable_lvls[1, call_lvls[-1], :],color='#be0119', alpha=0.
 
 ax[1].set_xlabel('Range (km)')
 
-ax[1].set_ylim(1.5, 2.2)
+ax[1].set_ylim(-0.3, 0.35)
 
 ax[0].text(min_x - 25., 5, '(a)', bbox=cf.bbox)
-ax[1].text(min_x - 25., 0.30, '(b)', bbox=cf.bbox)
+ax[1].text(min_x - 25., 0.35, '(b)', bbox=cf.bbox)
 
 
 ax[0].spines["right"].set_visible(False)

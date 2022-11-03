@@ -73,7 +73,7 @@ ax[2].grid()
 #ax[0].legend([s + ' km' for s in map(str, list(prof_i))], loc=(0.03, 0.78))
 ax[0].legend([s + ' km' for s in map(str, list(prof_i))])
 
-ax[0].set_xlim(25.3, 27.0)
+ax[0].set_xlim(25.1, 26.4)
 loc = plticker.MultipleLocator(base=0.5)
 ax[0].xaxis.set_major_locator(loc)
 ax[1].set_xlim(-0., 0.3)

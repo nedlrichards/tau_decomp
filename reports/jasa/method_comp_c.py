@@ -27,12 +27,10 @@ filled_lvls = decomp_fields['filled_lvls']
 
 last_cntr_i = np.argmax(stable_lvls[0, :, :] > 1, axis=0)
 
-last_z_hp = filled_lvls[0, last_cntr_i, np.arange(stable_lvls.shape[-1])]
-last_z_hp_i = np.argmin(np.abs(last_z_hp - z_a[:, None]), axis=0)
+last_z_hp = filled_lvls[0, last_cntr_i[250], np.arange(stable_lvls.shape[-1])]
 
 last_z = stable_lvls[0, last_cntr_i, np.arange(stable_lvls.shape[-1])]
 last_z_i = np.argmin(np.abs(last_z - z_a[:, None]), axis=0)
-
 
 fig, ax = plt.subplots(figsize=(cf.jasa_1clm, 2.25))
 cm = ax.pcolormesh(x_a / 1e3, z_a[z_i], c_diff, cmap=plt.cm.BrBG,

@@ -53,7 +53,7 @@ r_a, mil_400 = plt_loss(400)
 r_a, mil_1000 = plt_loss(1e3)
 plot_max = 8
 
-fig, axes = plt.subplots(2, 1, figsize=(cf.jasa_2clm,2.5), sharex=True, sharey=True)
+fig, axes = plt.subplots(2, 1, figsize=(cf.jasa_2clm, 2.5), sharex=True, sharey=True)
 axes[0].plot(r_a, mil_400[1:].T, label=cf.field_types[1:])
 axes[0].plot(r_a, mil_400[0].T, label=cf.field_types[0])
 
