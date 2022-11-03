@@ -97,11 +97,6 @@ ax.plot(r_a / 1e3, np.mean(eng_bg_ml_tl_400[i_co:, :], axis=0), color=clrs[0])
 ax.plot(r_a / 1e3, np.mean(eng_bg_ml_tl_1000[:i_co, :], axis=0), color=clrs[-1], linestyle='--')
 ax.plot(r_a / 1e3, np.mean(eng_bg_ml_tl_1000[i_co:, :], axis=0), color=clrs[-1])
 
-#ax.plot(r_a / 1e3, eng_bg_ml_tl_400[:i_co, :].T, color=clrs[0], linewidth=0.5)
-#ax.plot(r_a / 1e3, eng_bg_ml_tl_400[i_co:, :].T, color=clrs[-1], linewidth=0.5)
-#ax.plot(r_a / 1e3, eng_bg_ml_tl_1000[:i_co, :].T, color=clrs[0], linewidth=0.5)
-#ax.plot(r_a / 1e3, eng_bg_ml_tl_1000[i_co:, :].T, color=clrs[-1], linewidth=0.5)
-
 ax.text(-3, -26, '(c)', bbox=cf.bbox, clip_on=False)
 
 x0 = 0.02
