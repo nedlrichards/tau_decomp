@@ -11,6 +11,7 @@ plt.ion()
 plt.style.use('elr')
 
 fc = 400
+#fc = 1e3
 cf = Config(fc=fc)
 r_bound = (7.5e3, 37.5e3)
 
@@ -42,16 +43,18 @@ def ray_lag(i_field, i_xmission, cf):
                                     fields['c_' + cf.field_types[i_field]],
                                     rmax=cf.rmax)
     # mean of c_field
-    c_field = np.mean(c_field, axis=1)[:, None] * np.ones((1, c_field.shape[1]))
+    #c_field = np.mean(c_field, axis=1)[:, None] * np.ones((1, c_field.shape[1]))
 
     sld_z, sld_i = sonic_layer_depth(z_a, c_field, z_max=200)
     c_sld = c_field[sld_i, range(c_field.shape[1])]
+
     kx = 2 * pi * fc / c_sld
 
     # trace beam through transition layer
     z_i = z_a < cf.z_tl
     ssp_transition = c_field[z_i]
     # set c values above sld to 0
+
     for i, c in zip(sld_i, ssp_transition.T): c[:i+1] = 0
 
     ky = np.sqrt((2 * pi * fc / ssp_transition) ** 2 - kx ** 2)
