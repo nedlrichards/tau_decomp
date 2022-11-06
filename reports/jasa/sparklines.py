@@ -109,7 +109,7 @@ def sparkline(ax, r_line_a, lines, stats, dy, title, ylim=(-10, 5), dx=0):
     ax.set(yticklabels=[])
     ax.set(xticklabels=[])
     ax.set_xlim(range_bounds[0] / 1e3 - 1, range_bounds[1] / 1e3 + 1)
-    ax.set_ylim(ylim[0]-0.1, ylim[1]+0.1)
+    ax.set_ylim(ylim[0], ylim[1])
 
 
 def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e3)):
@@ -138,13 +138,12 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e
     col_str = f'Type {space_str_1} 400 Hz, dB re RI BG  {space_str} {range_bounds[0]/1e3:.1f} km  {space_str} {range_bounds[1]/1e3} km'
     ax.text(-0.48, 2.3, col_str, transform=ax.transAxes)
     #ax.set_yticklabels(ax.get_yticks(), fontdict={'fontsize':8})
+    ax.set_yticklabels(ylim, fontdict={'fontsize':8})
     ax.text(-0.45, 1.5, 'Complete', transform=ax.transAxes, clip_on=False, bbox=cf.bbox, fontsize=8)
 
     ax.plot([-0.46, 4.17], [1.65, 1.65], transform=ax.transAxes, clip_on=False, linewidth=0.75, color='0.8')
 
     sparkline(ax, r_line_a, demean_400[bg_i][:, r_i], stats_400[bg_i], -0.04, 'BG', ylim=ylim)
-    ax.set_yticks(ylim)
-    ax.set_yticklabels(ylim, fontdict={'fontsize':8})
 
     ax = axes[1, 0]
     sparkline(ax, r_line_a, demean_400[tilt_i][:, r_i], stats_400[tilt_i], -0.04, 'Tilt', ylim=ylim)
@@ -176,14 +175,12 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e
     ax = axes[4, 0]
     ax.plot([-0.46, 4.17], [1.5, 1.5], transform=ax.transAxes, clip_on=False, linewidth=0.75, color='0.8')
     ax.text(-0.45, 1.5, 'W/O Blocking', transform=ax.transAxes, clip_on=False, bbox=cf.bbox, fontsize=8)
+    ax.set_yticklabels(ylim, fontdict={'fontsize':8})
 
 
     flt_eng = demean_400[tilt_i][block_i[tilt_i], :].copy()
     flt_tilt_stats = field_stats(r_a, flt_eng, range_bounds=stat_range)
     sparkline(ax, r_line_a, flt_eng[:, r_i], flt_tilt_stats, -0.10, 'Tilt', ylim=ylim)
-
-    ax.set_yticks(ylim)
-    ax.set_yticklabels(ylim, fontdict={'fontsize':8})
 
     ax = axes[5, 0]
 

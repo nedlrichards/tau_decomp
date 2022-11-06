@@ -177,15 +177,15 @@ The spice sound speed field, left panel (c), shows both vertical fronts and feat
 
 Similar blocking features are also observed at other ranges and can appear in one or multiple dynamic fields. A metric of blocking feature is defined through mixed layer energy in Sec. \ref{ssec:blocking}. Statistics of the mixed layer energy are significantly influenced by these sporadic high loss events, and so are reported both with and without these blocking features in Sec. \ref{ssec:energy}.
 
-\subsection{Background acoustic energy}\label{ssec:bg}
-Two quantifications of acoustic energy are considered, vertical integration of the PE pressure result, and a limited depth projection of a mixed layer mode (MLM) onto the PE pressure result. The vertical integration of the PE pressure contains no information about the vertical distribution of energy, while the modal quantification describes the energy in the mixed layer with the same vertical distribution as the MLM. The limited depth mode projection is proposed as an alternative to mode amplitudes from coupled mode calculations that approximates mixed layer orthogonality even when multiple modes have the similar shape in the mixed layer.
+\subsection{Background mixed layer energy}\label{ssec:bg}
+Two quantifications of mixed layer energy are considered, vertical integration of the PE pressure result, and a limited depth projection of a mixed layer mode (MLM) onto the PE pressure result. The vertical integration of the PE pressure contains no information about the vertical distribution of energy, while the modal quantification describes the energy in the mixed layer with the same vertical distribution as the MLM. The limited depth mode projection is proposed as an alternative to mode amplitudes from coupled mode calculations that approximates mixed layer orthogonality even when multiple modes have the similar shape in the mixed layer.
 
-The vertical integration of acoustic energy is computed from the PE acoustic pressure result, $p(x, z)$, as
+The vertical integration of mixed layer energy is computed from the PE acoustic pressure result, $p(x, z)$, as
 \begin{equation}
-    \textrm{E} = 20 \, \textrm{log}_{10} \left( \frac{1}{D} \int^{z_1}_z_0 \left| p(x, z) \right| \,  dz \right).
+    \textrm{E} = 20 \, \textrm{log}_{10} \left( \frac{1}{D} \int^{D}_0 \left| p(x, z) \right| \,  dz \right).
     \label{eq:int_eng}
 \end{equation}
-For mixed layer energy, $z_0 = 0$ m and $z_1 = 150$ m, a depth chosen to be significantly below the SLD. Since acoustic pressure is downward refracted below the mixed layer, this energy calculation is insensitive to the lower boundary of integration. Similarly, transistion layer energy is relativly insentitive to these bounds, and is calculated with $z_0 = 150$ m and $z_1 = 300$ m.
+Since acoustic pressure is downward refracted below the mixed layer, this energy calculation is insensitive to the lower boundary of integration. A fixed integration depth, $D$, of 150 m is chosen to be significantly beneath the SLD for all observations.
 
 \begin{figure}
 \includegraphics{../figures/bg_eng_loss.png}
@@ -229,23 +229,6 @@ The dynamic decomposition shows different partitioning between the dynamic field
 
 While the blocking features in the observed field are distributed across the transect range, the tilt field blocking features occur before 450 km and spice blocking features dominate after this range. This blocking feature distribution indicates that the effects of both tilt and spice fields are regionally variable over the 1000 km range of the transect.
 
-Blocking features also lead to a brief increase in TL energy as beams of energy leaving the ML pass through the TL. The horizontal distance this energy remains in the TL is calculated here by assuming the beam leaves the ML at grazing incidence angle at the SLD. The mean profile and SLD are used for this calculation here,
-\begin{equation}
-    k_x = \frac{2 \pi}{c_{SLD}},
-\end{equation}
-where $k_x$ is the modeled horiontal wavenumber of each beam and $c_{SLD}$ is the sound speed at the SLD. The horizontal distance travelled by this ray to a depth $z$ is
-\begin{equation}
-    (z - z_{SLD}) = \int^x_0 k_y dx,
-\end{equation}}
-where the vertical wavenumber $k_y^2 = k^2 + k_x^2$, where $k$ is the local acoustic wavenumber. A beam of energy leaving the ML at position $x$ then enters the TL at $x + \Delta x_0$ and exits at positon $x + \Delta x_1$. The contribution of the energy between these two positions is assumed to be superimposed, leading to a model of the TL eneergy as a moving sum filter of energy leaving the ML,
-\begin{equation}
-    E_{TL} = \int_{x-\Delta x_0}^{x+ \Delta x_1} \Delta E_{ML} dx,
-    \label{eq:TL_eng}
-\end{equation}
-where $E_{ML}$ is the change in ML energy compensated for cylindrical spreading.
-
-TODO: Calculation for $\Delta E_{ML}=-3$ dB over 5 km.
-
 \subsection{Upper ocean acoustic energy}\label{ssec:energy}
 \begin{figure}
 \includegraphics{../figures/bg_eng_loss_3_panel.png}
@@ -261,6 +244,8 @@ The shallow source MLAD scenario, Fig.~\ref{fig:eng_bg_3} panel (a), has the hig
 The energy in the MLAD is 2-3 dB higher for the 400 Hz source, and the energy is also 2-3 dB higher for both frequencies at low transect ranges. Both results show that increasing diffractive losses in a shallow source MLAD scenario will also lead to energy gain in the deep source scenario.
 
 The transistion layer RI background energy, Fig.~\ref{fig:eng_bg_3} panel (c), has a modal interference beat pattern. The energy at 400 Hz is higher than the deep source scenario, and lower at 1 kHz. These energies increase at near source ranges due to higher diffractive losses from the MLAD.
+
+
 
 \begin{figure}
 \includegraphics{../figures/eng_shallow.png}
@@ -300,19 +285,18 @@ Without blocking features, the projected and total energy statistics at 400 Hz a
     \caption{Mixed layer energy relative to the RI background for a source at 200 m depth. Presentation of the result follows Fig. \ref{fig:shal_eng}, with y-axis bounds of $\pm$15 dB.}
     \label{fig:deep_proj}
 \end{figure}
-The second propagation scenario investigates coupling into the MLAD caused by the dynamic sound speed fields with a 200 m deep source . The presentation of these results follows Fig.~\ref{fig:shal_eng}, except the statistics linear regression fit is only made between 7.5 and 40 km to remove the effect of the wider convergence zone at 400 Hz. The results of this regression are extended to 47.5 km for consitancy.
+Finally, a 200 m deep source is used to investigate coupling into the mixed layer from the dynamic sound speed fields. While the presentation of these results follows Fig.~\ref{fig:proj_eng}, differences in the propagation conditions effect their interpretation. First, the background level of acoustic energy in the mixed layer is lower than in the case of a source in the mixed layer. The difference at 7.5 km and 47.5 km is -15 and -24 dB at 400 Hz, and -16 and -28 dB at 1000 Hz. Secondly, scattering increases the width of the convergence zone in the mixed layer compared to the background field. While results are reported at 47.5 km for consistency, the linear regression is fit only from 7.5 to 40 km to remove the increase in mixed layer energy seen after this point in the 400 Hz simulations.
 
-Unlike the shallow source scenario, the background field has a large effect on propagation, especially at 1 kHz. This is expected to be due to resonance conditions in mode coupling with the 50 km lowpass wavelength used to construct the background field\cite{colosi21}. The RMS values at 7.5 km are much larger than for the dynamic fields than the background, which indicates more coupling into the mixed layer in the source region. In most cases, the dynamic fields create a small net increase in the MLAD energy at 7.5 km, and a decrease in MLAD energy at 47.5 km. When blocking features are removed, the total MLAD energy at 47.5 km for the 200 m source largely follows the same trend as the 40 m source. This trend indicates the dynamic field has essentially the same effect on acoustic propagation in the MLAD after source region coupling of the deep source. An exception is the spice field which decreases in energy at 47.5 km when blocking features are removed. This could be an effect of a correlation between blocking feature regions and regions with large source coupling which removes a few large positive energy scenarios from the non-blocking statistics. This result is similar at 1 kHz. The 1 kHz fields also have the highest RMS vales at 7.5 km, which indicates higher frequencies have more source region coupling into the MLAD.
+For the source outside of the mixed layer, all fields both significantly increase and decrease in the total mixed layer energy. Unlike the shallow source scenario, the background field has a large effect on propagation, especially at 1 kHz. This is expected to be due to the increased importance of long-range diffractive cycling of energy out of the MLAD, described in Sec.~\ref{ssec:bg}. The low levels of ducted energy in this scenario can be changed significantly with the slow varying background field because of the long loop lengths of this interaction.
+
+The dynamic fields show larger variances than the background field when blocking features are included. The mean effect of the dynamic fields is essentially zero for all scenarios except for the tilt field at 1 kHz, which has a net loss of energy. The large RMS values for this field suggest that this result may be dominated by a few high loss events. With blocking features removed, all dynamic fields significantly increase the mean energy in the mixed layer. This indicates that while the dynamic fields are important for coupling energy into the mixed layer, the effectiveness of the MLAD is still an important consideration for mixed layer energy with a deep source. The mean increase of MLAD energy is greatest for the total field with no blocking features, which indicates increased mode coupling is more important than the performance of the MLAD once these extreme events are removed. The higher gain of MLAD energy at 1 kHz relative to 400 Hz further supports the conclusion that increased mode coupling is the primary driver of MLAD energy for deep sources once blocking features are removed.
 
 \begin{figure}
 \includegraphics{../figures/eng_shallow_tl.png}
     \caption{Transition layer energy relative to a 2nd order fit of the RI background for a source at 40 m depth. Presentation of the result follows Fig. \ref{fig:shal_eng}, with y-axis bounds of $\pm$15 dB.}
     \label{fig:eng_tl}
 \end{figure}
-
-Finally, energy in the transition layer is shown for the 40 m source depth scenario in Fig. \ref{fig:eng_tl}. Unlike the MLAD, the transition layer is strongly downward refracting, and energy exits the transition layer a few kilometers after entering. For a source in the MLAD, all of this transition layer energy before the first converegence enters from the MLAD and is caused by diffraction and range dependent scatter. Diffractive losses from the mixed layer form a beat pattern in range in both the RI and range dependent bacground fields, most apparent at 1 kHz. A second order polynormial fit the the RI background is used to normalize the energy calculation, since this beat pattern is smeared out by the scattering of the dynamic fields.
-
-The energy in the transion layer is inversely related to these MLAD energy losses, and fields that create large MLAD losses create large temporary energy gains in the transition layer.
+Finnally, the energy in the transition layer is shown for the 40 m source depth scenario in Fig. \ref{fig:eng_tl}. Unlike the MLAD, the transition layer is strongly downward refracting, and energy exits the transition layer a few kilometers after entering. For a source in the MLAD, all of this transition layer energy before the first converegence enters from the MLAD. Outside of the source region, energy exits the MLAD both from diffraction and from range dependent energy coupling. The energy in the transion layer is inversely related to these MLAD energy loss, and fields that create large MLAD losses create large temporary energy gains in the transition layer.
 
 \section{Conclusion}\label{sec:conclusion}
 A transect of the mixed layer was decomposed to produce fields with separated isopycnal tilt or spice sound speed variation. This decomposition followed Dzieciuch \emph{et al.}\citep{dzieciuch2004} and introduced a linear superposition model for the mixed layer. The different horizontal and vertical structure of the two dynamic fields effected acoustic propagation very differently, both between the two decomposed fields and when compared with the observed field. Acoustic propagation simulations were made at 400 and 1000 Hz, which had an average of one or three mixed layer modes, respectively. There was significant localized range dependent loss observed in PE simulations for many different source positions from blocking features in both the decomposed and observed fields. Blocking features appear for all source positions that transmit through these features, and these effects were most clearly demonstrated at 400 Hz.
