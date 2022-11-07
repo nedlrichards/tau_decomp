@@ -11,6 +11,7 @@ plt.ion()
 plt.style.use('elr')
 
 fc = 400
+#fc = 1000
 cf = Config(fc=fc)
 r_bound = (7.5e3, 37.5e3)
 
@@ -35,14 +36,15 @@ x_pe_a = int_eng['r_a']
 dr = (x_pe_a[-1] - x_pe_a[0]) / (x_pe_a.size - 1)
 x_i = (r_bound[0] <= x_pe_a) & (r_bound[1] >= x_pe_a)
 
-def ray_lag(i_field, i_xmission, cf):
+def ray_lag(i_field, i_xmission, is_mean=True):
     """ray lag is the delay of a ray entering and exiting the transition layer"""
 
     x_sec, c_field = section_cfield(xs[i_xmission], x_field_a,
                                     fields['c_' + cf.field_types[i_field]],
                                     rmax=cf.rmax)
-    # mean of c_field
-    c_field = np.mean(c_field, axis=1)[:, None] * np.ones((1, c_field.shape[1]))
+    if is_mean:
+        # mean of c_field
+        c_field = np.mean(c_field, axis=1)[:, None] * np.ones((1, c_field.shape[1]))
 
     sld_z, sld_i = sonic_layer_depth(z_a, c_field, z_max=200)
     c_sld = c_field[sld_i, range(c_field.shape[1])]
@@ -51,6 +53,7 @@ def ray_lag(i_field, i_xmission, cf):
     # trace beam through transition layer
     z_i = z_a < cf.z_tl
     ssp_transition = c_field[z_i]
+
     # set c values above sld to 0
     for i, c in zip(sld_i, ssp_transition.T): c[:i+1] = 0
 
@@ -59,57 +62,47 @@ def ray_lag(i_field, i_xmission, cf):
     dx = dz * (kx / ky)
 
     tl_z_i = np.argmin(np.abs(z_a - cf.z_ml))
-    pre_distance = np.sum(dx[:tl_z_i, :], axis=0)
     tl_distance = np.sum(dx[tl_z_i:, :], axis=0)
-
-    pd_up = np.interp(x_pe_a, x_sec - xs[i_xmission], pre_distance)
-    tl_up = np.interp(x_pe_a, x_sec - xs[i_xmission], tl_distance)
 
     return pd_up, tl_up
 
-def tl_model(i_field, i_xmission, cf):
+def tl_model(i_field, i_xmission):
     """Predict tl energy for ml loss"""
 
     en_ml = dyn_ml[i_field, i_xmission, :]
     en_tl = dyn_tl[i_field, i_xmission, :]
-    pre_distance, tl_distance = ray_lag(i_field, i_xmission, cf)
+    _, tl_distance = ray_lag(i_field, i_xmission, is_mean=True)
 
     # predict energy change from spreading alone
-    ml_spreading = en_ml[:-1].copy()
-    ml_spreading /= x_pe_a[1:]
-
-    # positive difference from spreading is related to ml loss
-    tl_in = ml_spreading - (en_ml / x_pe_a)[1:]
+    tl_in = -np.diff(en_ml) / x_pe_a[1:]
     tl_in[tl_in < 0] = 0
 
-    tl_model = np.zeros(x_pe_a.size)
-    for i, (pd, td, p_in) in enumerate(zip(pre_distance, tl_distance, tl_in)):
-        #start_i = i + int(pd / dr) + 1
-        start_i = i + 1
-        if start_i >= x_pe_a.size - 1:
-            break
-        end_i = min(start_i + int(td / dr), x_pe_a.size - 1)
-        tl_model[start_i: end_i] += tl_in[i] * x_pe_a[start_i] / x_pe_a[start_i: end_i]
-    tl_model *= x_pe_a
-    return tl_model
+    # cumulative sum of tl energy
+    n = int(tl_distance[0] / dr)
+    tl_model = np.cumsum(tl_in, dtype=float)
+    tl_model[n:] = tl_model[n:] - tl_model[:-n]
+    tl_model = np.concatenate([[tl_model[0]], tl_model])
+    return tl_model * x_pe_a
 
 ml_pred = []
 for i_f in range(4):
     i_field = 3
     pred= []
     for i_x in range(dyn_ml.shape[1]):
-        pred.append(tl_model(i_f, i_x, cf))
+        pred.append(tl_model(i_f, i_x))
     pred = np.array(pred)
     ml_pred.append(pred)
 ml_pred = 10 * np.log10(np.array(ml_pred))
 
-test_i = 3
+test_i = 1
 diff = ml_pred - int_eng['ml_tl'][1:]
-
 test = diff[test_i, :, x_i]
 test[int_eng['ml_tl'][test_i + 1, :, x_i] < -65] = np.nan
 
-fig, ax = plt.subplots()
-ax.plot(x_pe_a[x_i] / 1e3, test)
+plt_i = 88
 
+fig, ax = plt.subplots()
+ax.plot(x_pe_a[x_i] / 1e3, test[:, 80:])
+#x.plot(x_pe_a / 1e3, int_eng['ml_tl'][test_i + 1, plt_i, :])
+#ax.plot(x_pe_a / 1e3, ml_pred[test_i, plt_i, :])
 

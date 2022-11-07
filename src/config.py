@@ -21,7 +21,7 @@ class Config:
             raise(ValueError("Source depth must be either shallow or deep"))
         self.source_depth = source_depth
 
-        self.z_ml = 150.
+        self.z_ml = 125.
         self.z_tl = 250.
         self.rmax = 60e3
 
