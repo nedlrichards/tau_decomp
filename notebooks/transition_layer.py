@@ -10,8 +10,8 @@ from src import MLEnergy, list_tl_files, Config, sonic_layer_depth, section_cfie
 plt.ion()
 plt.style.use('elr')
 
-fc = 400
-#fc = 1000
+#fc = 400
+fc = 1000
 cf = Config(fc=fc)
 r_bound = (7.5e3, 37.5e3)
 
@@ -64,14 +64,14 @@ def ray_lag(i_field, i_xmission, is_mean=True):
     tl_z_i = np.argmin(np.abs(z_a - cf.z_ml))
     tl_distance = np.sum(dx[tl_z_i:, :], axis=0)
 
-    return pd_up, tl_up
+    return tl_distance
 
 def tl_model(i_field, i_xmission):
     """Predict tl energy for ml loss"""
 
     en_ml = dyn_ml[i_field, i_xmission, :]
     en_tl = dyn_tl[i_field, i_xmission, :]
-    _, tl_distance = ray_lag(i_field, i_xmission, is_mean=True)
+    tl_distance = ray_lag(i_field, i_xmission, is_mean=True)
 
     # predict energy change from spreading alone
     tl_in = -np.diff(en_ml) / x_pe_a[1:]
@@ -86,7 +86,6 @@ def tl_model(i_field, i_xmission):
 
 ml_pred = []
 for i_f in range(4):
-    i_field = 3
     pred= []
     for i_x in range(dyn_ml.shape[1]):
         pred.append(tl_model(i_f, i_x))
@@ -94,15 +93,8 @@ for i_f in range(4):
     ml_pred.append(pred)
 ml_pred = 10 * np.log10(np.array(ml_pred))
 
-test_i = 1
-diff = ml_pred - int_eng['ml_tl'][1:]
-test = diff[test_i, :, x_i]
-test[int_eng['ml_tl'][test_i + 1, :, x_i] < -65] = np.nan
 
-plt_i = 88
+save_dir = 'data/processed/'
+sf = os.path.join(save_dir, 'tl_eng_model' + '_' + str(int(fc)) + '.npz')
 
-fig, ax = plt.subplots()
-ax.plot(x_pe_a[x_i] / 1e3, test[:, 80:])
-#x.plot(x_pe_a / 1e3, int_eng['ml_tl'][test_i + 1, plt_i, :])
-#ax.plot(x_pe_a / 1e3, ml_pred[test_i, plt_i, :])
-
+np.savez(sf, ml_pred=ml_pred)
