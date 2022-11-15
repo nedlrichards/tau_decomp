@@ -10,8 +10,8 @@ from src import MLEnergy, list_tl_files, Config, sonic_layer_depth, section_cfie
 plt.ion()
 plt.style.use('elr')
 
-#fc = 400
-fc = 1000
+fc = 400
+#fc = 1000
 cf = Config(fc=fc)
 r_bound = (7.5e3, 37.5e3)
 
@@ -35,6 +35,8 @@ xs = int_eng['xs']
 x_pe_a = int_eng['r_a']
 dr = (x_pe_a[-1] - x_pe_a[0]) / (x_pe_a.size - 1)
 x_i = (r_bound[0] <= x_pe_a) & (r_bound[1] >= x_pe_a)
+
+z_tl_i = (z_a < cf.z_tl) & (z_a > cf.z_ml)
 
 def ray_lag(i_field, i_xmission, is_mean=True):
     """ray lag is the delay of a ray entering and exiting the transition layer"""
@@ -71,14 +73,14 @@ def tl_model(i_field, i_xmission):
 
     en_ml = dyn_ml[i_field, i_xmission, :]
     en_tl = dyn_tl[i_field, i_xmission, :]
-    tl_distance = ray_lag(i_field, i_xmission, is_mean=True)
+    tl_distance = ray_lag(i_field, i_xmission, is_mean=False)
 
     # predict energy change from spreading alone
     tl_in = -np.diff(en_ml) / x_pe_a[1:]
     tl_in[tl_in < 0] = 0
 
     # cumulative sum of tl energy
-    n = int(tl_distance[0] / dr)
+    n = int(tl_distance[0] / dr) - 1
     tl_model = np.cumsum(tl_in, dtype=float)
     tl_model[n:] = tl_model[n:] - tl_model[:-n]
     tl_model = np.concatenate([[tl_model[0]], tl_model])

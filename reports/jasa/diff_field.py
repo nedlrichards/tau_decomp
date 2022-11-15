@@ -61,9 +61,9 @@ fig.colorbar(cm0, cax=cax)
 cax = fig.add_axes([0.92, 0.22, 0.01, 0.5])
 fig.colorbar(cm1, cax=cax)
 
-axes[0].text(990, 465, "+1500")
-axes[0].text(990, 545, "$c$ (m/s)")
-axes[3].text(990, 250, "$\delta c$ (m/s)")
+axes[0].text(985, 465, "+1500")
+axes[0].text(985, 545, "$c$ (m/s)")
+axes[3].text(985, 250, "$\delta \, c$ (m/s)")
 
 
 axes[0].set_ylim(350, 0)
@@ -141,8 +141,13 @@ pos.y0 += y0
 pos.y1 += y0 + dy2
 axes[3].set_position(pos)
 
-#fig.savefig(os.path.join(savedir, 'diff_fields.png'), dpi=300)
+axes[0].text(0, 0, 'a', bbox=cf.bbox)
+axes[1].text(0, 0, 'b', bbox=cf.bbox)
+axes[2].text(0, 0, 'c', bbox=cf.bbox)
+axes[3].text(0, 0, 'd', bbox=cf.bbox)
 
+fig.savefig(os.path.join(savedir, 'diff_fields.png'), dpi=300)
+"""
 fig, ax = plt.subplots()
 ax.plot(c_total[z_i, 670:680], z_a[z_i])
 #ax.plot(c_total[z_i, 670:680], z_a[z_i])
@@ -157,4 +162,4 @@ fig, ax = plt.subplots()
 ax.plot((c_tilt - c_bg)[z_i, 670:680], z_a[z_i])
 #ax.plot(c_bg[z_i, 670:680], z_a[z_i])
 ax.set_ylim(150, 0)
-
+"""

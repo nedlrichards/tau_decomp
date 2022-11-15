@@ -258,19 +258,19 @@ bg_fit_400 = np.array(bg_fit_400)
 test_400[0] = bg_fit_400
 
 shallow_modelled = np.load(join(load_dir, 'tl_eng_model_400.npz'))['ml_pred']
-test_400[1:] = shallow_modelled
+#test_400[1:] = shallow_modelled
 
 test_1000 = shallow_int_1000['ml_tl'].copy()
 bg = test_1000[0]
 bg_fit_1000 = []
 for line in bg:
-    fit = np.polynomial.polynomial.polyfit(r_a[rb_i], line[rb_i], 1)
+    fit = np.polynomial.polynomial.polyfit(r_a[rb_i], line[rb_i], 2)
     bg_fit_1000.append(np.polynomial.polynomial.polyval(r_a, fit))
 bg_fit_1000 = np.array(bg_fit_1000)
 test_1000[0] = bg_fit_1000
 
 shallow_modelled = np.load(join(load_dir, 'tl_eng_model_1000.npz'))['ml_pred']
-test_1000[1:] = shallow_modelled
+#test_1000[1:] = shallow_modelled
 
 fig, axes = plot_sparks(r_a, test_400, test_1000, ylim=(-20, 25), stat_range=ml_tl_rb)
 #fig.savefig(join(savedir, f'eng_shallow_tl.png'), dpi=300)
