@@ -76,40 +76,10 @@ ax.set_position(pos)
 ax.set_ylabel('Compensated ML energy (dB)')
 
 ax = axes[1]
-ax.plot(r_a / 1e3, np.mean(eng_bg_tl_ml_400[:i_co, :], axis=0), color=clrs[0], linestyle='--')
-ax.plot(r_a / 1e3, np.mean(eng_bg_tl_ml_400[i_co:, :], axis=0), color=clrs[0])
-ax.plot(r_a / 1e3, np.mean(eng_bg_tl_ml_1000[:i_co, :], axis=0), color=clrs[-1], linestyle='--')
-ax.plot(r_a / 1e3, np.mean(eng_bg_tl_ml_1000[i_co:, :], axis=0), color=clrs[-1])
-
-ax.text(-3, -26, '(b)', bbox=cf.bbox, clip_on=False)
-
-x0 = 0.0
-pos = ax.get_position()
-pos.x0 += x0
-pos.x1 += x0 + dx
-pos.y0 += 0.08
-pos.y1 += 0.07
-ax.set_position(pos)
-
-ax = axes[2]
 ax.plot(r_a / 1e3, np.mean(eng_bg_ml_tl_400[:i_co, :], axis=0), color=clrs[0], linestyle='--')
 ax.plot(r_a / 1e3, np.mean(eng_bg_ml_tl_400[i_co:, :], axis=0), color=clrs[0])
 ax.plot(r_a / 1e3, np.mean(eng_bg_ml_tl_1000[:i_co, :], axis=0), color=clrs[-1], linestyle='--')
 ax.plot(r_a / 1e3, np.mean(eng_bg_ml_tl_1000[i_co:, :], axis=0), color=clrs[-1])
-
-ax.text(-3, -26, '(c)', bbox=cf.bbox, clip_on=False)
-
-x0 = 0.02
-pos = ax.get_position()
-pos.x0 += x0
-pos.x1 += x0 + dx
-pos.y0 += 0.08
-pos.y1 += 0.07
-ax.set_position(pos)
-
-ax.set_ylim(-70, -25)
-
-fig.supxlabel('Position, $x$ (km)')
 
 
 rb_i = (r_a > range_bounds[0]) & (r_a < range_bounds[1])
@@ -125,5 +95,36 @@ bg_fit_400 = np.polynomial.polynomial.polyval(r_a / 1e3, fit)
 ax.plot(r_a[rb_i] / 1e3, bg_fit_400[rb_i], 'k', linewidth=1)
 ax.plot(r_a[rb_i] / 1e3, bg_fit_1000[rb_i], 'k', linewidth=1)
 #ax.plot(r_a[rb_i] / 1e3, np.mean(eng_bg_tl_ml_1000[i_co:, :], axis=0)[rb_i], 'k')
+
+
+ax.text(-3, -26, '(b)', bbox=cf.bbox, clip_on=False)
+
+x0 = 0.0
+pos = ax.get_position()
+pos.x0 += x0
+pos.x1 += x0 + dx
+pos.y0 += 0.08
+pos.y1 += 0.07
+ax.set_position(pos)
+
+ax = axes[2]
+ax.plot(r_a / 1e3, np.mean(eng_bg_tl_ml_400[:i_co, :], axis=0), color=clrs[0], linestyle='--')
+ax.plot(r_a / 1e3, np.mean(eng_bg_tl_ml_400[i_co:, :], axis=0), color=clrs[0])
+ax.plot(r_a / 1e3, np.mean(eng_bg_tl_ml_1000[:i_co, :], axis=0), color=clrs[-1], linestyle='--')
+ax.plot(r_a / 1e3, np.mean(eng_bg_tl_ml_1000[i_co:, :], axis=0), color=clrs[-1])
+
+ax.text(-3, -26, '(c)', bbox=cf.bbox, clip_on=False)
+
+x0 = 0.02
+pos = ax.get_position()
+pos.x0 += x0
+pos.x1 += x0 + dx
+pos.y0 += 0.08
+pos.y1 += 0.07
+ax.set_position(pos)
+
+ax.set_ylim(-70, -25)
+
+fig.supxlabel('Position, $x$ (km)')
 
 fig.savefig('reports/jasa/figures/bg_eng_loss_3_panel.png', dpi=300)
