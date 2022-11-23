@@ -16,12 +16,12 @@ climatology_file = 'data/raw/NPAL05prosGDEM.mat'
 class SectionLvls:
     """Common data used in section processing"""
 
-    def __init__(self, is_spiceness=True):
+    def __init__(self, spice_def=0):
         """Load data and compute commonly used quanitities"""
 
         self.cf = Config()
-        self.is_spiceness = is_spiceness
-        self.field = Field(is_spiceness=is_spiceness)
+        self.spice_def = spice_def
+        self.field = Field(spice_def=spice_def)
 
         self.x_a = self.field.x_a
         self.dx = (self.x_a[-1] - self.x_a[0]) / (self.x_a.size - 1)
@@ -114,16 +114,32 @@ class SectionLvls:
     def stable_spice(self, lvls, break_spice=False):
         """Compute estimate of stable spice"""
         stable_spice_lvls = lvls.copy()
-        cntrs = np.moveaxis(stable_spice_lvls, 1, 0)
-        if break_spice:
-            for i, cntr in enumerate(cntrs):
-                if i in self.cf.break_inds:
-                    brks = self.cf.breakpoints[self.cf.break_inds.index(i)]
-                else:
-                    brks = None
-                self._lp_spice(cntr, brks)
+        if self.spice_def == 2:
+            # moving average used for spice definition
+            #len_avg = 100  # needs to be even
+            len_avg = 50  # needs to be even
+
+            sig_mean_sa = []
+            for i in range(stable_spice_lvls.shape[-1] - len_avg):
+                sig_mean_sa.append(np.nanmean(stable_spice_lvls[1, :, i:i + len_avg], axis=1))
+
+            o_s = (stable_spice_lvls.shape[1], len_avg // 2)
+            sig_mean_sa = np.concatenate([np.broadcast_to(sig_mean_sa[0][:, None], o_s),
+                                          np.array(sig_mean_sa).T,
+                                          np.broadcast_to(sig_mean_sa[-1][:, None], o_s)], axis=1)
+            stable_spice_lvls[1] = sig_mean_sa
+
         else:
-            [self._lp_spice(cntr, None) for cntr in cntrs]
+            cntrs = np.moveaxis(stable_spice_lvls, 1, 0)
+            if break_spice:
+                for i, cntr in enumerate(cntrs):
+                    if i in self.cf.break_inds:
+                        brks = self.cf.breakpoints[self.cf.break_inds.index(i)]
+                    else:
+                        brks = None
+                    self._lp_spice(cntr, brks)
+            else:
+                [self._lp_spice(cntr, None) for cntr in cntrs]
 
         return stable_spice_lvls
 

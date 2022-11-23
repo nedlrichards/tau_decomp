@@ -5,12 +5,15 @@ from copy import copy
 class Config:
     """Common enviornment configuration"""
 
-    def __init__(self, source_depth="shallow", fc=400., c_bounds=[1503., 1545.]):
+    def __init__(self, source_depth="shallow", fc=400., c_bounds=[1503., 1545.],
+            savedir='reports/jasa/figures'):
+
         """define config"""
         self.fc = fc
         self.bottom_HS = [1600., 1000., 0.1]
         self.c_bounds = c_bounds
         self.decomp_npz = 'data/processed/inputed_decomp.npz'
+        self.savedir = savedir
 
         if source_depth=="shallow":
             self.z_src = 40.

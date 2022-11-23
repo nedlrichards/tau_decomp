@@ -30,13 +30,28 @@ data: requirements data/processed/inputed_decomp.npz propagation
 	$(PYTHON_INTERPRETER) -m src.eng_processing.save_energy
 
 data/processed/inputed_decomp.npz: requirements
-	$(PYTHON_INTERPRETER) -m src.data.lp_incompute 0
+	$(PYTHON_INTERPRETER) -m src.data.lp_incompute 2
 
 propagation: requirements data/processed/inputed_decomp.npz
 	$(PYTHON_INTERPRETER) -m src.data.acoustic_prop 400 'shallow'
 	$(PYTHON_INTERPRETER) -m src.data.acoustic_prop 1000 'shallow'
 	$(PYTHON_INTERPRETER) -m src.data.acoustic_prop 400 'deep'
 	$(PYTHON_INTERPRETER) -m src.data.acoustic_prop 1000 'deep'
+
+plots:
+	$(PYTHON_INTERPRETER) -m reports.jasa.section_plots
+	$(PYTHON_INTERPRETER) -m reports.jasa.dynamic_prof
+	$(PYTHON_INTERPRETER) -m reports.jasa.method_comp_c
+	$(PYTHON_INTERPRETER) -m reports.jasa.diff_field
+	$(PYTHON_INTERPRETER) -m reports.jasa.c_rms
+	$(PYTHON_INTERPRETER) -m reports.jasa.diff_spectra
+	$(PYTHON_INTERPRETER) -m reports.jasa.c_decomp_tl
+	$(PYTHON_INTERPRETER) -m reports.jasa.bg_energy
+	$(PYTHON_INTERPRETER) -m reports.jasa.mode_shapes
+	$(PYTHON_INTERPRETER) -m reports.jasa.bg_eng_3_panel
+	$(PYTHON_INTERPRETER) -m reports.jasa.ml_blocking
+	$(PYTHON_INTERPRETER) -m reports.jasa.blocking_energy
+	$(PYTHON_INTERPRETER) -m reports.jasa.sparklines
 
 ## Delete all compiled Python files
 clean:

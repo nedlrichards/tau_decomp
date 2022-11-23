@@ -9,13 +9,13 @@ from src import Config, SA_CT_from_sigma0_spiciness0
 class Field:
     """Generate spice, gamma, in local coordinates"""
 
-    def __init__(self, num_sigma=300, is_spiceness=True):
+    def __init__(self, num_sigma=300, spice_def=1):
         """Standard processing"""
         self.cf = Config()
         grid_data = loadmat('data/processed/stablized_field.mat')
         self.p_ref = 0.
         self.num_sigma = num_sigma
-        self.is_spiceness = is_spiceness
+        self.spice_def = spice_def
 
         self.x_a = np.squeeze(grid_data['x_a']).astype(np.float64) * 1e3
         self.z_a = np.squeeze(grid_data['z_a']).astype(np.float64)
@@ -31,7 +31,8 @@ class Field:
         self.xy_c = gsw.sound_speed(self.xy_sa, self.xy_ct, self.press[:, None])
         self.r_prof = np.broadcast_to(self.x_a, self.xy_sa.shape)
 
-        if self.is_spiceness:
+        if self.spice_def == 0:
+            print('spiciness')
             self.xy_gamma = gsw.spiciness0(self.xy_sa, self.xy_ct)
             return
 
@@ -53,13 +54,17 @@ class Field:
         self.xsig_sa = props_xsig[0, :, :]
         self.xsig_ct = props_xsig[1, :, :]
 
-        # compute mean temperature, compute salinity from temperature
-        mean_props = np.nanmean(props_xsig, axis=-1)
-        self.sig_mean_ct = mean_props[1]
-        self.sig_mean_sa = gsw.SA_from_rho(self.sig_bins + 1000,
-                                           mean_props[1],
-                                           self.p_ref)
+        if self.spice_def == 2:
+            self.xy_gamma = self.xy_sa
+            return
 
+
+        print('transect average spice definition')
+        # compute mean temperature, compute salinity from temperature
+        self.sig_mean_sa = np.nanmean(self.xsig_sa, axis=-1)
+        self.sig_mean_ct = gsw.CT_from_rho(self.sig_bins + 1000,
+                                        self.sig_mean_sa,
+                                        self.p_ref)[0]
         mean_props = np.array([self.sig_mean_sa, self.sig_mean_ct])
 
         # interpoloator of mean properties from sigma
@@ -94,8 +99,11 @@ class Field:
 
     def sa_ct_from_sig_gamma(self, sig, gamma):
         """inverse of spice function"""
-        if self.is_spiceness:
+        if self.spice_def == 0:
             return SA_CT_from_sigma0_spiciness0(sig, gamma)
+        elif self.spice_def == 2:
+            return gamma, gsw.CT_from_rho(sig + 1e3, gamma, self.p_ref)[0]
+
 
         sig_err = 1e-4
         sig = np.asarray(sig)
