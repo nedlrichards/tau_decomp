@@ -40,6 +40,7 @@ propagation: requirements data/processed/inputed_decomp.npz
 
 plots:
 	$(PYTHON_INTERPRETER) -m reports.jasa.section_plots
+	$(PYTHON_INTERPRETER) -m reports.jasa.t_s_diagram
 	$(PYTHON_INTERPRETER) -m reports.jasa.dynamic_prof
 	$(PYTHON_INTERPRETER) -m reports.jasa.method_comp_c
 	$(PYTHON_INTERPRETER) -m reports.jasa.diff_field
