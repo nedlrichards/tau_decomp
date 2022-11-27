@@ -17,8 +17,8 @@ cf = Config()
 
 inputed_data  = np.load('data/processed/inputed_decomp.npz')
 
-#prof_i = np.arange(250, 255)
-prof_i = np.array([249, 252])
+prof_i = np.array([33, 249])
+#prof_i = np.array([249, 252])
 #prof_i = np.array([20, 33, 40])
 #prof_i = np.array([139])
 

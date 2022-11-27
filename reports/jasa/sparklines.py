@@ -273,4 +273,4 @@ shallow_modelled = np.load(join(load_dir, 'tl_eng_model_1000.npz'))['ml_pred']
 #test_1000[1:] = shallow_modelled
 
 fig, axes = plot_sparks(r_a, test_400, test_1000, ylim=(-20, 25), stat_range=ml_tl_rb)
-#fig.savefig(join(savedir, f'eng_shallow_tl.png'), dpi=300)
+fig.savefig(join(savedir, f'eng_shallow_tl.png'), dpi=300)
