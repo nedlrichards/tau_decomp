@@ -116,8 +116,8 @@ class SectionLvls:
         stable_spice_lvls = lvls.copy()
         if self.spice_def == 2:
             # moving average used for spice definition
-            len_avg = 100  # needs to be even
-            #len_avg = 50  # needs to be even
+            #len_avg = 100  # needs to be even
+            len_avg = 50  # needs to be even
 
             sig_mean_sa = []
             for i in range(stable_spice_lvls.shape[-1] - len_avg):
