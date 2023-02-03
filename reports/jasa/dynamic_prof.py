@@ -61,16 +61,22 @@ for p_i in prof_i:
 #ax[0].plot([-10, 100], [sld_z[prof_i], sld_z[prof_i]], alpha=0.6)
 #ax[1].plot([-10, 100], [sld_z[prof_i], sld_z[prof_i]], alpha=0.6)
 #ax[0].plot([-10, 1e4], [ml_d[0], ml_d[0]], color='#eb44e6')
-ax[0].plot([1505, 1e4], [sld_z[prof_i], sld_z[prof_i]], color='0.2')
+ax[0].plot([1506, 1e4], [sld_z[prof_i], sld_z[prof_i]], color='0.2')
 
 ax[0].set_ylabel('Depth (m)')
-ax[1].set_xlabel(r'$\gamma$ (kg/m$^3$)')
-ax_t0.set_xlabel('$\sigma_0$ (kg/m$^3$)')
-ax[0].set_xlabel('c (m/s)')
-ax_t1.set_xlabel(r'$\theta$ ($^\circ$C)')
+ax[1].set_xlabel(r'Salinity, $S$ (kg/m$^3$)')
+ax_t0.set_xlabel('Density, $\sigma_0$ (kg/m$^3$)')
+ax[0].set_xlabel('Sound speed, c (m/s)')
+ax_t1.set_xlabel(r'Temperature, $\theta$ ($^\circ$C)')
 
-ax[0].text(25.37, 7, '(a)', bbox=cf.bbox)
-ax[1].text(0.012, 7, '(b)', bbox=cf.bbox)
+ax[0].text(1487, -30, '(a)', bbox=cf.bbox, clip_on=False)
+ax[1].text(34.2, -30, '(b)', bbox=cf.bbox, clip_on=False)
+ax[0].text(1503, 73, 'SLD', bbox=cf.bbox, clip_on=False)
+
+ax[0].plot([0.12, 0.20], [1.17, 1.17], color='0.2', clip_on=False, transform=ax[0].transAxes)
+ax[1].plot([0.12, 0.20], [1.17, 1.17], color='0.2', clip_on=False, transform=ax[1].transAxes)
+ax[0].plot([0.12, 0.20], [-0.17, -0.17], '--', color='0.2', clip_on=False, transform=ax[0].transAxes)
+ax[1].plot([0.12, 0.20], [-0.19, -0.19], '--', color='0.2', clip_on=False, transform=ax[1].transAxes)
 
 # Create offset transform by 5 points in x direction
 dx = 10/72.
@@ -89,7 +95,7 @@ dy = 0/72.
 #ax[1].grid()
 
 #ax[0].legend([s + ' km' for s in map(str, list(prof_i))], loc=(0.03, 0.78))
-ax[0].legend([s + ' km' for s in map(str, list(prof_i))], loc=(0.3, 0.2))
+ax[0].legend([s + ' km' for s in map(str, list(prof_i))], loc=(0.3, 0.10))
 
 ax_t0.set_xlim(25.1, 26.4)
 ax[1].set_xlim(34.25, 34.8)
