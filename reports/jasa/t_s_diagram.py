@@ -56,7 +56,7 @@ def fmt(x):
 
 ax.clabel(CS, CS.levels[::2], inline=True, fmt=fmt, fontsize=10)
 ax.set_ylabel(r'Tempurature, $\theta$ ($^\circ$C)')
-ax.set_xlabel(r'Salinity, S$_{A}$ (g kg$^{-1}$)')
+ax.set_xlabel(r'Salinity, $S$ (g kg$^{-1}$)')
 ax.set_xlim(33.7, 34.9)
 ax.set_ylim(7, 18)
 
@@ -77,10 +77,42 @@ ax.add_patch(patch)
 
 plt_i = 100
 ax.plot(mean_sa[:, plt_i], mean_ct[:, plt_i], 'r', linewidth=1, zorder=40)
+
+# analysis of 100 km line
+nan_i = (np.isnan(mean_sa[:, plt_i]) | np.isnan(mean_ct[:, plt_i]))
+lin_fit = np.polyfit(mean_sa[~nan_i, plt_i], mean_ct[~nan_i, plt_i], 1)
+test_sa = np.array([34.4, 34.3])
+test_ct = test_sa * lin_fit[0] + lin_fit[1]
+test_s0 = gsw.sigma0(test_sa, test_ct)
+test_c = gsw.sound_speed(test_sa, test_ct, 0.)
+ax.plot(mean_sa[:, plt_i], mean_sa[:, plt_i] * lin_fit[0] + lin_fit[1], 'k')
+
+grad_cs0 = np.diff(test_c) / np.diff(test_s0)
+print(f"slope is {grad_cs0[0]:.3f} at {plt_i} km")
+
 plt_i = 900
-ax.plot(mean_sa[:, plt_i], mean_ct[:, plt_i], 'r--', linewidth=1, zorder=40)
+nan_i = (np.isnan(mean_sa[:, plt_i]) | np.isnan(mean_ct[:, plt_i]))
+sa = mean_sa[~nan_i, plt_i]
+ct = mean_ct[~nan_i, plt_i]
+ax.plot(sa, ct, 'r--', linewidth=1, zorder=40)
+sig0 = gsw.sigma0(sa, ct)
+srt_i = np.argsort(sig0)
+ax.plot(sa[:10], ct[:10], 'k')
+
+lin_fit = np.polyfit(sa[:10], ct[:10], 1)
+test_sa = np.array([34.4, 34.3])
+test_ct = test_sa * lin_fit[0] + lin_fit[1]
+test_s0 = gsw.sigma0(test_sa, test_ct)
+test_c = gsw.sound_speed(test_sa, test_ct, 0.)
+ax.plot(sa, sa * lin_fit[0] + lin_fit[1], 'k')
+
+grad_cs0 = np.diff(test_c) / np.diff(test_s0)
+print(f"slope is {grad_cs0[0]:.3f} at {plt_i} km")
 
 
+
+
+1/0
 
 mean_c = gsw.sound_speed(mean_sa, mean_ct, 0.)
 
