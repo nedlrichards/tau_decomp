@@ -53,7 +53,8 @@ if l_len[am + 1] > 6e4:
 else:
     am = [am]
 
-am = np.hstack([[am[0] - 1], am, [am[-1] + 1]])
+#am = np.hstack([[am[0] - 1], am, [am[-1] + 1]])
+am = np.hstack([am, [am[-1] + 1], [am[-1] + 2]])
 labels = np.arange(rd_modes.mode_number.size)[am]
 
 z_sld, sld_i = sonic_layer_depth(rd_modes.z_a,
