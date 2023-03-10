@@ -82,7 +82,8 @@ for i, m in enumerate(mil_1000[1:]):
 
 axes[1].plot(r_a, np.full_like(r_a, 3), color='C3', linestyle=':')
 
-fig.supylabel('Maxium loss over 5 km (dB)')
+#fig.supylabel('Maxium loss over 5 km (dB)')
+fig.supylabel('Maxium 5 km CMLE loss (dB)')
 axes[0].set_ylim(-0.5, plot_max)
 axes[0].set_xlim(0, 900)
 #axes[0].grid()

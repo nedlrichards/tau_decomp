@@ -68,12 +68,12 @@ ml_fit = np.polynomial.polynomial.polyval(r_a, fit)
 
 fig, axes = plt.subplots(2, 1, sharex=True, figsize=(cf.jasa_1clm, 3))
 ax = axes[0]
-l0 = ax.plot(plot_r_a / 1e3, ml_bg[tl_ind], color='k', label='RI BG')
-l1 = ax.plot(plot_r_a / 1e3, ml_eng[tl_ind], color='C1', label='MLAD-MLAD')
+l0 = ax.plot(plot_r_a / 1e3, ml_bg[tl_ind], color='k', label='BG')
+l1 = ax.plot(plot_r_a / 1e3, ml_eng[tl_ind], color='C1', label='CMLE')
 l2 = ax.plot(plot_r_a / 1e3, proj_eng[tl_ind] - 10 * np.log10(92), color='C1', label='MLM1', linewidth=1, linestyle=':')
 
 ax.plot(plot_r_a / 1e3, tl_bg[tl_ind], color='k')
-l3 = ax.plot(plot_r_a / 1e3, tl_eng[tl_ind], color='C2', label='MLAD-UTL')
+l3 = ax.plot(plot_r_a / 1e3, tl_eng[tl_ind], color='C2', label='CTRLE')
 
 ax.set_ylim(-70, -20)
 
@@ -85,13 +85,22 @@ pos.y1 += 0.07
 ax.set_position(pos)
 ax.grid()
 
-ax.text(231, -22, 'a', bbox=cf.bbox)
+ax.text(231, -22, '(a)', bbox=cf.bbox)
 
 ax = axes[1]
-ax.plot(plot_r_a / 1e3, deep_bg[tl_ind], color='k', label='RI BG')
-l4 = ax.plot(plot_r_a / 1e3, deep_eng[tl_ind], color='r', label='UTL-MLAD')
-ax.legend(handles=l0 + l1 + l2 + l3 + l4, fontsize=8, framealpha=1.0,
-          loc='lower left', bbox_to_anchor=(0.65, 0.50), handlelength=1)
+ax.plot(plot_r_a / 1e3, deep_bg[tl_ind], color='k', label='BG')
+l4 = ax.plot(plot_r_a / 1e3, deep_eng[tl_ind], color='r', label='CMLE')
+
+#ax.legend(handles=l0 + l1 + l2 + l3 + l4, fontsize=8, framealpha=1.0,
+          #loc='lower left', bbox_to_anchor=(0.65, 0.50), handlelength=1)
+
+l = ax.legend(handles=l0 + l1 + l2 + l3, fontsize=8, framealpha=1.0,
+              loc='lower left', bbox_to_anchor=(0.78, 0.75), handlelength=1)
+ax.add_artist(l)
+
+
+ax.legend(handles=l0 + l4, fontsize=8, framealpha=1.0,
+          loc='lower left', bbox_to_anchor=(0.78, -0.10), handlelength=1)
 
 ax.set_ylim(-70, -20)
 ax.set_xlim(plot_r_a[0]/1e3 - 1, plot_r_a[0]/1e3 + 55)
@@ -104,10 +113,10 @@ pos.y1 += 0.07
 ax.set_position(pos)
 ax.grid()
 
-ax.text(231, -22, 'b', bbox=cf.bbox)
+ax.text(231, -22, '(b)', bbox=cf.bbox)
 
-fig.supxlabel('Transect range (km)')
-fig.supylabel('Compensated energy (dB)')
+fig.supxlabel('Position (x)')
+fig.supylabel('Verically averaged energy (dB)')
 
 #ax.legend([l0, l1, l2], ['RI BG', 'MLAD', 'TL'])
 #ax.legend([l0, l1, l2])

@@ -66,7 +66,7 @@ cb.set_ticklabels([r'$x_{src}\leq$300 km', '$x_{src}$ >300km'])
 ax.set_ylim(-40, -25)
 
 ax.set_xlabel('Position, $x$ (km)')
-ax.set_ylabel('Compensated ML energy (dB)')
+ax.set_ylabel('MLAD energy (dB)')
 
 pos = ax.get_position()
 pos.x0 += 0.10
@@ -76,4 +76,3 @@ pos.y1 += 0.07
 ax.set_position(pos)
 
 fig.savefig('reports/jasa/figures/bg_eng_loss.png', dpi=300)
-

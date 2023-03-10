@@ -230,7 +230,7 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
 
     return fig, axes
-
+1/0
 fig, axes = plot_sparks(r_a, shallow_int_400['ml_ml'], shallow_int_1000['ml_ml'],
                         ylim=(-10, 5), stat_range=range_bounds)
 fig.savefig(join(savedir, 'eng_shallow.png'), dpi=300)

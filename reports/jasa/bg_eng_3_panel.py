@@ -43,7 +43,7 @@ clrs = np.ones(eng_bg_ml_400.shape[0]) * 0.70
 clrs[i_co:] = 0.4
 clrs = cmap(clrs)
 
-fig, axes = plt.subplots(1, 3, sharey=True, figsize=(cf.jasa_2clm, 2.5))
+fig, axes = plt.subplots(1, 3, sharey=True, figsize=(cf.jasa_2clm, 2.55))
 
 ax = axes[0]
 ax.plot(r_a / 1e3, np.mean(eng_bg_ml_400[:i_co, :], axis=0), color=clrs[0], linestyle='--')
@@ -73,7 +73,7 @@ pos.y0 += 0.08
 pos.y1 += 0.07
 ax.set_position(pos)
 
-ax.set_ylabel('Compensated ML energy (dB)')
+ax.set_ylabel('Vertically averaged energy (dB)')
 
 ax = axes[1]
 ax.plot(r_a / 1e3, np.mean(eng_bg_ml_tl_400[:i_co, :], axis=0), color=clrs[0], linestyle='--')
