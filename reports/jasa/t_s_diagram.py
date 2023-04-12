@@ -44,7 +44,7 @@ cb = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=plt.cm.cividis),
                   cax=cax, ticks=[0, 500e3, 969e3])
 cb.set_ticklabels(['0', '500', '970'])
 ax.text(34.76, 7.9, '$x$ (km)', rotation='vertical', zorder=30)
-
+ax.text(0.02, 0.99, '(a)', transform=ax.transAxes, bbox=cf.bbox)
 
 def fmt(x):
     s = f"{x:.1f}"
@@ -109,11 +109,6 @@ ax.plot(sa, sa * lin_fit[0] + lin_fit[1], 'k')
 grad_cs0 = np.diff(test_c) / np.diff(test_s0)
 print(f"slope is {grad_cs0[0]:.3f} at {plt_i} km")
 
-
-
-
-1/0
-
 mean_c = gsw.sound_speed(mean_sa, mean_ct, 0.)
 
 full_c = []
@@ -129,6 +124,7 @@ pth = ax.scatter(diff_c.flatten(), field.xy_sig.flatten(), c=position.flatten(),
                  cmap=plt.cm.cividis, norm=norm, s=0.2, alpha=0.2, zorder=20)
 
 ax.grid()
+ax.text(0.02, 0.99, '(b)', transform=ax.transAxes, bbox=cf.bbox)
 
 pos = ax.get_position()
 pos.x0 += 0.04
@@ -147,4 +143,4 @@ ax.set_yticks(cnt_lvls[2:])
 ax.xaxis.set_major_locator(MaxNLocator(nbins = 5))
 
 
-fig.savefig(join(savedir, 'ts_mean_c.png'), dpi=300)
+# fig.savefig(join(savedir, 'ts_mean_c.png'), dpi=300)
