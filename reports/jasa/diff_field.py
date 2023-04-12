@@ -105,7 +105,7 @@ label.set_transform(label.get_transform() + offset)
 
 
 fig.supylabel('Depth (m)')
-fig.supxlabel('Range (km)')
+fig.supxlabel('Section range, $x$ (km)')
 
 dy1 = -0.03
 y0 = 0.135

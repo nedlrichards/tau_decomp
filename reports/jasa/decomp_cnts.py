@@ -62,7 +62,7 @@ pos.y0 += 0.13
 ax.set_position(pos)
 
 ax.set_ylabel('Depth (m)')
-ax.set_xlabel('Transcet range, $x$ (km)')
+ax.set_xlabel('Section range, $x$ (km)')
 ax.text(max_x + 1., 10, '$\sigma$', va='center')
 ax.text(max_x + 1., 30, '(kg/m$^3$)', va='center')
 
