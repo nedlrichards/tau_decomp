@@ -226,5 +226,4 @@ pos.y1 += yoff + dy1
 axes[3, 1].set_position(pos)
 
 
-fig.savefig(os.path.join(savedir, 'decomp_xmission.png'), dpi=300)
-
+fig.savefig(os.path.join(savedir, 'figure_9.pdf'), dpi=300)

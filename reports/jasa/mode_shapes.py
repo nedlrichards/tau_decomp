@@ -93,6 +93,6 @@ pos.y0 += 0.06
 ax[1].set_position(pos)
 
 savedir = 'reports/jasa/figures'
-fig.savefig(os.path.join(savedir, 'mode_shapes.png'), dpi=300)
+fig.savefig(os.path.join(savedir, 'figure_10.pdf'), dpi=300)
 
 print(lrg.slope)

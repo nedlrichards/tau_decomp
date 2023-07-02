@@ -126,4 +126,4 @@ axes[1].set_position(pos)
 axes[0].text(170, plot_max - 1, '400 Hz', bbox=cf.bbox)
 axes[1].text(170, plot_max - 1, '1 kHz', bbox=cf.bbox)
 
-fig.savefig('reports/jasa/figures/integrated_loss.png', dpi=300)
+fig.savefig('reports/jasa/figures/figure_14.pdf', dpi=300)

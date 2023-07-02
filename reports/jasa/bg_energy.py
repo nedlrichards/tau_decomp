@@ -75,4 +75,4 @@ pos.y0 += 0.08
 pos.y1 += 0.07
 ax.set_position(pos)
 
-fig.savefig('reports/jasa/figures/bg_eng_loss.png', dpi=300)
+fig.savefig('reports/jasa/figures/figure_11.pdf', dpi=300)

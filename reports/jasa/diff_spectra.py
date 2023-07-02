@@ -132,4 +132,4 @@ pos.y1 += 0.08
 axes[2].set_position(pos)
 
 savedir = 'reports/jasa/figures'
-fig.savefig(os.path.join(savedir, 'diff_spectra.png'), dpi=300)
+fig.savefig(os.path.join(savedir, 'figure_8.pdf'), dpi=300)

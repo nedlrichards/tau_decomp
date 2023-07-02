@@ -77,6 +77,6 @@ pos.y0 += 0.06
 pos.y1 += 0.06
 ax[1].set_position(pos)
 
-fig.savefig(join(savedir, 'rms_profile.png'), dpi=300)
+fig.savefig(join(savedir, 'figure_7.pdf'), dpi=300)
 
 print(lrg.slope)

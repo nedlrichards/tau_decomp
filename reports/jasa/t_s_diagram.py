@@ -33,7 +33,7 @@ fig, axes = plt.subplots(1, 2, figsize=(cf.jasa_2clm, 3))
 ax = axes[0]
 
 pth = ax.scatter(field.xy_sa.flatten(), field.xy_ct.flatten(), c=position.flatten(),
-                 cmap=plt.cm.cividis, norm=norm, s=0.2, alpha=0.2, zorder=20)
+                 cmap=plt.cm.cividis, norm=norm, s=0.2, alpha=0.2, zorder=20, rasterized=True)
 
 cnt_lvls = np.array([24. , 24.4, 24.8, 25.2, 25.6, 26. , 26.4])
 CS = ax.contour(cntr_x, cntr_y, cntr_sig.T, colors='0.2', linewidths=0.5, levels=cnt_lvls)
@@ -121,7 +121,7 @@ diff_c = gsw.sound_speed(field.xy_sa, field.xy_ct, 0.) - full_c
 
 ax = axes[1]
 pth = ax.scatter(diff_c.flatten(), field.xy_sig.flatten(), c=position.flatten(),
-                 cmap=plt.cm.cividis, norm=norm, s=0.2, alpha=0.2, zorder=20)
+                 cmap=plt.cm.cividis, norm=norm, s=0.2, alpha=0.2, zorder=20, rasterized=True)
 
 ax.grid()
 ax.text(0.02, 0.99, '(b)', transform=ax.transAxes, bbox=cf.bbox)
@@ -143,4 +143,4 @@ ax.set_yticks(cnt_lvls[2:])
 ax.xaxis.set_major_locator(MaxNLocator(nbins = 5))
 
 
-# fig.savefig(join(savedir, 'ts_mean_c.png'), dpi=300)
+fig.savefig(join(savedir, 'figure_3.pdf'), dpi=300)

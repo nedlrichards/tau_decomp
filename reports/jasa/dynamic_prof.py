@@ -116,7 +116,7 @@ pos.y1 += -0.04
 pos.y0 += 0.06
 ax[1].set_position(pos)
 
-fig.savefig(join(savedir, 'sld_profile.png'), dpi=300)
+fig.savefig(join(savedir, 'figure_2.pdf'), dpi=300)
 
 """
 # compute gradient in mixed layer

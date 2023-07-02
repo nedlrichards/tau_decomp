@@ -23,7 +23,7 @@ source_depth="deep"
 range_bounds = np.array((7.5e3, 47.5e3))
 ml_tl_rb = (7.5e3, 37.0e3)
 deep_rb = (7.5e3, 40.0e3)
-savedir = 'reports/jasa/figures'
+savedir = 'reports/jasa/tex'
 cf = Config()
 
 load_dir = 'data/processed/'
@@ -230,18 +230,18 @@ def plot_sparks(r_a, lines_400, lines_1000, ylim=(-10, 5), stat_range=(10e3, 40e
     ax.set_xticks([range_bounds[0] / 1e3, range_bounds[1] / 1e3])
 
     return fig, axes
-1/0
+
 fig, axes = plot_sparks(r_a, shallow_int_400['ml_ml'], shallow_int_1000['ml_ml'],
                         ylim=(-10, 5), stat_range=range_bounds)
-fig.savefig(join(savedir, 'eng_shallow.png'), dpi=300)
+fig.savefig(join(savedir, 'figure_15.pdf'), dpi=300)
 
 fig, axes = plot_sparks(r_a, shallow_int_400['ml_proj'], shallow_int_1000['ml_proj'],
                         ylim=(-20, 5), stat_range=range_bounds)
-fig.savefig(join(savedir, f'eng_shallow_proj.png'), dpi=300)
+fig.savefig(join(savedir, f'figure_16.pdf'), dpi=300)
 
 fig, axes = plot_sparks(r_a, deep_int_400['ml_ml'], deep_int_1000['ml_ml'],
                         ylim=(-20, 20), stat_range=deep_rb)
-fig.savefig(join(savedir, 'eng_deep.png'), dpi=300)
+fig.savefig(join(savedir, 'figure_18.pdf'), dpi=300)
 
 
 # transition layer
@@ -273,4 +273,4 @@ shallow_modelled = np.load(join(load_dir, 'tl_eng_model_1000.npz'))['ml_pred']
 #test_1000[1:] = shallow_modelled
 
 fig, axes = plot_sparks(r_a, test_400, test_1000, ylim=(-20, 25), stat_range=ml_tl_rb)
-fig.savefig(join(savedir, f'eng_shallow_tl.png'), dpi=300)
+fig.savefig(join(savedir, f'figure_17.pdf'), dpi=300)

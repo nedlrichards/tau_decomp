@@ -34,7 +34,7 @@ last_z_i = np.argmin(np.abs(last_z - z_a[:, None]), axis=0)
 
 fig, ax = plt.subplots(figsize=(cf.jasa_1clm, 2.25))
 cm = ax.pcolormesh(x_a / 1e3, z_a[z_i], c_diff, cmap=plt.cm.BrBG,
-                      vmin=-2.5, vmax=2.5)
+                      vmin=-2.5, vmax=2.5, rasterized=True)
 ax.plot(x_a / 1e3, last_z, 'k')
 ax.plot(x_a / 1e3, last_z_hp, '0.4', linewidth=0.5)
 #cm = ax.pcolormesh(x_a / 1e3, z_a[z_i], c_rud)
@@ -62,4 +62,4 @@ pos.y0 += 0.10
 pos.y1 += 0.09
 cb.ax.set_position(pos)
 
-fig.savefig('reports/jasa/figures/sound_speed_comp.png', dpi=300)
+fig.savefig('reports/jasa/figures/figure_5.pdf', dpi=300)

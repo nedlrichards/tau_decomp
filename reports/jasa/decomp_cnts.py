@@ -66,4 +66,4 @@ ax.set_xlabel('Section range, $x$ (km)')
 ax.text(max_x + 1., 10, '$\sigma$', va='center')
 ax.text(max_x + 1., 30, '(kg/m$^3$)', va='center')
 
-fig.savefig(join(savedir, 'sig_tau_interp.png'), dpi=300)
+fig.savefig(join(savedir, 'figure_4.pdf'), dpi=300)

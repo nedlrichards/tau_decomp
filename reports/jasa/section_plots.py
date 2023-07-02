@@ -40,7 +40,8 @@ ml_depth_100 = z_a[np.argmax((sig_100 - sig_100[0, :] > 0.05), axis=0)]
 fig, ax = plt.subplots(figsize=(cf.jasa_2clm,  3))
 cm = ax.pcolormesh(x_a / 1e3, z_a[plt_i], c_field - 1500,
                    cmap=plt.cm.coolwarm,
-                   vmax = sec_mean_c + 6 - 1500, vmin = sec_mean_c - 6 - 1500)
+                   vmax = sec_mean_c + 6 - 1500, vmin = sec_mean_c - 6 - 1500,
+                   rasterized=True)
 
 ax.text(1000, 163, "+ 1500.")
 
@@ -71,7 +72,7 @@ cb.ax.set_position(pos)
 #ax.plot(x_a / 1e3, ml_depth_100, '#e619e2', linewidth=1)
 ax.plot(x_a / 1e3, sld_z, '0.2', linewidth=1)
 
-fig.savefig(join(savedir, 'sound_speed_transcet_sld.png'), dpi=300)
+fig.savefig(join(savedir, 'figure_1.pdf'), dpi=300)
 #fig.savefig(join(savedir, 'sound_speed_transcet_mld.png'), dpi=300)
 #fig.savefig(join(savedir, 'sound_speed_transcet_sld_mld.png'), dpi=300)
 

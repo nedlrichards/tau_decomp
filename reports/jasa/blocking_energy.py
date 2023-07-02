@@ -122,4 +122,4 @@ fig.supylabel('Verically averaged energy (dB)')
 #ax.legend([l0, l1, l2])
 
 savedir = 'reports/jasa/figures'
-fig.savefig(join(savedir, 'blocking_energy.png'), dpi=300)
+fig.savefig(join(savedir, 'figure_13.pdf'), dpi=300)

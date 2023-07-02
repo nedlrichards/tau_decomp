@@ -40,18 +40,19 @@ propagation: requirements data/processed/inputed_decomp.npz
 
 plots:
 	$(PYTHON_INTERPRETER) -m reports.jasa.section_plots
-	$(PYTHON_INTERPRETER) -m reports.jasa.t_s_diagram
 	$(PYTHON_INTERPRETER) -m reports.jasa.dynamic_prof
+	$(PYTHON_INTERPRETER) -m reports.jasa.t_s_diagram
+	$(PYTHON_INTERPRETER) -m reports.jasa.decomp_cnts
 	$(PYTHON_INTERPRETER) -m reports.jasa.method_comp_c
 	$(PYTHON_INTERPRETER) -m reports.jasa.diff_field
 	$(PYTHON_INTERPRETER) -m reports.jasa.c_rms
 	$(PYTHON_INTERPRETER) -m reports.jasa.diff_spectra
 	$(PYTHON_INTERPRETER) -m reports.jasa.c_decomp_tl
-	$(PYTHON_INTERPRETER) -m reports.jasa.bg_energy
 	$(PYTHON_INTERPRETER) -m reports.jasa.mode_shapes
+	$(PYTHON_INTERPRETER) -m reports.jasa.bg_energy
 	$(PYTHON_INTERPRETER) -m reports.jasa.bg_eng_3_panel
-	$(PYTHON_INTERPRETER) -m reports.jasa.ml_blocking
 	$(PYTHON_INTERPRETER) -m reports.jasa.blocking_energy
+	$(PYTHON_INTERPRETER) -m reports.jasa.ml_blocking
 	$(PYTHON_INTERPRETER) -m reports.jasa.sparklines
 
 ## Delete all compiled Python files
