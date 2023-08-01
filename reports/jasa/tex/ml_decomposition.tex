@@ -1,6 +1,9 @@
 \documentclass[preprint,NumberedRefs]{JASA}
 \usepackage{multirow}
 \usepackage{booktabs}
+%\usepackage{makecell}
+\usepackage{tabularray}
+\usepackage{setspace}
 
 \begin{document}
 \title[Mixed layer tilt and spice]{Observations of ocean spice and isopycnal tilt sound-speed structures in the mixed layer and upper ocean, and their impacts on acoustic propagation}
@@ -9,7 +12,7 @@
 \affiliation{Ocean Sciences, University of California Santa Cruz, Santa Cruz, California 95064, USA}
 \author{John A. Colosi}
 \affiliation{Department of Oceanography, Naval Postgraduate School, Monterey, California 93943, USA}
-\preprint{E. L. Richards, JASA}	%if you want this message to appear in upper right corner of title page
+%\preprint{E. L. Richards, JASA}	%if you want this message to appear in upper right corner of title page
 
 \date{\today}
 
@@ -43,7 +46,7 @@ A 400-m deep and 970 km long conductivity, temperature, depth section in the Nor
 \section{\label{sec:intro} Introduction}
 Mechanical mixing from wind forcing at the air-sea interface and convection from surface cooling homogenizes the upper ocean and contributes to a mixed layer that is deepest in the late winter.\citep{cole2010seasonal} This study analyses a horizontal and vertical sound-speed section of the top 400 m of the northeastern Pacific Ocean across 970 km collected at the time of the deepest mixed layer.\citep{colosi2020observations} This study quantifies the relative impact on acoustic propagation of two dynamic sources of the observed sound-speed variation, tilted isopycnals and ocean spice. These fields are decomposed based on their different effects on the position of, and sound-speed properties along, isopycnals.\cite{dzieciuch2004} The sound-speed from both dynamic fields shows different spatial structure and root mean squared (RMS) variation in depth. Statistics of upper ocean acoustic propagation are calculated for the decomposed fields with an ensemble of source positions at two source depths and two frequencies. These results indicate that both spice and tilt dynamics are important to acoustic variability over the 50 km range of study. Finally, changes in relative statistics across source depth and frequencies show sensitivity differences to each of the fields across the different acoustic propagation scenarios.
 
-The mixed layer acoustic duct (MLAD) is the dominant mechanism for upper ocean acoustic energy propagation in the northeast Pacific. Without a MLAD essentially all acoustic energy cycles into the deep ocean and returns after a convergence zone length,\cite{jensen2011computational} approximately 55 km for the study region. The canonical MLAD is formed by a reflecting ocean surface and upward refraction in mixed water, which has an adiabatic sound-speed gradient of approximately 0.016 $s^{-1}$. The acoustic characteristics of the MLAD are distinct from a shallow water duct with the same sound-speed profile because it interacts with the deep ocean acoustic channel through diffraction\citep{porter93} and scattering.\cite{colosi2020observations} However, the MLAD is expected to be stable at frequencies above its cutoff\citep{Urick1982Prop} and range independent models predict long range acoustic propagation.
+The mixed layer acoustic duct (MLAD) is the dominant mechanism for upper ocean acoustic energy propagation in the northeast Pacific. Without an MLAD essentially all acoustic energy cycles into the deep ocean and returns after a convergence zone length,\cite{jensen2011computational} approximately 55 km for the study region. The canonical MLAD is formed by a reflecting ocean surface and upward refraction in mixed water, which has an adiabatic sound-speed gradient of approximately 0.016 $s^{-1}$. The acoustic characteristics of the MLAD are distinct from a shallow water duct with the same sound-speed profile because it interacts with the deep ocean acoustic channel through diffraction\citep{porter93} and scattering.\cite{colosi2020observations} However, the MLAD is expected to be stable at frequencies above its cutoff\citep{Urick1982Prop} and range independent models predict long range acoustic propagation.
 
 Range or time dependent measurements of the MLAD show that it has highly variable sound-speed,\citep{cole2010seasonal,rudnick1999compensation,klymak2015} which can significantly alter or completely block acoustic duct propagation.\citep{colosi2020observations,colosi21} However, an acoustically viable MLAD is also predicted with many range dependent sound-speed observations, especially at frequencies significantly above the MLAD cutoff. Finally, the range dependent propagation characteristics of the MLAD also remain important even in scenarios that consider acoustics below the MLAD due to diffraction or range dependent scatter.\citep{colosi21}
 
@@ -67,32 +70,32 @@ The paper is organized as follows. Section~\ref{sec:transcet} describes the uppe
 
 This study is based on a 970 km SeaSoar conductivity, salinity, and depth (CTD) transect taken over 4 days in the Northeast Pacific Ocean,\citep{cole2010seasonal, colosi2020observations}. The 970 km transect followed a great circle path roughly parallel to the sea surface temperature contours, although minor differences between these two predict a slight warming of the mixed layer over the transect. SeaSoar CTD observations extend from the sea surface to 430 m depth, with an average cycle length of 2.6 km. These observations were first interpolated from the vehicle's sawtooth path to a grid with 1 km horizontal and 0.5 m vertical resolution,\citep{colosi2020observations} and World Ocean Atlas climatology is appended to a depth of 4000 m\citep{WOA}. Sound speed, $c$, computed from the CTD data with the Thermodynamic Equation of Seawater 2010,\cite{TEOS10} is shown in Fig. \ref{fig:c_grid}. The MLAD is apparent as the relatively high sound-speed over a strong negative sound-speed gradient that extends into the deep ocean. Horizontal and vertical variability in sound-speed is apparent throughout the MLAD observations caused by tilted isopycnals and ocean spice\citep{colosi2020observations}.
 
-The sonic layer depth (SLD) is a simple metric of the MLAD, defined as the depth of maximum sound-speed above the thermocline, and shown as a black line in Fig.~\ref{fig:c_grid}. The MLAD is expected to strengthen with increasing SLD, quantified in the mode cutoff frequency\citep{Urick1982Prop},
+The sonic layer depth (SLD), the depth of maximum sound-speed above the thermocline, is a measure of the MLAD and shown as the black line in Fig.~\ref{fig:c_grid}. The MLAD is expected to strengthen with increasing SLD, quantified in the mode cutoff frequency of mode $n$,\citep{Urick1982Prop}
 \begin{equation}
     f_{min}(n) = \frac{3(4n-1)}{16} \sqrt{\frac{c_0^3}{2h^3} \left( \frac{\partial c}{\partial z} \right) ^ {-1}},
     \label{eq:f_cutoff}
 \end{equation}
-where $f_{min}$ has units of Hz. The SLD is $h$, and the reference sound-speed is $c_0 = 1500$ m/s. Several observations on mode cutoff frequency over the complete transect from Colosi and Rudnick\cite{colosi2020observations} are summarized here. Sound speed gradients vary from almost 0 to above 0.1 and are on average higher than the homogeneous mixed layer gradient of 0.016 $s^{-1}$. The first four cutoff frequencies for the transect average sound-speed profile are 210, 480, 760 and 1040 Hz, and may be lower or many times higher for individual profiles.
+where $f_{min}$ has units of Hz, $h$ is the SLD, and a reference sound-speed of $c_0 = 1500$ m/s is used. Colosi and Rudnick\cite{colosi2020observations} observed the sound speed gradients of this transect vary from almost 0 to above 0.1 and are on average higher than the homogeneous mixed layer gradient of 0.016 $s^{-1}$. The first four cutoff frequencies for the transect average sound-speed profile are 210, 480, 760 and 1040 Hz, and individual profiles vary significantly.
 
 \begin{figure}
     \includegraphics{figure_2.pdf}
-    \caption{\label{fig:profiles}{(a) Potential density (solid lines), $\sigma$, and sound-speed, $c$ (dashed lines) (b) conservative temperature (solid lines), $\theta$, and absolute salinity, $S$. Measurements at 249 km (blue curves) and 252 km (orange curves). The SLD is shown as horizontal black lines in (a).}}
+    \caption{\label{fig:profiles}{(a) Potential density (dashed lines), $\sigma$, and sound-speed, $c$ (solid lines) (b) conservative temperature (dashed lines), $\theta$, and absolute salinity (solid lines), $S$. Measurements at 249 km (blue curves) and 252 km (orange curves). The SLDs are shown with black arrows in (a).}}
 \end{figure}
 
-The acoustical relevance of ocean spice is illustrated first with an example of two profiles measured at 249 and 252 km transect range, Fig.~\ref{fig:profiles}. The two profiles at 249 and 252 km have significantly different SLDs, horizontal grey lines in Fig. ~\ref{fig:profiles}(a), of 45 and 89 m, respectively. The difference in $f_{min}$ predicted by this SLD change is moderated in part by the sound-speed gradients of 0.24 and 0.15 s$^{-1}$. Overall, Eq.~\eqref{eq:f_cutoff} predicts cutoff frequencies of 485 and 222 Hz, indicating the relative importance of SLD compared to the sound-speed gradient. This change in $f_{min}$ is not reflected in the density profile, however, which is roughly constant for both profiles to the TRL start at 90 m depth. Instead, the 249 km profile has positive gradients in temperature and salinity to 45 m depth, followed by negative gradients. The variation of these properties up to the TRL start is mostly due to spice since the relative gradients of temperature and salinity compensate in density.
+An example of ocean spice is shown in two profiles measured at 249 and 252 km transect range, Fig.~\ref{fig:profiles}. These profiles have SLDs of 45 and 89 m, respectively, and estimated sound-speed gradients of 0.24 and 0.15 s$^{-1}$. The first mode cuttoff, $f_{min}(1)$, changes from 485 and 222 Hz in 3 km. This variation is related to positive gradients in the 249 km profile of both temperature and salinity to 45 m depth, followed by negative gradients to the 90 m thermocline. The temperature and salinity variations between these profiles illustrate spice, and show marginal differences in the density profiles but signifciant differences in the sound speed profiles.
 
 \begin{figure}
 \includegraphics{figure_3.pdf}
-    \caption{\label{fig:ts_diagram}{(a) Temperature and salinity observed along transect, and (b) sound-speed anomaly along isopycnals. Brightness of markers indicate transect range. Two lines in (a) show 50 km averages at 100 (solid) and 900 km (dashed).}}
+    \caption{\label{fig:ts_diagram}{(a) Temperature and salinity observed along transect, and (b) sound-speed anomaly along isopycnals. Potential density and sound-speed are shown in (a) as down and up sloped contours, respectively. Brightness of markers indicate transect range. Two lines in (a) show 50 km averages at 100 (solid) and 900 km (dashed).}}
 \end{figure}
-Regional differences between tilt and spice dynamics are next demonstrated with a conservative temperature and absolute salinity diagram,\cite{TEOS10} ($\theta$, $S$), shown in Fig.~\ref{fig:ts_diagram}(a). The markers of each observation become lighter with increasing transect range, $x$. Potential density and sound-speed are shown as darker and lighter contours, respectively. The potential density is dynamically stable and increases with depth, in rare cases the gridded data was adjusted to enforce a requirement of minimal dynamic stability.\citep{barker2017stabilizing} Ocean spice is observed in the spread in ($\theta$, $S$) parallel to the density contours, both as regional differences between markers of different brightness and local variation between markers of similar brightness.
+Regional differences between tilt and spice dynamics are next demonstrated with a conservative temperature and absolute salinity diagram,\cite{TEOS10} ($\theta$, $S$), shown in Fig.~\ref{fig:ts_diagram}(a). The potential density is dynamically stable and increases with depth, in rare cases the gridded data was adjusted to enforce a requirement of minimal dynamic stability.\citep{barker2017stabilizing} Ocean spice is observed in the spread in ($\theta$, $S$) parallel to the density contours, both as regional differences between markers of different brightness and local variation between markers of similar brightness.
 
-Spice is quantified relative to expected ($\theta$, $S$), computed here with a 50 km running mean in transect range. The mean ($\theta$, $S$) at $x$ at 100 and 900 km are shown as solid and dashed lines red lines in Fig.~\ref{fig:ts_diagram}(a), respectively. TRL waters make up most of the observations and have a positive ($\theta$, $S$) slope. The steeper slope at 900 km shows a larger negative sound-speed gradient compared with 100 km, driven by a salinity minimum near the TRL base. MLAD waters are the lightest waters, where the two profiles have almost opposite ($\theta$, $S$) slopes, due to differences in surface stratification forcing.\cite{colosi2020observations} The 900 km profile shows decreasing $\theta$ and $S$ with decreasing density. This MLAD stratification will increase the positive sound-speed gradient and cutoff frequency. An example is shown above the SLD at 249 km in Fig.~\ref{fig:profiles}, and has also been discussed for a profile near the transect center.\cite{colosi2020observations} In contrast, the 100 km profile shows increasing $\theta$ and $S$ with decreasing density, and MLAD stratification will reduce the sound-speed gradient and cutoff frequency.
+Spice is quantified relative to expected ($\theta$, $S$), computed here with a 50 km running mean in transect range. The mean ($\theta$, $S$) at $x$ at 100 and 900 km are shown as solid and dashed lines red lines in Fig.~\ref{fig:ts_diagram}(a), respectively. TRL waters make up most of the observations and have a positive ($\theta$, $S$) slope. MLAD waters are the lightest waters, where the two profiles have almost opposite ($\theta$, $S$) slopes, due to differences in surface stratification forcing.\cite{colosi2020observations} The 900 km profile shows decreasing $\theta$ and $S$ with decreasing density. This MLAD stratification will increase the positive sound-speed gradient and cutoff frequency. In contrast, the 100 km profile shows increasing $\theta$ and $S$ with decreasing density, and MLAD stratification will reduce the sound-speed gradient and cutoff frequency.
 
-The spice variation along isopycnals is shown in Fig.~\ref{fig:ts_diagram}(b) as sound-speed at 0 dbar. Separate from regional level variation, sound-speed variation mostly decreases with increasing density. The smallest variation is observed for the densest waters at the top of the permanent thermocline.\cite{cole2010seasonal} In contrast, the magnitude of the sound-speed changes often exceeds 2 m s$^{-1}$ in the TRL and approaches 4 m s$^{-1}$ in the lightest MLAD waters. This is consistent with previous observations of spice variance along isopycnals, which showed a roughly linear and inverse relationship with density in the upper ocean.\cite{ferrari2000}
+The spice variation along isopycnals is shown in Fig.~\ref{fig:ts_diagram}(b) as sound-speed at 0 dbar. Sound-speed variation mostly decreases with increasing density, with the smallest variation observed for the densest waters at the top of the permanent thermocline.\cite{cole2010seasonal} In contrast, the magnitude of the sound-speed changes often exceeds 2 m s$^{-1}$ in the TRL and approaches 4 m s$^{-1}$ in the lightest MLAD waters. This is consistent with previous observations of spice variance along isopycnals that showed a roughly linear and inverse relationship with density in the upper ocean.\cite{ferrari2000}
 
 \section{\label{sec:decomposition}Spice and tilt decomposition}
-The observed sound-speed variations are decomposed into contributions from isopycnal tilt and spice following a method proposed for a similar SeaSoar transect by Dzieciuch \emph{et al.}.\citep{dzieciuch2004} However, spice in the marginally stratified mixed layer is treated differently here. This decomposition is first described for the stratified TRL. A linear superposition model for spice is then introduced for the MLAD, and the results are compared. Finally, the RMS sound-speed variations of the decomposed components are compared over the entire survey depth.
+The observed sound-speed variations are decomposed into contributions from isopycnal tilt and spice following a method proposed for a similar SeaSoar transect by Dzieciuch \emph{et al.}.\citep{dzieciuch2004} However, spice in the marginally stratified mixed layer is treated differently here. This decomposition is first described for the stratified TRL. A linear superposition model for spice is then introduced for the MLAD, and the results are compared. Finally, RMS sound-speed variation of the decomposed components are compared over the survey depth.
 
 \subsection{Stratified ocean decomposition}
 \begin{figure}
@@ -100,51 +103,48 @@ The observed sound-speed variations are decomposed into contributions from isopy
     \caption{\label{fig:cntrs}{Isopycnal position, $z_i(z; \sigma_i)$ are shown in greys. Lowpass isopycnal position estimates, $\bar{z}_i(z; \sigma_i)$, made in the stratified TRL, are shown in red.}}
 \end{figure}
 
-The dynamic decomposition begins by defining a gridded quantity, $\sigma$ is used for demonstration, as an interpolation of values between isopycnals. The isopycnal $z$ position is defined $\sigma(x, z) = z^{-1}(x, \sigma)$ and discretized as $z_i(x; \sigma_i)$. A two-dimensional linear interpolation is defined for $\sigma$,
+The dynamic decomposition begins by defining a gridded quantity, $\sigma$ is used for demonstration, as an interpolation of values between isopycnals. The isopycnal $z$ position is defined $\sigma(x, z) = z^{-1}(x, \sigma)$ and discretized as $z_i(x)$ for a range of $\sigma_i$. A two-dimensional linear interpolation is defined for $\sigma$,
 \begin{equation}
     \sigma(x,y)\approx\mathcal{L}(x, y; \sigma_i, z_i).
     \label{eq:lin_intr}
 \end{equation}
-The isopycnal positions $z_i(x, \sigma)$ are modeled as the superposition of fine scale dynamics on a stable background position $\bar{z}(x, \sigma)$. The background density field, $\bar{\sigma}$, is defined by substituting $\bar{z}(x, \sigma)$ for $z(x, \sigma)$ in Eq.~\eqref{eq:lin_intr}. The estimate of $\bar{\sigma}(x,y)$ is a vertically stretched field without fine scale tilt dynamics.
+The isopycnal positions $z_i(x)$ are modeled as the superposition of fine scale dynamics on a stable background position $\bar{z}_i(x)$. The background density field, $\bar{\sigma}$, is defined by substituting $\bar{z}_i(x)$ for $z_i(x)$ in Eq.~\eqref{eq:lin_intr}. The method then removes fine scale tilt dynamics by vertically streching the observed density field.
 
-The background isopycnal positions, $\bar{z}_i(x, \sigma)$, are estimated with a spatial 50 km low-pass filter, red lines in Fig.~\ref{fig:cntrs}. The position of isopycnals inside the MLAD are unstable, \emph{e.g.} $\sigma=25.17$ and 25.21 kg/m$^3$, and poorly described as perturbations from a low-passed position. Therefore, instead of tracking the unstable positions of isopycnals in the MLAD, the dynamic decomposition only estimates the mean position for isopycnals after they have clearly entered the stratified TRL. A conservative estimate is used for the start of the stable contour, for example, the $\sigma=25.25$ kg/m$^3$ estimate begins at $x=270$ km after it begins to closely follow the denser isopycnals.
+The background isopycnal positions, $\bar{z}_i(x, \sigma)$, are estimated with a spatial 50 km low-pass filter, red lines in Fig.~\ref{fig:cntrs}. The isopycnals in the stratified TRL are assumed to be continuous, and a 17th order Chebyshev 2 filter was used with Gustafsson's edge treatment method.\citep{2020SciPy-NMeth, gustafsson1996determining} However, the position of isopycnals inside the MLAD vary rapidly, \emph{e.g.} $\sigma=$25.21 kg/m$^3$, and are poorly described as perturbations from a low-passed position. A conservative estimate is made of the position where the isopycnal enters the TRL. For example, the stable $\sigma=25.25$ kg/m$^3$ estimate begins at $x=270$ km after it begins to closely follow denser isopycnals.
 
-The stable isopycnal position estimates can similarly define the spice field without fine scale isopycnal tilt,
+Salinity is chosen here to specifiy the sound-speed field when combined with density.\citep{TEOS10} The salinity field interpolation is written
 \begin{equation}
     S(x, z)\approx\mathcal{L}(x, z; S_i(x), z_i),
     \label{eq:lin_inter}
 \end{equation}
-where S$_i$ is the salinity along the $i$-th isopycnal. Salinity is chosen here to quantify ocean spice, which is then combined with density to uniquely specify the sound-speed field\citep{TEOS10}. As described along with Fig.~\ref{fig:ts_diagram}, a regional salinity estimate $\bar{\textrm{S}}_i(x)$ is estimated with a 50 km moving average filter along each isopycnal. The moving average both acts as a lowpass filter and handles missing values at ranges without $\sigma_i$ observations.
+where S$_i$ is the salinity along the $i$-th isopycnal. A regional salinity estimate, $\bar{\textrm{S}}_i(x)$, is computed with a 50 km moving average filter along each isopycnal. The moving average acts both as a lowpass filter and handles missing values at ranges without $\sigma_i$ observations.
 
-Finally, combinations of the low-pass and observed values of $\sigma_i$ and S$_i(x)$ can be substituted into Eqs.~\eqref{eq:lin_intr} and \eqref{eq:lin_inter} to produce four S$(x,z)$ fields. The stable background field is computed with ($\bar{\textrm{S}}_i$, $\bar{z}_i$), tilt with ($\bar{\textrm{S}}_i$, $z_i$), and spice with (S$_i$, $\bar{z}_i$). Finally, the observed field is conceptually produced from (S$_i$, $z_i$).
+Finally, combinations of the low-pass or observed values of $z_i$ and S$_i(x)$ can be substituted into Eqs.~\eqref{eq:lin_intr} and \eqref{eq:lin_inter} to produce four salinity and density fields. The stable background fields are computed with ($\bar{\textrm{S}}_i$, $\bar{z}_i$), tilt with ($\bar{\textrm{S}}_i$, $z_i$), spice with (S$_i$, $\bar{z}_i$), and the observed field wtih (S$_i$, $z_i$).
 
 \subsection{Mixed layer decomposition}\label{ssec:ml_decomp}
 \begin{figure}
 \includegraphics{figure_5.pdf}
-    \caption{\label{fig:c_diff}{Difference in spice field sound-speed between the stratified decomposition and the linear superposition methods. The two decompositions are equal at and below the stable position of the lightest tracked isopycnal. The discontinuity in stable isopycnal position at $x=$270 km is the last tracked position of isopycnal $\sigma=25.25$ kg/m $^3$. Significant vertical variation of sound-speed is apparent in the mixed layer above the last tracked position of the isopycnal.}}
+    \caption{\label{fig:c_diff}{Difference in spice field sound-speed between the stratified decomposition and the linear superposition methods. The two decompositions are equal at and below the stable position of the lightest tracked isopycnal. The discontinuity in stable isopycnal position at $x=$270 km is the last tracked position of isopycnal $\sigma=25.25$ kg/m$^3$.}}
 \end{figure}
-
-Estimation of the stable isopycnal position and spice with a low-pass filter is most effective below the MLAD, where most spice variation occurs in well stratified waters. Two challenges to this approach arise in the marginally stratified MLAD: (1) significant spice variations occur in positions with small $\sigma$ gradients, and (2) isopycnal locations vary rapidly without a clear stable position. A linear superposition model for salinity is proposed here for the MLAD to avoid these issues with sampling salinity along isopycnals.
-
-The linear superposition model attributes all observed salinity variability not explained by the tilt field to the spice field, without any vertical stretching to account for the mean isopycnal levels. The linear superposition model is
+Two challenges in the calulation of the spice salinity field arrise in the MLAD: (1) isopycnal locations vary rapidly without a clear stable position; and (2) significant salinity variations occur in positions with small $\sigma$ gradients. The tilt field, in contrast, uses the observed isopycnal positions and an isopycnal averaged salinity value. The linear superposition model is introduced here that attributed all observed salinity variability in the MLAD not explained by the tilt field to the spice field,
 \begin{equation}
     \textrm{S}_{observed} = \textrm{S}_{bg} + \Delta \textrm{S}_{tilt} + \Delta \textrm{S}_{spice},
     \label{eq:lin_sup}
 \end{equation}
-where S$_{bg}$ is the background spice field. The spice field is defined as S$_{bg} + \Delta \textrm{S}_{spice}$, and the tilt field is S$_{bg} + \Delta \textrm{S}_{tilt}$. The value of $\Delta \textrm{S}_{spice}$ is estimated with Eq.~\eqref{eq:lin_sup} by subtracting S$_{tilt}$ from S$_{observed}$. This approach uses the background and tilt fields, which do not require vertical stretching of mixed layer isopycnals, to estimate the spice field from the observed field.
+where S$_{bg}$ is the background spice field. The spice field is defined as S$_{bg} + \Delta \textrm{S}_{spice}$, and the tilt field is S$_{bg} + \Delta \textrm{S}_{tilt}$. The value of $\Delta \textrm{S}_{spice}$ is estimated with Eq.~\eqref{eq:lin_sup} by subtracting S$_{tilt}$ from S$_{observed}$. This approach uses the background and tilt fields, which do not require vertical stretching of MLAD isopycnals, to estimate the spice field from the observed field.
 
-The sound-speed field is compared between the stratified decomposition of Eq.~\eqref{eq:lin_inter} and the linear superposition model of Eq.~\eqref{eq:lin_sup} in Fig.~\ref{fig:c_diff}. The difference between these methods begins above the last stable isopycnal position. While the difference field often shows uniform vertical structure, there are also locations with significant vertical variation. Sampling this spice variation with the stratified decomposition would require estimates of stable isopycnal positions well into the MLAD. The linear superposition model avoids the need to introduce non-physical stable isopycnal positions to sample the observed spice variation in the MLAD.
+The sound-speed field is compared between the stratified decomposition of Eq.~\eqref{eq:lin_inter} and the linear superposition model of Eq.~\eqref{eq:lin_sup} in Fig.~\ref{fig:c_diff}. The difference begins above the last stable isopycnal estimate. While the difference field often vertically uniform, there are also locations with significant vertical variation. Sampling this spice variation with the stratified decomposition would require estimates of stable isopycnal positions well into the MLAD, which the linear superposition model avoids.
 
 \begin{figure}
 \includegraphics{figure_6.pdf}
-        \caption{\label{fig:c_fields}{Total and decomposed fields. Background field is shown in (a). Dynamic fields are shown with the background field subtracted: (b) tilt, (c) spice and (d) observed. The black line in each panel is the SLD.}}
+        \caption{\label{fig:c_fields}{Background field (bg), and the tilt, spice and total fields with the background field subtracted. The black line in each panel is the SLD.}}
 \end{figure}
 
-The background and dynamic fields computed with the dynamic decomposition are shown in Fig.~\ref{fig:c_fields}. The background field, Fig.~\ref{fig:c_fields}(a), shows a high sound-speed MLAD that overlies slower sound-speeds in the TRL. The background field SLD varies smoothly in range except at discontinuous positions where an isopycnal leaves the TRL and enters the mixed layer. The SLD change, even at the position of discontinuities, is relatively minor compared with that of the dynamic fields shown in the bottom three panels, and the background field is expected to produce marginal range dependent effects.
+The background and dynamic fields computed with the dynamic decomposition are shown in Fig.~\ref{fig:c_fields}. The background field (BG) shows a high sound-speed MLAD that overlies slower sound-speeds in the TRL. The background field SLD varies smoothly in range except at discontinuous positions where an isopycnal leaves the TRL and enters the mixed layer. The SLD change, even at the position of discontinuities, is relatively minor compared with that of the dynamic fields shown in the bottom three panels, and the background field is expected to produce marginal range dependent effects.
 
-The difference in sound-speed relative to the background for the tilt, spice, and observed fields are shown in panel (b), (c), and (d), respectively. The highest sound-speed variations are from internal waves in the tilt field TRL. The tilt field also shows large scale sound-speed anomalies in the top 50 m, mostly positive in the first half of the transect and negative in the second, expected from regional differences in the MLAD ($\theta$, $S$) gradient, Fig.~\ref{fig:ts_diagram}. The negative sound-speed anomalies observed are often associated with deeper SLDs, consistent with profile observations with both high positive sound-speed gradients and significant stratification.\cite{colosi2020observations}
+The highest sound-speed anomolied from the background are from internal waves in the tilt field below the SLD. The tilt field also shows large scale sound-speed anomalies in the top 50 m, mostly positive in the first half of the transect and negative in the second, expected from regional differences in the MLAD ($\theta$, $S$) gradient, Fig.~\ref{fig:ts_diagram}. The negative sound-speed anomalies observed are often associated with deeper SLDs, consistent with profile observations with both high positive sound-speed gradients and significant stratification.\cite{colosi2020observations}
 
-The spice anomaly field has smaller magnitudes than the tilt field overall, with many front-like features that extend over the entire MLAD depth. Spice contributions to sound-speed also appear in the TRL, where they often appear tilted with depth. The effect of spice on the SLD is more intermittent than the tilt field. A clear separation exists between the relatively flat SLD in the first half of the transect, and jagged and often shallow SLD in the second half of the transect. Finally, the observed field often appears as a superposition of spice and tilt fields features, which supports using the dynamic decomposition in the discussion of observed sound-speed fields.
+The spice anomaly field has smaller magnitudes than the tilt field overall, with many front-like features that extend over the entire MLAD depth. Spice contributions to sound-speed also appear in the TRL, where they often appear tilted with depth. The effect of spice on the SLD is more intermittent than the tilt field. A clear separation exists between the relatively flat SLD in the first half of the transect, and jagged and often shallow SLD in the second half of the transect. Finally, the total field often appears as a superposition of spice and tilt fields features, which supports using the dynamic decomposition in the discussion of observed sound-speed fields.
 
 \subsection{Decomposed sound-speed statistics}\label{ssec:decomp}
 \begin{figure}
@@ -152,60 +152,55 @@ The spice anomaly field has smaller magnitudes than the tilt field overall, with
         \caption{\label{fig:c_rms}{Transect mean sound-speed profile and RMS variation in the observed, tilt and spice fields. The SLD is shown as a horizontal line on both panels. A dashed line in (a) shows a fit to the MLAD sound-speed profile with 0.024 s$^{-1}$ slope.}}
 \end{figure}
 
-The transect mean sound-speed profile, $\bar{c}(z)$, and the dynamic fields RMS variations are shown in Fig.~\ref{fig:c_rms}. A gradient of 0.024 s$^{-1}$ fits $\bar{c}(z)$ well in the MLAD up to the 80 m SLD, which is followed by a sharp sound-speed decrease in the TRL. The observed, tilt and spice field RMS differences are shown in Fig.~\ref{fig:c_rms}, all have maximum values in the TRL. The tilt and observed fields have similar maximum values of more than 1.5 m/s, almost 50 m below the MLAD. The spice field has a smaller maximum just below the SLD of 0.8 m/s. The spice maximum occurs much deeper in range averaged calculations than in isopycnal averaged calculations, Fig.~\ref{fig:ts_diagram}(b), because of the influence of tilted isopycnals.\citep{ferrari2000} Importantly, the spice maximum occurs close to the tilt field minima and has a large impact on the total RMS at the base of the MLAD.
+The transect mean sound-speed profile, $\bar{c}(z)$, and the dynamic fields RMS variations are shown in Fig.~\ref{fig:c_rms}. A gradient of 0.024 s$^{-1}$ fits $\bar{c}(z)$ well in the MLAD up to the 80 m SLD, before a sharp sound-speed decrease in the TRL. The total, tilt and spice field RMS differences are shown in Fig.~\ref{fig:c_rms}, all have maximum values in the TRL. The tilt and total fields have similar maximum values of more than 1.5 m/s, almost 50 m below the MLAD. The spice field has a smaller maximum just below the SLD of 0.8 m/s. The spice maximum occurs much deeper in range averaged calculations than in isopycnal averaged calculations, Fig.~\ref{fig:ts_diagram}(b), because of the influence of tilted isopycnals.\citep{ferrari2000} Importantly, the spice maximum occurs close to the tilt field minima and has a large impact on the total RMS at the base of the MLAD.
 
-The tilt field maximum in the TRL is well predicted by the Garret-Munk (GM) internal wave model, shown as a dashed green line in Fig.~\ref{fig:c_rms}. The GM result is calculated from the buoyancy frequency, $N$, of the mean potential density profile. The RMS GM displacement is computed with the WKB method as
-\begin{equation*}
+The RMS sound-speed variations are also compared to the Garret-Munk (GM) internal wave model, the dashed green line in Fig~\ref{fig:c_rms}. The GM result is calculated from the buoyancy frequency, $N$, of the mean potential density profile. The RMS GM displacement is computed with the WKB method as
+\begin{equation}
     \zeta_{RMS}(z) = \zeta_0 \sqrt{\frac{N_0}{N(z)}},
-\end{equation*}
-where the standard GM values used are $\zeta_0$ = 7.3 m and $N_0=3$ cycles per hour.\cite{colosi2016sound} The RMS sound-speed is related to this displacement by the non-linear equation
-\begin{equation*}
+\end{equation}
+where the standard GM values used are $\zeta_0$ = 7.3 m and $N_0=3$ cycles per hour.\cite{colosi2016sound} The RMS change in sound-speed caused by this vertical displacement is
+\begin{equation}
     \delta c_{RMS} = \bar{c}(z+\zeta)-\big(\bar{c}(z) - \gamma \, \zeta_{RMS}(z)\big),
-\end{equation*}
+\end{equation}
 where $\gamma$ is the adiabatic sound-speed gradient of approximately 0.016 m s$^{-1}$.
+
+The tilt field maximum in the TRL is well predicted by the GM internal wave model.
 
 \begin{figure}
 \includegraphics{figure_8.pdf}
-        \caption{\label{fig:spectra}{Power spectral density of sound-speed anomaly in the total, tilt, spice, and background fields in the (a) MLAD, (b) TRL and (c) permanent thermocline.}}
+        \caption{\label{fig:spectra}{Power spectral density of sound-speed anomaly in the total, tilt, spice, and background fields (BG) in the (a) MLAD, (b) TRL and (c) permanent thermocline.}}
 \end{figure}
 Next, the power spectral density of the sound-speed anomaly in the MLAD, TRL, and permanent thermocline are shown in Fig.~\ref{fig:spectra}. Following Colosi and Rudnick,\cite{colosi2020observations} each spectrum is an average of 4 depths: 20, 40, 60 and 80 m for the MLAD; 100, 120, 140, 160 m for the TRL; and 180, 200, 220, 240 m for the thermocline. The mean background profile is subtracted from the background field, while the background field is subtracted from each of the dynamic fields.
 
 The background field has a sharp fall off for wavenumbers above 0.02 cpkm (50 km wavelength), and the subtraction of the background from the dynamic fields generally leads to a peak at 0.02 cpkm and decreases with lower wavenumbers. The MLAD has comparatively little falloff at low wavenumbers, however, and the tilt field variance increases below 0.02 cpkm. This long-range structure is related to the surface tilt field RMS maxima in Fig.~\ref{fig:c_rms}. An example of this low wavenumber tilt variance is the overall positive anomaly in the MLAD between 0 and 450 km, Fig.~\ref{fig:c_fields}(b). In contrast, the spice field has a factor of 10 more MLAD energy than the tilt field at wavenumbers above 0.02 cpkm.
 
-The TRL and thermocline spectra have similar shapes. For the TRL, the peak of the tilt and total fields at 0.02 cpkm is a factor of 10 above the spice field. In the upper thermocline the contribution of tilt and spice contribute equally to the total sound-speed variation. Equipartition observed between the tilt and spice field over much of the spectrum is a result of the shallow sampling depths, and the RMS in Fig.~\ref{fig:c_rms} indicates tilt variance begins to dominate below 250 m depth.
+The TRL and thermocline spectra have similar shapes. For the TRL, the peak of the tilt and total fields at 0.02 cpkm is a factor of 10 above the spice field. Approximate equipartition in the thermocline between the tilt and spice field is a result of the shallow sampling depths, and the RMS in Fig.~\ref{fig:c_rms} indicates tilt variance begins to dominate below 250 m depth.
 
 \section{\label{sec:propagation}Upper ocean acoustic propagation}
 \begin{figure}
 \includegraphics{figure_9.pdf}
-    \caption{\label{fig:decomp_x}{Left panels are sound-speed fields; right panels are acoustic pressures for MLAD source. Rows are the: (a) background (b) tilt, (c) spice, and (d) observed fields. The source region before 7.5 km has significant down going energy for all fields, up going energy in the first convergence zone begins 47.5 km from the source. Significant MLAD loss between these regions appears as down going energy below the approximately 100 m deep MLAD. MLAD loss is strongest around 250 and 260 km for the spice and total fields, and smaller loss is also observed in the tilt and total fields around 240 km.}}
+    \caption{\label{fig:decomp_x}{Left panels are sound-speed fields; right panels are acoustic pressures for MLAD source. Rows are the background (BG), tilt, spice, and total fields.}}
 \end{figure}
 
 The acoustic effects of tilt and spice are analyzed with 60 km propagation sections separated by 10 km transect range. This separation was chosen as a compromise that samples the observed range variation with reasonable independence. Two source frequencies, 400 and 1000 Hz, are used for comparison of propagation and have an average of one and three mixed layer modes, respectively. Three upper ocean propagation scenarios are investigated, the first analyzes acoustic energy in the MLAD for a source at 40 m depth in the MLAD (MLAD-MLAD). The second analyzes the non-ducted energy in the TRL for the MLAD source (MLAD-TRL). Finally, the acoustic energy in the MLAD is analyzed for a source in the TRL at 200 m depth (TRL-MLAD).
 
-Figure~\ref{fig:decomp_x} shows a representative section of propagation at 400 Hz for a MLAD source at $x=$230 km, modeled with the PE solver RAM.\citep{collins93} The background, tilt, spice, and observed sound-speed fields are shown in the left column of Fig.~\ref{fig:decomp_x}. The right column is PE acoustic pressure. The background acoustic field, Fig.~\ref{fig:decomp_x}(a), shows basic MLAD propagation. The MLAD is obscured by high angle propagation up to about 7.5 km from the source, and in the first convergence zone starting around 47.5 km. An absorbent layer introduced at the bottom of the PE domain suppresses bottom interactions that would otherwise contribute non-ducted energy to the MLAD at source ranges between these regions. With the higher angle arrivals removed, the MLAD between the source region and the first convergence zone has no external sources of acoustic energy, one maximum in depth, and a slow energy decrease with range.
+Figure~\ref{fig:decomp_x} shows a representative section of propagation at 400 Hz for an MLAD source at $x=$230 km, modeled with the PE solver RAM.\citep{collins93} The background, tilt, spice, and observed sound-speed fields are shown in the left column of Fig.~\ref{fig:decomp_x}. The right column is PE acoustic pressure. The background (BG) field shows basic MLAD propagation. The MLAD is obscured by high angle propagation up to about 7.5 km from the source, and in the first convergence zone starting around 47.5 km. An absorbent layer introduced at the bottom of the PE domain suppresses bottom interactions that would otherwise contribute non-ducted energy to the MLAD at source ranges between these regions. With the higher angle arrivals removed, the MLAD between the source region and the first convergence zone has no external sources of acoustic energy, one maximum in depth, and a slow energy decrease with range.
 
-The tilt and spice fields are shown in Fig.~\ref{fig:decomp_x} (b) and (c), respectively. The most acoustically significant tilt field feature is SLD shoaling out to 240 km that leads to MLAD energy loss. A surface concentration of lower sound-speed also appears in the tilt field after $x=270$ km. This tilt feature increases the mean sound-speed gradient of the mixed layer, both strengthening the MLAD and moving acoustic energy shallower.
+The most acoustically significant tilt field feature is SLD shoaling out to 240 km that leads to MLAD energy loss. A surface concentration of lower sound-speed also appears in the tilt field after $x=270$ km. This tilt feature increases the mean sound-speed gradient of the mixed layer, both strengthening the MLAD and moving acoustic energy shallower.
 
 The spice field has significant sound-speed variation in the MLAD, with both vertical fronts and features with depth variation. The most acoustically significant is a high sound-speed feature between 250 and 260 km transect range. This feature causes concentrated loss of acoustic energy from the MLAD at the front-like edges. There is also a marked change to the vertical pressure distribution that indicates coupling between different MLAD modes. The energy loss is characteristic of a blocking feature\cite{colosi2020observations} that significantly reduces the viability of the MLAD, and briefly increases energy in the TRL.
 
-Finally, the observed field appears as a combination of the tilt and spice fields, with many of the distinct features partitioned almost exclusively into one field or the other. The acoustic propagation shows most of the same behaviors observed for the spice and tilt fields, although it is not expected to be an exact superposition.
+Finally, the total field appears as a combination of the tilt and spice fields, with many of the distinct features partitioned almost exclusively into one field or the other. The acoustic propagation shows most of the same behaviors observed for the spice and tilt fields, although it is not expected to be an exact superposition.
 
 \subsection{Normal mode acoustic energy}
 \begin{figure}
 \includegraphics{figure_10.pdf}
-    \caption{\label{fig:bg_modes}{(a) RI background profile between $x=$230 to 280 km, (b) MLM1 (mode \#238) and surrounding modes at 400 Hz. The sound-speed profile is fit to a 0.017 s$^{-1}$ gradient until the 99.5 m SLD. Neighboring modes have a similar shape to MLM1 over much of the MLAD, and all modes have a significant tail down to the MLAD compensation depth.}}
+    \caption{\label{fig:bg_modes}{(a) RI background profile between $x=$230 to 280 km, (b) MLM1 (mode \#238) and surrounding modes at 400 Hz. The sound-speed profile is fit to a 0.017 s$^{-1}$ gradient until the 99.5 m SLD.}}
 \end{figure}
 
 The energy discussion first introduces normal modes to estimate upper ocean propagation in the absence of the observed dynamics. The modes are computed from a range independent (RI) background profile, made with 60 km range averages of the background field. The normal modes with turning points up to 1525 m/s are computed with the finite difference method.\cite{jensen2011computational} The last mode turning point is approximately 4000 m deep, past the approximately 3200 m MLAD compensation depth, and bottom interacting modes are not included.
 
-Three normal modes centered around mixed layer mode 1 (MLM1) for the $x=$230 km RI background are shown in Fig.~\ref{fig:bg_modes}. The MLM1 is found as the mode with the most MLAD energy within an index of the first peak in loop length,\citep{jensen2011computational}
-\begin{equation}
-    l_{m} = \frac{2 \pi}{k_{m+1} - k_m}.
-    \label{eq:loop_length}
-\end{equation}
-This approach can also identify mixed layer mode 2 (MLM2) and higher.
-
-The shape of MLM1 is not orthogonal to neighboring modes over MLAD depth. Instead, the coherent sum of similarly shaped modes reenforce or diminish the amplitude of MLM1 with marginal change to the vertical distribution of the MLAD pressure field. This interaction between modes leads to a very long-range cycling of energy first out from and then back into the MLAD,\citep{porter93,colosi2020observations} which causes loss of MLAD energy for the propagation ranges considered here. This energy cycling is most significant for acoustic frequencies close to the mode 1 cutoff of Eq.~\eqref{eq:f_cutoff}.
+Three normal modes centered around mixed layer mode 1 (MLM1) for the $x=$230 km RI background are shown in Fig.~\ref{fig:bg_modes}. MLM1 is the mode with the most energy and no zero crossings above the SLD. The shape of MLM1 is not orthogonal to neighboring modes over MLAD depth. Instead, the coherent sum of similarly shaped modes reenforce or diminish the amplitude of MLM1 with marginal change to the vertical distribution of the MLAD pressure field. This interaction between modes leads to a very long-range cycling of energy first out from and then back into the MLAD,\citep{porter93,colosi2020observations} which causes loss of MLAD energy for the propagation ranges considered here. This energy cycling is most significant for acoustic frequencies close to the mode 1 cutoff of Eq.~\eqref{eq:f_cutoff}.
 
 The total MLAD and TRL energies are quantified as vertically averaged acoustic energy after cylindrical spreading compensation,
 \begin{equation}
@@ -214,7 +209,7 @@ The total MLAD and TRL energies are quantified as vertically averaged acoustic e
 \end{equation}
 MLAD energy is defined here with $z_0=0$ m and $z_1=125$ m depth to include the deepest SLDs, and TRL energy is integrated between $z_0=125$ m  and $z_1=250$ m depth.
 
-The vertical distribution of MLAD energy is described with a limited depth mode projection. This is used as an alternative to mode amplitudes from coupled mode calculations because multiple modes can contribute to energy with similar MLAD vertical shape. The limited depth mode projection is the inner product of a MLM, $\psi_i(z)$, and the pressure field up to the $n$-th zero crossing, $z_n$,
+The vertical distribution of MLAD energy is described with a limited depth mode projection. This is used as an alternative to mode amplitudes from coupled mode calculations because multiple modes can contribute to energy with similar MLAD vertical shape. The limited depth mode projection is the inner product of an MLM, $\psi_i(z)$, and the pressure field up to the $n$-th zero crossing, $z_n$,
 \begin{equation}
     \textrm{E}_{\textrm{\vspace{0.001} MLM(i)}} = 20 \, \textrm{log}_{10} \left( \left| \int^{z_n}_0 \,  p(x, z) \ \psi_i(z) \, \sqrt{r} \, dz \ \right|\right) - 20 \,\textrm{log}_{10} \left( \int^{z_n}_0 \, \left| \psi_i(z) \right| \,  dz \right).
     \label{eq:proj_eng}
@@ -257,9 +252,9 @@ The TRL-MLAD scenario, Fig.~\ref{fig:ml_energy}(b), shows two localized effects.
 \end{figure}
 Further discussion of acoustic energy will use a compensated energy metric that subtracts the RI background energy from the background, spice, tilt and observed fields. The compensated MLAD energy (CMLE) and TRL energy (CTRLE) account for regional changes in MLAD diffraction and is 0 dB over the transmission length in the absence of ocean dynamics.
 
-First the CMLE for a MLAD source is used to identify blocking features, or localized sound-speed features transect that cause significant MLAD energy loss. Blocking features appear throughout the tilt, spice and observed transects, and they are expected to affect each of the three propagation scenarios considered here. Blocking features increase diffraction from the MLAD and are most common at 400 Hz, an example of which was shown in Fig.~\ref{fig:decomp_x} and \ref{fig:ml_energy}. Blocking events significantly affect statistical characterization of acoustic energy, and the results of analysis both with and without blocking features are reported separately in Sec.~\ref{ssec:energy}.
+First the CMLE for an MLAD source is used to identify blocking features, or localized sound-speed features transect that cause significant MLAD energy loss. Blocking features appear throughout the tilt, spice and observed transects, and they are expected to affect each of the three propagation scenarios considered here. Blocking features increase diffraction from the MLAD and are most common at 400 Hz, an example of which was shown in Fig.~\ref{fig:decomp_x} and \ref{fig:ml_energy}. Blocking events significantly affect statistical characterization of acoustic energy, and the results of analysis both with and without blocking features are reported separately in Sec.~\ref{ssec:energy}.
 
-A blocking feature is defined as a region between source ranges of 7.5 and 47.5 km where CMLE loss for a MLAD source exceeds 3 dB over 5 km. The top and bottom panels of Fig.~\ref{fig:blocking} show the maximum CMLE loss over 5 km for each section at 400 Hz and 1 kHz, respectively. At 400 Hz there are eight separate regions of high loss between the total, tilt, and spice fields. These regions are typically 50 km wide and flat topped, indicating the same feature dominates MLAD propagation for all source positions that sample the feature. The MLAD has fewer blocking features at 1 kHz than at 400 Hz. The 1 kHz blocking features are more sensitive to mode phase because they rarely appear over consecutive source positions.
+A blocking feature is defined as a region between source ranges of 7.5 and 47.5 km where CMLE loss for an MLAD source exceeds 3 dB over 5 km. The top and bottom panels of Fig.~\ref{fig:blocking} show the maximum CMLE loss over 5 km for each section at 400 Hz and 1 kHz, respectively. At 400 Hz there are eight separate regions of high loss between the total, tilt, and spice fields. These regions are typically 50 km wide and flat topped, indicating the same feature dominates MLAD propagation for all source positions that sample the feature. The MLAD has fewer blocking features at 1 kHz than at 400 Hz. The 1 kHz blocking features are more sensitive to mode phase because they rarely appear over consecutive source positions.
 
 Different partitioning of eight blocking features at 400 Hz between the decomposition fields shows regional differences in the dynamics. While blocking features in the observed field are distributed across the transect range, tilt field blocking features occur before $x=450$ km and spice blocking features are prevalent after this range. The last blocking feature position corresponds to a shift in tilt MLAD sound-speed perturbation from mainly positive to negative in Fig~\ref{fig:c_fields}(b). Following the discussion of the ($\theta$, $S$) diagram of Fig.~\ref{fig:ts_diagram}, surface concentrations of low sound-speed are expected to correspond with cooler and fresher surface water at further transect ranges, which increase the sound-speed gradient and the MLAD cutoff frequency. Secondly, while blocking features typically appear in the observed field and either the tilt or spice field, some blocking features appear in only the spice field for sources between 600 and 850 km. These observations indicate the tilt field destabilizes the MLAD at transect ranges before $x=450$ km and stabilizes it after this position.
 
@@ -271,7 +266,7 @@ Transect wide energy statistics are calculated for the different combinations of
     \caption{CMLE energy for MLAD sources. Left column is propagation at 400 Hz, right column is at 1 kHz. The top 4 rows are the complete set of simulated source positions. The bottom 3 rows are source positions without blocking events (W/O Blocking). The integrated energy for each transmission is shown as light grey lines, half circles at -10 dB indicate a line moves beyond the plotted scale. Linear regression fits of the ensemble mean (bold) and RMS ($\pm$) at 7.5 km and 47.5 km are shown right of the line plots.}
     \label{fig:shal_eng}
 \end{figure}
-Figure~\ref{fig:shal_eng} shows the CMLE energy statistics for a MLAD source. Results at 400 and 1000 Hz are in the left and right columns, respectively. The complete set of source positions is shown in the top section, while the set of source positions without blocking features is below. The background field shows marginal range dependence, the highest RMS is only 0.6 dB at 400 Hz and 47.5 km range, and the discussion focuses on the dynamic sound-speed fields.
+Figure~\ref{fig:shal_eng} shows the CMLE energy statistics for an MLAD source. Results at 400 and 1000 Hz are in the left and right columns, respectively. The complete set of source positions is shown in the top section, while the set of source positions without blocking features is below. The background field shows marginal range dependence, the highest RMS is only 0.6 dB at 400 Hz and 47.5 km range, and the discussion focuses on the dynamic sound-speed fields.
 
 The complete sets of source positions for all dynamic fields predict small mean loss over the source region before 7.5 km at 400 Hz, and small mean gains at 1 kHz. This increased coupling into the MLAD at higher frequency is also expected in the convergence zones, which also have a wide range of high angle modes, but these are not studied here. The statistics at 47.5 km predict mean loss for all fields and frequencies.
 
@@ -279,11 +274,14 @@ The tilt field has the least CMLE loss at both frequencies. There is more total 
 
 The CMLE statistics without blocking features are shown in the bottom three rows of Fig.~\ref{fig:shal_eng}. Outside of an overall adjustment in mean and RMS loss, many of the observations from the complete set apply to the set without blocking features. Two notable exceptions are: (1) the mean loss at 47.5 km range is the same or higher at 1 kHz compared to 400 Hz, and (2) RMS values are similar across field type and frequency. The higher mean loss at 1 kHz is a reversal from the complete field statistics but is consistent with the increased sensitivity of higher frequency acoustics to small-scale sound-speed fluctuations. The consistency in RMS loss simplifies the comparison of the mean values and clearly identifies the stabilizing effect of tilt in the observed fields. The differences in statistics between the observation sets support the discussion of coherent blocking features as distinct from the non-localized loss mechanisms expected to be present for all source ranges.
 
-\begin{figure}
-\includegraphics{figure_16.pdf}
-    \caption{Projected MLM energy for MLAD source. Presentation follows Fig.~\ref{fig:shal_eng}, but with a larger y-axis range of -20 to 5 dB. Energy projection of Eq.~\eqref{eq:proj_eng} is onto MLM1 at 400 Hz and MLM2 at 1 kHz.}
-    \label{fig:shal_proj}
-\end{figure}
+\begin{table}
+\begin{spacing}{0.75}
+    \input{table.txt}
+\end{spacing}
+    \caption{MLAD-MLAD}
+\label{tab:ml_ml}
+\end{table}
+
 Figure ~\ref{fig:shal_proj} shows the projected mode energy for MLM1 at 400 Hz and MLM2 at 1 kHz. The presentation follows that of Fig.~\ref{fig:shal_eng}, but with a lower bound of -20 dB to show the increased mean and RMS loss. The statistics at 7.5 and 47.5 km are the result of a linear regression fit to each statistic, which minimizes the effects of brief dips in mode amplitude.
 
 The mean and RMS values for the mode projection show more loss compared with the CMLE at all ranges and frequencies except for the 400 Hz background field. The mode projected energy and CMLE show the same trends, but the 400 Hz mean and RMS loss increase significantly in the observed and spice fields. The relative increase in MLM1 loss compared to the CMLE indicates some ranges couple energy into MLM2, an example appears in Fig.~\ref{fig:blocking}. A larger relative increase in mean and RMS loss between the mode projections and the CMLE is seen at 1 kHz, where there is often large coupling out of MLM2. The effect of mode coupling on the CMLE is ambiguous, however, since there is less CMLE loss at 1 kHz. The tilt field is the clearest indication that increased mode coupling at 1 kHz can stabilize CMLE, since it has higher MLM2 RMS than the spice field but has also the highest CMLE at 47.5 km.
@@ -295,7 +293,7 @@ Without blocking features, the 400 Hz projected and total MLAD energy statistics
         \caption{MLAD-TRL energy relative to a linear fit of the RI background at 400 Hz and a 2nd order polynomial fit at 1 kHz. Presentation of the result follows Fig. \ref{fig:shal_eng}, with y-axis between -20 and 25 dB.}
     \label{fig:eng_tl}
 \end{figure}
-Figure~\ref{fig:eng_tl} shows the CTRLE for a MLAD source. The truncated range of statistics (black lines) indicates a linear regression region that avoids the expanded convergence zone, this fit is extrapolated to 47.5 km. The beat pattern in the background field is smoothed out by scattering in the dynamic fields and was removed from the reference energy by a polynomial fit, Fig.~\ref{fig:eng_bg_3}(c). This reference energy does emphasize the beat pattern in the background field, however, and leads to relatively high RMS values.
+Figure~\ref{fig:eng_tl} shows the CTRLE for an MLAD source. The truncated range of statistics (black lines) indicates a linear regression region that avoids the expanded convergence zone, this fit is extrapolated to 47.5 km. The beat pattern in the background field is smoothed out by scattering in the dynamic fields and was removed from the reference energy by a polynomial fit, Fig.~\ref{fig:eng_bg_3}(c). This reference energy does emphasize the beat pattern in the background field, however, and leads to relatively high RMS values.
 
 The dynamic field CTRLE at 400 Hz has small mean gains for the spice and observed fields at 7.5 km, and losses for all fields at 47.5 km. The smallest loss at 47.5 km is observed for the spice field, and largest for the observed field. Consistent and gradual loss from the MLAD is required to increase the mean CTLRE at 47.5 km, discussed with Fig.~\ref{fig:ml_energy}, and decreases in energy could represent either localized loss events or overall stabilization of the MLAD. The statistics with blocking features removed have similar mean but consistently less RMS at 47.5 km, most apparent in the spice and observed fields. The RMS change at 47.5 km indicates that although blocking features cause localized CTRLE gains, these events do not make a significant impact on the mean CTRLE at 47.5 km. This is also consistent with a visual comparison of the RMS bounds with the ensemble realization in Fig.~\ref{fig:eng_tl}, that show more localized exceedances with blocking features than without.
 
@@ -308,7 +306,7 @@ The mean dynamic energy at 1 kHz is increased at both 7.5 and 47.5 km, which com
 \end{figure}
 Finally, Fig.~\ref{fig:deep_eng} shows CMLE statistics for the TRL source. The background field has a large effect on propagation in this scenario, especially at 1 kHz. The linear energy change for all source ranges suggests long wavelength mode resonances with the slowly varying background field\cite{colosi21} are significant when compared with the low energy background. There is a larger mean and RMS effect on MLAD energy in all dynamic fields, however, with RMS values between 7 and 11 dB at 47.5 km.
 
-As discussed with Fig.~\ref{fig:ml_energy}, source region coupling is important to increase CMLE with a the TRL source. The CMLE is then expected to behave like the MLAD source scenario after the source region. This is simplest to demonstrate in cases when source region coupling is uncorrelated with blocking features, \emph{i.e.} the tilt and observed fields have almost no change in RMS at 7.5 km with or without blocking features. With the observed field as an example, the CMLE mean at 47.5 km increases by almost 3 dB and the RMS decreases by 2 dB with the removal of blocking features. This is a similar trend to the CMLE effects with a MLAD source, Fig. \ref{fig:shal_eng}. In contrast, the spice field RMS at 7.5 km decreases by approximately 1.5 dB with the removal of blocking features. This correlation obscures the effects of blocking features on the MLAD propagation of energy scattered into the MLAD, and the removal of blocking features has little effect on the mean energy at 47.5 km. A second exceptional CMLE behavior for the TRL source is the relatively low tilt field mean at 7.5 km at 1 kHz. This reduced source region scatter into the MLAD could be caused by increased sensitivity at higher frequencies to the strong, small scale, sound-speed perturbations in the TRL, Fig.~\ref{fig:c_fields}(b).
+As discussed with Fig.~\ref{fig:ml_energy}, source region coupling is important to increase CMLE with a the TRL source. The CMLE is then expected to behave like the MLAD source scenario after the source region. This is simplest to demonstrate in cases when source region coupling is uncorrelated with blocking features, \emph{i.e.} the tilt and observed fields have almost no change in RMS at 7.5 km with or without blocking features. With the observed field as an example, the CMLE mean at 47.5 km increases by almost 3 dB and the RMS decreases by 2 dB with the removal of blocking features. This is a similar trend to the CMLE effects with an MLAD source, Fig. \ref{fig:shal_eng}. In contrast, the spice field RMS at 7.5 km decreases by approximately 1.5 dB with the removal of blocking features. This correlation obscures the effects of blocking features on the MLAD propagation of energy scattered into the MLAD, and the removal of blocking features has little effect on the mean energy at 47.5 km. A second exceptional CMLE behavior for the TRL source is the relatively low tilt field mean at 7.5 km at 1 kHz. This reduced source region scatter into the MLAD could be caused by increased sensitivity at higher frequencies to the strong, small scale, sound-speed perturbations in the TRL, Fig.~\ref{fig:c_fields}(b).
 
 \section{Conclusion}\label{sec:conclusion}
 A 970 km transect of the upper 400 m of the Northeast Pacific Ocean was decomposed to produce sound-speed fields with separated isopycnal tilt or spice variation. This decomposition followed Dzieciuch \emph{et al.}\citep{dzieciuch2004} but introduced a linear superposition model within the MLAD. The separate dynamic decomposition components have different effects on three upper ocean acoustic propagation scenarios, related to spatial characteristics of the MLAD and TRL variation. Peak RMS sound-speed variation was almost twice as large in the tilt field than the spice field, However, the tilt field maximum was deeper in the TRL. A second RMS tilt maxima of similar size to the spice field was observed at the surface associated with long wavelength stratification effects. The acoustic effect of this MLAD stratification depended on regional scale differences in upper ocean temperature and salinity. Finally, the separated fields showed almost exclusive partition of many sound-speed features into either the tilt or spice fields, supporting the analysis of the upper ocean sound-speed environment as a combination of dynamically separate oceanographic processes.
@@ -317,7 +315,7 @@ Acoustic propagation statistics were calculated at 400 and 1000 Hz following Col
 
 Energy statistics were used to compare the separate effects of spice and tilt to the observed field over the transect. In the MLAD-MLAD scenario, similar losses occurred for the spice and observed fields, while the tilt field had the least loss. Separate positions with blocking features from the analysis showed two more results. First, more loss was observed at low frequencies with blocking features, and at high frequencies without blocking features. This indicated different relative importance of discrete and diffuse loss mechanisms at the two frequencies. Second, the spice fields produced more loss than the observed fields when blocking features were removed, which indicated that the tilt field had a net stabilizing effect on the MLAD.
 
-Mode amplitude analysis of the MLAD-MLAD scenario showed higher losses for a single mode than the total field, indicating coupling was significant for both frequencies. Little difference between total and MLM1 projected energy was observed at 400 Hz when blocking features were removed, however, and mode coupling is expected only at large loss events. While the mode coupling was significantly reduced without blocking features at 1 kHz, the mean and RMS loss values for MLM2 significantly exceeded that for the total MLAD energy, and mode coupling and randomization is expected to be a diffuse process.
+Mode amplitude analysis of the MLAD-MLAD scenario showed higher losses for a single mode than the total field, indicating coupling was significant for both frequencies. Only minor difference between total and MLM1 projected energy was observed at 400 Hz when blocking features were removed, however, and mode coupling is expected only at large loss events. While the mode coupling was significantly reduced without blocking features at 1 kHz, the mean and RMS loss values for MLM2 significantly exceeded that for the total MLAD energy, and mode coupling and randomization is expected to be a diffuse process.
 
 In the MLAD-TRL scenario, the spice field had the highest average CTRLE at both frequencies related to consistently higher MLAD energy loss. Blocking features had a marginal effect on the mean TRL energy but did reduce the RMS energy. Another notable change was the increase in TRL energy at 1 kHz for all fields, consistent with increased diffuse CMLE loss at 1 kHz. Finally, the TRL-MLAD scenario showed that scattering inside the source region of the dynamic fields increased the ducted energy in the MLAD. The propagation of this energy after entering the MLAD was consistent with the MLAD-MLAD scenario, and the removal of positions with blocking features significantly increased the CMLE.
 
@@ -327,176 +325,6 @@ The observed upper ocean dynamics were acoustically important in all three propa
 This research was supported by the Ofﬁce of Naval Research under Grant No. N00014-19-1-2580.
 
 \bibliographystyle{jasanum2}
-%\bibliography{eRichards_master}
-\begin{thebibliography}{10}
-\def\enquote#1,{``#1,''}
-\def\enxquote#1{``#1''}
-\expandafter\ifx\csname url\endcsname\relax
-  \def\url#1{\texttt{#1}}\fi
-\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
-\providecommand{\bibinfo}[2]{#2}
-\def\plainquote#1{``#1''}
-\providecommand{\noopsort}[1]{}
-\providecommand{\switchargs}[2]{#2#1}
-\providecommand{\dourl}[1]{\href{http://#1}{\nolinkurl{#1}}}
-  \def\eatspace #1{#1}
+\bibliography{eRichards_master}
 
-\bibitem{cole2010seasonal}
-\bibinfo{author}{S.~T. Cole}, \bibinfo{author}{D.~L. Rudnick}, and
-  \bibinfo{author}{J.~A. Colosi}, \enquote{\bibinfo{title}{Seasonal evolution
-  of upper-ocean horizontal structure and the remnant mixed layer}},
-  \bibinfo{journal}{Journal of Geophysical Research: Oceans} \textbf{115}(C4)
-  (\bibinfo{year}{2010}).
-
-\bibitem{colosi2020observations}
-\bibinfo{author}{J.~A. Colosi} and \bibinfo{author}{D.~L. Rudnick},
-  \enquote{\bibinfo{title}{Observations of upper ocean sound-speed structures
-  in the north pacific and their effects on long-range acoustic propagation at
-  low and mid-frequencies}},  \bibinfo{journal}{The Journal of the Acoustical
-  Society of America} \textbf{148}(4), \bibinfo{pages}{2040--2060}
-  (\bibinfo{year}{2020}).
-
-\bibitem{dzieciuch2004}
-\bibinfo{author}{M.~Dzieciuch}, \bibinfo{author}{W.~Munk}, and
-  \bibinfo{author}{D.~L. Rudnick}, \enquote{\bibinfo{title}{Propagation of
-  sound through a spicy ocean, the {SOFAR} overture}},  \bibinfo{journal}{The
-  Journal of the Acoustical Society of America} \textbf{116}(3),
-  \bibinfo{pages}{1447--1462} (\bibinfo{year}{2004}) \dodoi{10.1121/1.1772397}.
-
-\bibitem{jensen2011computational}
-\bibinfo{author}{F.~Jensen}, \bibinfo{author}{W.~Kuperman},
-  \bibinfo{author}{M.~Porter}, and \bibinfo{author}{H.~Schmidt},
-  \emph{\bibinfo{title}{Computational Ocean Acoustics}}
-  (\bibinfo{publisher}{Springer, New York, NY}, \bibinfo{year}{2011}).
-
-\bibitem{porter93}
-\bibinfo{author}{M.~B. Porter} and \bibinfo{author}{F.~B. Jensen},
-  \enquote{\bibinfo{title}{Anomalous parabolic equation results for propagation
-  in leaky surface ducts}},  \bibinfo{journal}{The Journal of the Acoustical
-  Society of America} \textbf{94}(3), \bibinfo{pages}{1510--1516}
-  (\bibinfo{year}{1993}) \dourl{https://doi.org/10.1121/1.408127}
-  \dodoi{10.1121/1.408127}.
-
-\bibitem{Urick1982Prop}
-\bibinfo{author}{R.~J. Urick}, \emph{\bibinfo{title}{Sound propagation in the
-  sea}}  (\bibinfo{publisher}{Peninsula Publishing}, \bibinfo{address}{Los
-  Altos, CA}, \bibinfo{year}{1982}).
-
-\bibitem{rudnick1999compensation}
-\bibinfo{author}{D.~L. Rudnick} and \bibinfo{author}{R.~Ferrari},
-  \enquote{\bibinfo{title}{Compensation of horizontal temperature and salinity
-  gradients in the ocean mixed layer}},  \bibinfo{journal}{Science}
-  \textbf{283}(5401), \bibinfo{pages}{526--529} (\bibinfo{year}{1999}).
-
-\bibitem{klymak2015}
-\bibinfo{author}{J.~M. Klymak}, \bibinfo{author}{W.~Crawford},
-  \bibinfo{author}{M.~H. Alford}, \bibinfo{author}{J.~A. MacKinnon}, and
-  \bibinfo{author}{R.~Pinkel}, \enquote{\bibinfo{title}{Along-isopycnal
-  variability of spice in the north pacific}},  \bibinfo{journal}{Journal of
-  Geophysical Research: Oceans} \textbf{120}(3), \bibinfo{pages}{2287--2307}
-  (\bibinfo{year}{2015})
-  \dourl{https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1002/2013JC009421}
-  \dodoi{https://doi.org/10.1002/2013JC009421}.
-
-\bibitem{colosi21}
-\bibinfo{author}{J.~A. Colosi} and \bibinfo{author}{W.~Zinicola-Lapin},
-  \enquote{\bibinfo{title}{Sensitivity of mixed layer duct propagation to
-  deterministic ocean features}},  \bibinfo{journal}{The Journal of the
-  Acoustical Society of America} \textbf{149}(3), \bibinfo{pages}{1969--1978}
-  (\bibinfo{year}{2021}) \dourl{https://doi.org/10.1121/10.0003821}
-  \dodoi{10.1121/10.0003821}.
-
-\bibitem{garrett1972space}
-\bibinfo{author}{C.~Garrett} and \bibinfo{author}{W.~Munk},
-  \enquote{\bibinfo{title}{Space-time scales of internal waves}},
-  \bibinfo{journal}{Geophysical Fluid Dynamics} \textbf{3}(3),
-  \bibinfo{pages}{225--264} (\bibinfo{year}{1972}).
-
-\bibitem{ferrari2000}
-\bibinfo{author}{R.~Ferrari} and \bibinfo{author}{D.~L. Rudnick},
-  \enquote{\bibinfo{title}{Thermohaline variability in the upper ocean}},
-  \bibinfo{journal}{Journal of Geophysical Research: Oceans} \textbf{105}(C7),
-  \bibinfo{pages}{16857--16883} (\bibinfo{year}{2000}).
-
-\bibitem{munk1981evolution}
-\bibinfo{author}{W.~Munk}, \enquote{\bibinfo{title}{Internal waves and
-  small-scale processes}}, in \emph{\bibinfo{booktitle}{The Evolution of
-  Physical Oceanography}},  edited by \bibinfo{editor}{B.~Warren} and
-  \bibinfo{editor}{C.~Wunsch}  (\bibinfo{publisher}{MIT, Cambridge Press,
-  Cambridge, MA}, \bibinfo{year}{1981}), pp. \bibinfo{pages}{264--291}.
-
-\bibitem{dasaro2011}
-\bibinfo{author}{E.~D’Asaro}, \bibinfo{author}{C.~Lee},
-  \bibinfo{author}{L.~Rainville}, \bibinfo{author}{R.~Harcourt}, and
-  \bibinfo{author}{L.~Thomas}, \enquote{\bibinfo{title}{Enhanced turbulence and
-  energy dissipation at ocean fronts}},  \bibinfo{journal}{Science}
-  \textbf{332}(6027), \bibinfo{pages}{318--322} (\bibinfo{year}{2011})
-  \dourl{https://www.science.org/doi/abs/10.1126/science.1201515}
-  \dodoi{10.1126/science.1201515}.
-
-\bibitem{colosi12}
-\bibinfo{author}{J.~A. Colosi}, \bibinfo{author}{T.~F. Duda},
-  \bibinfo{author}{Y.-T. Lin}, \bibinfo{author}{J.~F. Lynch},
-  \bibinfo{author}{A.~E. Newhall}, and \bibinfo{author}{B.~D. Cornuelle},
-  \enquote{\bibinfo{title}{Observations of sound-speed fluctuations on the new
-  jersey continental shelf in the summer of 2006}},  \bibinfo{journal}{The
-  Journal of the Acoustical Society of America} \textbf{131}(2),
-  \bibinfo{pages}{1733--1748} (\bibinfo{year}{2012})
-  \dourl{https://doi.org/10.1121/1.3666014} \dodoi{10.1121/1.3666014}.
-
-\bibitem{colosi13}
-\bibinfo{author}{J.~A. Colosi}, \bibinfo{author}{L.~J. Van~Uffelen},
-  \bibinfo{author}{B.~D. Cornuelle}, \bibinfo{author}{M.~A. Dzieciuch},
-  \bibinfo{author}{P.~F. Worcester}, \bibinfo{author}{B.~D. Dushaw}, and
-  \bibinfo{author}{S.~R. Ramp}, \enquote{\bibinfo{title}{Observations of
-  sound-speed fluctuations in the western philippine sea in the spring of
-  2009}},  \bibinfo{journal}{The Journal of the Acoustical Society of America}
-  \textbf{134}(4), \bibinfo{pages}{3185--3200} (\bibinfo{year}{2013})
-  \dourl{https://doi.org/10.1121/1.4818784} \dodoi{10.1121/1.4818784}.
-
-\bibitem{murat2021}
-\bibinfo{author}{M.~Kucukosmanoglu}, \bibinfo{author}{J.~A. Colosi},
-  \bibinfo{author}{P.~F. Worcester}, \bibinfo{author}{M.~A. Dzieciuch}, and
-  \bibinfo{author}{D.~J. Torres}, \enquote{\bibinfo{title}{Observations of
-  sound-speed fluctuations in the beaufort sea from summer 2016 to summer
-  2017}},  \bibinfo{journal}{The Journal of the Acoustical Society of America}
-  \textbf{149}(3), \bibinfo{pages}{1536--1548} (\bibinfo{year}{2021})
-  \dourl{https://doi.org/10.1121/10.0003601} \dodoi{10.1121/10.0003601}.
-
-\bibitem{collins93}
-\bibinfo{author}{M.~D. Collins}, \enquote{\bibinfo{title}{A split‐step padé
-  solution for the parabolic equation method}},  \bibinfo{journal}{The Journal
-  of the Acoustical Society of America} \textbf{93}(4),
-  \bibinfo{pages}{1736--1742} (\bibinfo{year}{1993})
-  \dourl{https://doi.org/10.1121/1.406739} \dodoi{10.1121/1.406739}.
-
-\bibitem{WOA}
-\bibinfo{author}{T.~P. Boyer}, \bibinfo{author}{H.~E. Garcia},
-  \bibinfo{author}{R.~A. Locarnini}, \bibinfo{author}{M.~M. Zweng},
-  \bibinfo{author}{A.~V. Mishonov}, \bibinfo{author}{J.~R. Reagan},
-  \bibinfo{author}{K.~A. Weathers}, \bibinfo{author}{O.~K. Baranova},
-  \bibinfo{author}{D.~Seidov}, and \bibinfo{author}{I.~V. Smolyar},
-  \enxquote{\bibinfo{title}{World ocean atlas 2018}} ,
-  \bibinfo{howpublished}{https://www.ncei.noaa.gov/archive/accession/NCEI-WOA18}
-  (\bibinfo{year}{2018}) \bibinfo{note}{accessed: 2022-05-25}.
-
-\bibitem{TEOS10}
-\bibinfo{author}{I.~O. Commission} \emph{et~al.}, \enquote{\bibinfo{title}{The
-  international thermodynamic equation of seawater--2010: calculation and use
-  of thermodynamic properties.[includes corrections up to 31st october
-  2015].}},   (\bibinfo{year}{2015}).
-
-\bibitem{barker2017stabilizing}
-\bibinfo{author}{P.~M. Barker} and \bibinfo{author}{T.~J. McDougall},
-  \enquote{\bibinfo{title}{Stabilizing hydrographic profiles with minimal
-  change to the water masses}},  \bibinfo{journal}{Journal of Atmospheric and
-  Oceanic Technology} \textbf{34}(9), \bibinfo{pages}{1935--1945}
-  (\bibinfo{year}{2017}).
-
-\bibitem{colosi2016sound}
-\bibinfo{author}{J.~A. Colosi}, \emph{\bibinfo{title}{Sound propagation through
-  the stochastic ocean}}  (\bibinfo{publisher}{Cambridge University Press},
-  \bibinfo{year}{2016}).
-
-\end{thebibliography}
 \end{document}

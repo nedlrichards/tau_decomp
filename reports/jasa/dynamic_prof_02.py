@@ -13,7 +13,7 @@ from src import sonic_layer_depth, Config, Field, SectionLvls
 
 plt.ion()
 bbox = dict(boxstyle='round', fc='w')
-savedir = 'reports/jasa/figures'
+savedir = 'reports/jasa/tex'
 
 cf = Config()
 
@@ -61,7 +61,9 @@ for p_i in prof_i:
 #ax[0].plot([-10, 100], [sld_z[prof_i], sld_z[prof_i]], alpha=0.6)
 #ax[1].plot([-10, 100], [sld_z[prof_i], sld_z[prof_i]], alpha=0.6)
 #ax[0].plot([-10, 1e4], [ml_d[0], ml_d[0]], color='#eb44e6')
-ax[0].plot([1506, 1e4], [sld_z[prof_i], sld_z[prof_i]], color='0.2')
+#ax[0].plot([1506, 1e4], [sld_z[prof_i], sld_z[prof_i]], color='0.2')
+ax[0].arrow(1506, sld_z[prof_i[0]], 4, 0, head_width=10, head_length=1, color='0.4')
+ax[0].arrow(1507, sld_z[prof_i[1]], 4, 0, head_width=10, head_length=1, color='0.4')
 
 ax[0].set_ylabel('Depth (m)')
 ax[1].set_xlabel(r'Salinity, $S$ (kg/m$^3$)')
@@ -71,12 +73,12 @@ ax_t1.set_xlabel(r'Temperature, $\theta$ ($^\circ$C)')
 
 ax[0].text(1487, -30, '(a)', bbox=cf.bbox, clip_on=False)
 ax[1].text(34.2, -30, '(b)', bbox=cf.bbox, clip_on=False)
-ax[0].text(1503, 73, 'SLD', bbox=cf.bbox, clip_on=False)
+#ax[0].text(1503, 73, 'SLD', bbox=cf.bbox, clip_on=False)
 
-ax[0].plot([0.12, 0.20], [1.17, 1.17], color='0.2', clip_on=False, transform=ax[0].transAxes)
-ax[1].plot([0.12, 0.20], [1.17, 1.17], color='0.2', clip_on=False, transform=ax[1].transAxes)
-ax[0].plot([0.12, 0.20], [-0.17, -0.17], '--', color='0.2', clip_on=False, transform=ax[0].transAxes)
-ax[1].plot([0.12, 0.20], [-0.19, -0.19], '--', color='0.2', clip_on=False, transform=ax[1].transAxes)
+ax[0].plot([0.12, 0.20], [1.17, 1.17], '--', color='0.2', clip_on=False, transform=ax[0].transAxes)
+ax[1].plot([0.12, 0.20], [1.17, 1.17], '--', color='0.2', clip_on=False, transform=ax[1].transAxes)
+ax[0].plot([0.12, 0.20], [-0.17, -0.17], color='0.2', clip_on=False, transform=ax[0].transAxes)
+ax[1].plot([0.12, 0.20], [-0.19, -0.19], color='0.2', clip_on=False, transform=ax[1].transAxes)
 
 # Create offset transform by 5 points in x direction
 dx = 10/72.

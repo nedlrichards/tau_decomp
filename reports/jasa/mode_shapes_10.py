@@ -7,6 +7,7 @@ from src import RDModes, Config, list_tl_files, section_cfield, sonic_layer_dept
 import matplotlib.pyplot as plt
 
 plt.style.use('elr')
+savedir = 'reports/jasa/tex'
 
 plt.ion()
 
@@ -65,7 +66,7 @@ lrg = linregress(rd_modes.z_a[:sld_i[0]], rd_modes.bg_prof[:sld_i[0]])
 fig, ax = plt.subplots(1, 2, sharey=True, figsize=(cf.jasa_1clm, 2.75))
 ax[0].plot(rd_modes.bg_prof, rd_modes.z_a, color='0.2')
 ax[0].plot(rd_modes.z_a * lrg.slope + lrg.intercept, rd_modes.z_a, '--', color="b")
-ax[1].plot(rd_modes.psi_bg[am[0], :], rd_modes.z_a, label='#'+str(labels[0]))
+ax[1].plot(rd_modes.psi_bg[am[0], :], rd_modes.z_a, linestyle=(5, (10, 2)), label='#'+str(labels[0]))
 ax[1].plot(rd_modes.psi_bg[am[1], :], rd_modes.z_a, label='#'+str(labels[1]))
 ax[1].plot(rd_modes.psi_bg[am[2], :], rd_modes.z_a, label='#'+str(labels[2]))
 ax[0].set_xlim(1490, 1510)
@@ -76,7 +77,7 @@ ax[1].grid()
 ax[0].set_xlabel('Sound speed, $c$ (m/s)')
 ax[1].set_xlabel('Mode amplitude')
 ax[0].set_ylabel('Depth (m)')
-ax[1].legend(loc=(0.48, 0.02), framealpha=1, handlelength=1)
+ax[1].legend(loc=(0.42, 0.02), framealpha=1, handlelength=2)
 
 pos = ax[0].get_position()
 pos.x0 += 0.05
@@ -92,7 +93,6 @@ pos.y1 += 0.06
 pos.y0 += 0.06
 ax[1].set_position(pos)
 
-savedir = 'reports/jasa/figures'
 fig.savefig(os.path.join(savedir, 'figure_10.pdf'), dpi=300)
 
 print(lrg.slope)

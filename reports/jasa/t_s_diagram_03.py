@@ -17,7 +17,7 @@ mean_sa = sec4.stable_spice(sec4.lvls)[1]
 mean_ct = gsw.CT_from_rho(sig_lvl[:, None] + 1e3, mean_sa, field.p_ref)[0]
 
 position = np.broadcast_to(field.x_a, field.xy_ct.shape)
-savedir = 'reports/jasa/figures'
+savedir = 'reports/jasa/tex'
 
 # compute density contours
 xbounds = [33.75, 34.9]

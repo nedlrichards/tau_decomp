@@ -125,6 +125,6 @@ ax.set_position(pos)
 
 ax.set_ylim(-70, -25)
 
-fig.supxlabel('Position, $x$ (km)')
+fig.supxlabel('Source range, $r$ (km)')
 
-fig.savefig('reports/jasa/figures/figure_12.pdf', dpi=300)
+fig.savefig('reports/jasa/tex/figure_12.pdf', dpi=300)

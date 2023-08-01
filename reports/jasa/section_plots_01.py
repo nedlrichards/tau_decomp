@@ -9,7 +9,7 @@ from src import sonic_layer_depth, Config
 
 plt.ion()
 bbox = dict(boxstyle='round', fc='w')
-savedir = 'reports/jasa/figures'
+savedir = 'reports/jasa/tex'
 
 cf = Config()
 
@@ -47,7 +47,7 @@ ax.text(1000, 163, "+ 1500.")
 
 cb = fig.colorbar(cm)
 cb.set_label('Sound speed (m/s)')
-ax.set_xlabel('Range (km)')
+ax.set_xlabel('Position, $x$ (km)')
 ax.set_ylabel('Depth (m)')
 
 ax.set_ylim(150, 0)

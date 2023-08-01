@@ -19,6 +19,7 @@ from scipy.signal.windows import general_cosine
 plt.ion()
 plt.style.use('elr')
 cf = Config()
+savedir = 'reports/jasa/tex'
 
 fields = np.load('data/processed/inputed_decomp.npz')
 x_a = fields['x_a']
@@ -67,9 +68,9 @@ def plot_spectra(z_avg, field, axis, *args, **kwargs):
 fig, axes = plt.subplots(1, 3, figsize=(cf.jasa_2clm, 2.75), sharey=True)
 
 plot_spectra(z_ml, delta_total, axes[0], color='C0')
-plot_spectra(z_ml, delta_tilt, axes[0], color='C1')
+plot_spectra(z_ml, delta_tilt, axes[0], linestyle=(5, (10, 2)), color='C1')
 plot_spectra(z_ml, delta_spice, axes[0], color='C2')
-plot_spectra(z_ml, delta_bg, axes[0], label='bg', color='C3')
+plot_spectra(z_ml, delta_bg, axes[0], linestyle=':', label='bg', color='0.5')
 
 axes[0].set_xlim(8e-3, 1)
 axes[1].set_xlim(8e-3, 1)
@@ -77,14 +78,14 @@ axes[2].set_xlim(8e-3, 1)
 axes[0].set_ylim(1e-3, 1e2)
 
 plot_spectra(z_tl, delta_total, axes[1], color='C0')
-plot_spectra(z_tl, delta_tilt, axes[1], color='C1')
+plot_spectra(z_tl, delta_tilt, axes[1], linestyle=(5, (10, 2)), color='C1')
 plot_spectra(z_tl, delta_spice, axes[1], color='C2')
-plot_spectra(z_tl, delta_bg, axes[1], label='bg', color='C3')
+plot_spectra(z_tl, delta_bg, axes[1], linestyle=':', label='bg', color='0.5')
 
 plot_spectra(z_tmc, delta_total, axes[2], color='C0')
-plot_spectra(z_tmc, delta_tilt, axes[2], color='C1')
+plot_spectra(z_tmc, delta_tilt, axes[2], linestyle=(5, (10, 2)), color='C1')
 plot_spectra(z_tmc, delta_spice, axes[2], color='C2')
-plot_spectra(z_tmc, delta_bg, axes[2], label='bg', color='C3')
+plot_spectra(z_tmc, delta_bg, axes[2], linestyle=':', label='bg', color='0.5')
 
 #axes[2].legend(['total', 'tilt', 'spice', 'bg'], loc='upper right', bbox_to_anchor=(1.13, 1.08),
                #fontsize=9, labelspacing=0.2, handlelength=0.5, framealpha=1.0)
@@ -131,5 +132,4 @@ pos.y0 += 0.08
 pos.y1 += 0.08
 axes[2].set_position(pos)
 
-savedir = 'reports/jasa/figures'
 fig.savefig(os.path.join(savedir, 'figure_8.pdf'), dpi=300)

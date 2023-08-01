@@ -62,4 +62,4 @@ pos.y0 += 0.10
 pos.y1 += 0.09
 cb.ax.set_position(pos)
 
-fig.savefig('reports/jasa/figures/figure_5.pdf', dpi=300)
+fig.savefig('reports/jasa/tex/figure_5.pdf', dpi=300)

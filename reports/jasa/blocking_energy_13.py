@@ -3,6 +3,7 @@ from math import pi
 from os.path import join
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FixedLocator
+import matplotlib
 from scipy.signal import find_peaks, hilbert
 from scipy.interpolate import interp1d
 from scipy.stats import linregress
@@ -14,8 +15,8 @@ import pickle
 
 plt.ion()
 plt.style.use('elr')
+savedir = 'reports/jasa/tex'
 
-save_dir = 'data/processed/'
 range_bounds = (7.5e3, 47e3)
 total_rb = (7.5e3, 47e3)
 fc = 400
@@ -66,26 +67,25 @@ ml_rb = (r_a >= total_rb[0]) & (r_a <= total_rb[1])
 fit = np.polynomial.polynomial.polyfit(r_a[ml_rb], ml_eng[tl_ind][ml_rb], 1)
 ml_fit = np.polynomial.polynomial.polyval(r_a, fit)
 
-fig, axes = plt.subplots(2, 1, sharex=True, figsize=(cf.jasa_1clm, 3))
+fig, axes = plt.subplots(2, 1, sharex=True, figsize=(cf.jasa_1clm, 3.25))
 ax = axes[0]
 l0 = ax.plot(plot_r_a / 1e3, ml_bg[tl_ind], color='k', label='BG')
 l1 = ax.plot(plot_r_a / 1e3, ml_eng[tl_ind], color='C1', label='CMLE')
 l2 = ax.plot(plot_r_a / 1e3, proj_eng[tl_ind] - 10 * np.log10(92), color='C1', label='MLM1', linewidth=1, linestyle=':')
 
 ax.plot(plot_r_a / 1e3, tl_bg[tl_ind], color='k')
-l3 = ax.plot(plot_r_a / 1e3, tl_eng[tl_ind], color='C2', label='CTRLE')
+l3 = ax.plot(plot_r_a / 1e3, tl_eng[tl_ind], linestyle=(5, (10, 2)), color='C2', label='CTRLE')
 
 ax.set_ylim(-70, -20)
 
 pos = ax.get_position()
 pos.x0 += 0.06
 pos.x1 += 0.06
-pos.y0 += 0.07
-pos.y1 += 0.07
+pos.y0 += 0.05
+pos.y1 += 0.05
 ax.set_position(pos)
 ax.grid()
 
-ax.text(231, -22, '(a)', bbox=cf.bbox)
 
 ax = axes[1]
 ax.plot(plot_r_a / 1e3, deep_bg[tl_ind], color='k', label='BG')
@@ -95,12 +95,12 @@ l4 = ax.plot(plot_r_a / 1e3, deep_eng[tl_ind], color='r', label='CMLE')
           #loc='lower left', bbox_to_anchor=(0.65, 0.50), handlelength=1)
 
 l = ax.legend(handles=l0 + l1 + l2 + l3, fontsize=8, framealpha=1.0,
-              loc='lower left', bbox_to_anchor=(0.78, 0.75), handlelength=1)
+              loc='lower left', bbox_to_anchor=(0.73, 0.80), handlelength=2)
 ax.add_artist(l)
 
 
 ax.legend(handles=l0 + l4, fontsize=8, framealpha=1.0,
-          loc='lower left', bbox_to_anchor=(0.78, -0.10), handlelength=1)
+          loc='lower left', bbox_to_anchor=(0.73, -0.12), handlelength=2)
 
 ax.set_ylim(-70, -20)
 ax.set_xlim(plot_r_a[0]/1e3 - 1, plot_r_a[0]/1e3 + 55)
@@ -108,18 +108,23 @@ ax.set_xlim(plot_r_a[0]/1e3 - 1, plot_r_a[0]/1e3 + 55)
 pos = ax.get_position()
 pos.x0 += 0.06
 pos.x1 += 0.06
-pos.y0 += 0.07
-pos.y1 += 0.07
+pos.y0 += 0.05
+pos.y1 += 0.05
 ax.set_position(pos)
 ax.grid()
 
-ax.text(231, -22, '(b)', bbox=cf.bbox)
+offset = matplotlib.transforms.ScaledTranslation(0., -0.05, fig.dpi_scale_trans)
+for label in ax.xaxis.get_majorticklabels():
+    label.set_transform(label.get_transform() + offset)
 
-fig.supxlabel('Position (x)')
+
+axes[0].text(245, -22, 'MLAD source', bbox=cf.bbox)
+axes[1].text(247, -22, 'TRL source', bbox=cf.bbox)
+
+fig.supxlabel('Source range, $r$ (km)')
 fig.supylabel('Verically averaged energy (dB)')
 
 #ax.legend([l0, l1, l2], ['RI BG', 'MLAD', 'TL'])
 #ax.legend([l0, l1, l2])
 
-savedir = 'reports/jasa/figures'
 fig.savefig(join(savedir, 'figure_13.pdf'), dpi=300)

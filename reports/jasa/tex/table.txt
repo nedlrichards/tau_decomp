@@ -1,0 +1,8 @@
+\begin{tblr}{|Q[l,t]|Q[l,t]|Q[l,t]|Q[l,t]|Q[l,t]|Q[l,t]|Q[l,t]|Q[l,t]|} 
+7.5 km & 45 km & 7.5 km & 45 km &7.5 km & 45 km & 7.5 km & 45 km \\  
+\hline  
+{\textbf{ 0.0} \\ \quad $\pm$ 0.2} & - &{ \textbf{ 0.2} \\ \quad $\pm$ 0.5} & -& {\textbf{ 0.0} \\ \quad $\pm$ 0.3} & - &{ \textbf{ 0.1} \\ \quad $\pm$ 0.5} & - \\ 
+{\textbf{-0.1} \\ \quad $\pm$ 1.5} & {\textbf{ 0.0} \\ \quad $\pm$ 0.7} & { \textbf{-1.5} \\ \quad $\pm$ 4.7} & { \textbf{-0.2} \\ \quad $\pm$ 1.5} &{\textbf{-0.6} \\ \quad $\pm$ 1.6} & {\textbf{-0.4} \\ \quad $\pm$ 0.9} & { \textbf{-2.0} \\ \quad $\pm$ 5.1} & { \textbf{-0.5} \\ \quad $\pm$ 1.6} \\ 
+{\textbf{ 0.0} \\ \quad $\pm$ 1.5} & {\textbf{ 0.0} \\ \quad $\pm$ 0.6} & { \textbf{-4.5} \\ \quad $\pm$ 5.0} & { \textbf{-1.1} \\ \quad $\pm$ 2.0} &{\textbf{-1.0} \\ \quad $\pm$ 2.4} & {\textbf{-0.4} \\ \quad $\pm$ 0.7} & { \textbf{-5.9} \\ \quad $\pm$ 6.5} & { \textbf{-1.5} \\ \quad $\pm$ 2.2} \\ 
+{\textbf{-0.3} \\ \quad $\pm$ 2.6} & {\textbf{ 0.1} \\ \quad $\pm$ 1.0} & { \textbf{-4.6} \\ \quad $\pm$ 7.6} & { \textbf{-0.5} \\ \quad $\pm$ 1.6} &{\textbf{-1.2} \\ \quad $\pm$ 2.9} & {\textbf{-0.6} \\ \quad $\pm$ 1.2} & { \textbf{-5.7} \\ \quad $\pm$ 8.7} & { \textbf{-1.0} \\ \quad $\pm$ 1.6} \\ 
+\end{tblr}

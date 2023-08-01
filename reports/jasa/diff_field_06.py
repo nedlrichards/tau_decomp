@@ -14,7 +14,7 @@ from src import sonic_layer_depth, list_tl_files, Config, section_cfield
 
 plt.ion()
 cf = Config()
-savedir = 'reports/jasa/figures'
+savedir = 'reports/jasa/tex'
 
 fields = np.load('data/processed/inputed_decomp.npz')
 x_a = fields['x_a']
@@ -105,7 +105,7 @@ label.set_transform(label.get_transform() + offset)
 
 
 fig.supylabel('Depth (m)')
-fig.supxlabel('Section range, $x$ (km)')
+fig.supxlabel('Position, $x$ (km)')
 
 dy1 = -0.03
 y0 = 0.135
@@ -141,10 +141,10 @@ pos.y0 += y0
 pos.y1 += y0 + dy2
 axes[3].set_position(pos)
 
-axes[0].text(0, 0, 'a', bbox=cf.bbox)
-axes[1].text(0, 0, 'b', bbox=cf.bbox)
-axes[2].text(0, 0, 'c', bbox=cf.bbox)
-axes[3].text(0, 0, 'd', bbox=cf.bbox)
+axes[0].text(0, 0, 'bg', bbox=cf.bbox)
+axes[1].text(0, 0, 'tilt', bbox=cf.bbox)
+axes[2].text(0, 0, 'spice', bbox=cf.bbox)
+axes[3].text(0, 0, 'total', bbox=cf.bbox)
 
 fig.savefig(os.path.join(savedir, 'figure_6.pdf'), dpi=300)
 """

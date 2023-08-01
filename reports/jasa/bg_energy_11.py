@@ -65,7 +65,7 @@ cb = fig.colorbar(sm, cax=cax, ticks=[0.25, 0.75])
 cb.set_ticklabels([r'$x_{src}\leq$300 km', '$x_{src}$ >300km'])
 ax.set_ylim(-40, -25)
 
-ax.set_xlabel('Position, $x$ (km)')
+ax.set_xlabel('Source range, $r$ (km)')
 ax.set_ylabel('MLAD energy (dB)')
 
 pos = ax.get_position()
@@ -75,4 +75,4 @@ pos.y0 += 0.08
 pos.y1 += 0.07
 ax.set_position(pos)
 
-fig.savefig('reports/jasa/figures/figure_11.pdf', dpi=300)
+fig.savefig('reports/jasa/tex/figure_11.pdf', dpi=300)

@@ -17,7 +17,7 @@ cf = Config()
 
 fc = 400
 sec_num = 23
-savedir = 'reports/jasa/figures'
+savedir = 'reports/jasa/tex'
 
 tl_files = list_tl_files(fc, source_depth='shallow')
 tl_data = np.load(tl_files[sec_num])
@@ -37,7 +37,7 @@ _, c_tilt = section_cfield(tl_data['xs'], fields['x_a'], fields['c_tilt'])
 _, c_spice = section_cfield(tl_data['xs'], fields['x_a'], fields['c_spice'])
 _, c_total = section_cfield(tl_data['xs'], fields['x_a'], fields['c_total'])
 
-z_i = z_a < 360.
+z_i = z_a < 250.
 
 sld_z_tilt, _ = sonic_layer_depth(z_a[z_i], c_tilt[z_i, :])
 sld_z_spice, _ = sonic_layer_depth(z_a[z_i], c_spice[z_i, :])
@@ -63,22 +63,22 @@ cm0 = axes[0, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_bg[z_i, :],
                             cmap=plt.cm.coolwarm,
                             vmax=1507, vmin=1510,
                             rasterized=True)
-axes[0,0].text(x_t, 30, '(a)', bbox=cf.bbox, zorder=50, ha='center')
+axes[0,0].text(x_t, 30, 'bg', bbox=cf.bbox, zorder=50, ha='center')
 cm1 = axes[1, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_tilt[z_i, :],
                             cmap=plt.cm.BrBG,
                             vmin=-3, vmax=3,
                             rasterized=True)
-axes[1,0].text(x_t, 30, '(b)', bbox=cf.bbox, zorder=50, ha='center')
+axes[1,0].text(x_t, 30, 'tilt', bbox=cf.bbox, zorder=50, ha='center')
 cm = axes[2, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_spice[z_i, :],
                             cmap=plt.cm.BrBG,
                             vmin=-3, vmax=3,
                             rasterized=True)
-axes[2,0].text(x_t, 30, '(c)', bbox=cf.bbox, zorder=50, ha='center')
+axes[2,0].text(x_t, 30, 'spice', bbox=cf.bbox, zorder=50, ha='center')
 cm = axes[3, 0].pcolormesh(x_a / 1e3, z_a[z_i], c_total[z_i, :],
                             cmap=plt.cm.BrBG,
                             vmin=-3, vmax=3,
                             rasterized=True)
-axes[3,0].text(x_t, 30, '(d)', bbox=cf.bbox, zorder=50, ha='center')
+axes[3,0].text(x_t, 30, 'total', bbox=cf.bbox, zorder=50, ha='center')
 
 axes[1, 0].plot(x_a / 1e3, sld_z_tilt, linewidth=2, color='k')
 axes[2, 0].plot(x_a / 1e3, sld_z_spice, linewidth=2, color='k')
@@ -119,18 +119,21 @@ for i, label in enumerate(cbar.ax.xaxis.get_majorticklabels()):
     else:
         label.set_transform(label.get_transform() + offset)
 
+r_cmp = np.sqrt(rplot - tl_data['xs'])[:, None]
+vmin = -45
+vmax = -25
 cm = axes[0, 1].pcolormesh(rplot / 1e3, zplot,
-                        20 * np.log10(np.abs(p_bg)).T,
-                        cmap=cf.cmap, vmax=-50, vmin=-90, rasterized=True)
+                        20 * np.log10(np.abs(p_bg) * r_cmp).T,
+                        cmap=cf.cmap, vmax=vmax, vmin=vmin, rasterized=True)
 cm = axes[1, 1].pcolormesh(rplot / 1e3, zplot,
-                        20 * np.log10(np.abs(p_tilt)).T,
-                        cmap=cf.cmap, vmax=-50, vmin=-90, rasterized=True)
+                        20 * np.log10(np.abs(p_tilt) * r_cmp).T,
+                        cmap=cf.cmap, vmax=vmax, vmin=vmin, rasterized=True)
 cm = axes[2, 1].pcolormesh(rplot / 1e3, zplot,
-                        20 * np.log10(np.abs(p_spice)).T,
-                        cmap=cf.cmap, vmax=-50, vmin=-90, rasterized=True)
+                        20 * np.log10(np.abs(p_spice) * r_cmp).T,
+                        cmap=cf.cmap, vmax=vmax, vmin=vmin, rasterized=True)
 cm = axes[3, 1].pcolormesh(rplot / 1e3, zplot,
-                        20 * np.log10(np.abs(p_total)).T,
-                        cmap=cf.cmap, vmax=-50, vmin=-90, rasterized=True)
+                        20 * np.log10(np.abs(p_total) * r_cmp).T,
+                        cmap=cf.cmap, vmax=vmax, vmin=vmin, rasterized=True)
 
 cax = fig.add_axes([0.680, 0.93, 0.25, 0.015])
 cbar = fig.colorbar(cm, cax=cax, orientation='horizontal')
@@ -139,14 +142,15 @@ cbar = fig.colorbar(cm, cax=cax, orientation='horizontal')
 cax.text(-0.56, 0, '$p$ (dB re 1 m)', transform=cax.transAxes)
 
 cbar.ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
-cbar.set_ticks(cbar.get_ticks()[1:])
+#cbar.set_ticks(cbar.get_ticks()[1:])
+cbar.set_ticks(cbar.get_ticks())
 offset = matplotlib.transforms.ScaledTranslation(0, -0.05, fig.dpi_scale_trans)
 for label in cbar.ax.xaxis.get_majorticklabels():
     label.set_transform(label.get_transform() + offset)
 
 for ax in axes:
     for a in ax:
-        a.set_ylim(350, 0.01)
+        a.set_ylim(250, 0.01)
         a.set_xlim(x_a[0] / 1e3, x_a[-1] / 1e3 - 1)
 
 axes[0,0].set_xticks([])
@@ -160,7 +164,11 @@ axes[2,1].set_xticks([])
 axes[2,1].set_yticks([])
 axes[3,1].set_yticks([])
 
-fig.supxlabel('Range (km)')
+offset = matplotlib.transforms.ScaledTranslation(0.10, 0, fig.dpi_scale_trans)
+for label in axes[3, 1].xaxis.get_majorticklabels():
+    label.set_transform(label.get_transform() + offset)
+
+fig.supxlabel('Position, $x$ (km)')
 fig.supylabel('Depth (m)')
 
 dy0 = -0.03

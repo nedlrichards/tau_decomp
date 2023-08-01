@@ -94,7 +94,7 @@ axes[0].spines.top.set_visible(False)
 
 axes[0].set_yticks([0, 3, 6])
 
-axes[1].set_xlabel('Source position (km)')
+axes[1].set_xlabel('Source position, $x_{src}$ (km)', labelpad=-0.1)
 #axes[1].grid()
 #axes[1].legend()
 
@@ -126,4 +126,4 @@ axes[1].set_position(pos)
 axes[0].text(170, plot_max - 1, '400 Hz', bbox=cf.bbox)
 axes[1].text(170, plot_max - 1, '1 kHz', bbox=cf.bbox)
 
-fig.savefig('reports/jasa/figures/figure_14.pdf', dpi=300)
+fig.savefig('reports/jasa/tex/figure_14.pdf', dpi=300)

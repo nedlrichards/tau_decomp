@@ -10,7 +10,7 @@ cf = Config()
 
 plt.ion()
 bbox = dict(boxstyle='round', fc='w')
-savedir = 'reports/jasa/figures'
+savedir = 'reports/jasa/tex'
 
 c_fields = np.load('data/processed/inputed_decomp.npz')
 gm = loadmat('data/external/GMStats_spice.mat')
